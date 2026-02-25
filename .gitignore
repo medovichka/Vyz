@@ -2,3 +2,14 @@
 *.exe
 *.pdf
 .vs/
+.aux
+.out
+.synctex.gz
+.toc
+.user
+.env
+.vcxproj
+.Debug/
+.debug/
+.Release/
+.release/
