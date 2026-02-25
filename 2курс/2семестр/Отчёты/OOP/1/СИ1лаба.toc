@@ -1,8 +1,0 @@
-\babel@toc {russian}{}\relax 
-\contentsline {section}{Цель работы}{2}{Doc-Start}%
-\contentsline {section}{Задание}{2}{Doc-Start}%
-\contentsline {section}{Выполнение лабораторной работы}{3}{Item.3}%
-\contentsline {subsection}{Выбор темы}{3}{section*.1}%
-\contentsline {subsection}{Основные функции}{3}{section*.1}%
-\contentsline {subsection}{Прототип пользовательского интерфейса}{4}{Item.10}%
-\contentsline {section}{Вывод}{5}{figure.caption.2}%
