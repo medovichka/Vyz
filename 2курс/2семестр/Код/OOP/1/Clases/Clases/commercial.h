@@ -8,23 +8,19 @@
 class Commersorg : public Organization
 {
 private:
-	int revenue; //Доходы
-	int taxRate; //налогообложение
+	int revenue;
+	int taxRate;
 	int subscribers;
 	std::vector<std::string> socSeti;
 public:
 
-	//Каструктарыэ
-	//1) Обычный
 	Commersorg(
 		const std::string &name, 
 		const std::string &inn,
 		int employees, 
 		int revenue, 
 		int taxRate);
-	//2) Предустановленный
 	Commersorg();
-	//3) Расширенный
 	Commersorg(
 		const std::string &name,
 		const std::string &inn,
@@ -33,15 +29,11 @@ public:
 		int taxRate, 
 		int subscribers,
 		const std::vector<std::string> &socSeti);
-	// конструктору всё равно нужно заполнить унаследованные классы
 
+	int payTaxes() override;
+	std::string report() override;
 
-	int payTaxes() override; //тож переопр
-	std::string report() override;//тож переопр
-
-
-	void distributeProfit(); //уникальная функция комм
-	bool expandBusiness(); //уникальная функция комм
-
+	void distributeProfit() override;
+	bool expandBusiness() override;
 };
 #endif // !COMERSORG_H

@@ -1,40 +1,33 @@
-#ifndef ORGANIZATION_H // загружаем 1 раз
-#define ORGANIZATION_H // ну типа чё у нас как нызвается
+#ifndef ORGANIZATION_H 
+#define ORGANIZATION_H 
 
-#include <string> // нужны строки для имени и ин
+#include <string> 
 
-class Organization // класс
+class Organization 
 {
-protected: // только внутри и для друзей
+protected:
 	const std::string name;
 	const std::string inn;
 	int employees;
 
-public: //дляя всех
+public: 
 	Organization(
 		const std::string& name, 
 		const std::string& inn, 
-		int employees); //конструктор с передаваемыми параметрами
-	
-	// переопределяемы
-	virtual int payTaxes() =0; // виртуальная функция налогов (штука которая есть у класса, но она может быть переопределена у подклассов) /возвращает целое число
-	virtual std::string report() =0; //тож самое только функция отчёта /возвращает строку
-	
-	//общие
+		int employees); 
+
+	virtual int payTaxes() =0; 
+	virtual std::string report() =0; 
+
+
+	virtual void distributeProfit() {}
+	virtual bool expandBusiness() {return false;}
+	virtual void conductProgram(const std::string& programName) {}
+	virtual bool attractFunding(const std::string& source) {
+		return false;}
+
 	void reklama();
 	void hireEmployee();
-	//Organization(); нинадда
-	//~Organization();нинадда
 };
-//private: это только внутри класса
-//};
-
-//Organization::Organization()
-//{ это конструктор
-//}
-
-//Organization::~Organization()
-//{ это деструктор, мне он не особо нужен кастомный, лучше 
-//} просто по умолчанию оставить
 
 #endif // !ORGANIZATION_H

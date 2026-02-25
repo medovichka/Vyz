@@ -9,16 +9,13 @@ Organization::Organization(
 	: name(name), 
 	  inn(inn), 
 	  employees(employees) {}
-//Сама функция конструктора, которая принимает наме инн сотрудников, со значениями по умол
-
 
 void Organization::hireEmployee() {
 	employees++;
 	std::cout << 
 		"Наняты новые сотрудники! Всего сотрудников: " 
 		<< employees << std::endl;
-}//функция найма сотрудника
-
+}
 
 void Organization::reklama() {
 	std::cout << "Реклвма: "+name+" оч крутая";

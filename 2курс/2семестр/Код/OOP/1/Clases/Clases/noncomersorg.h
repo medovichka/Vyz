@@ -1,15 +1,13 @@
-#ifndef NONCOMERSORG_H //если не определяли, определяем
-#define NONCOMERSORG_H // определяем вот эт
- 
-#include "organization.h" // нужен класс Organization
-#include <string> // нужны строки
-//#include <iostream> наверное не надо, поторополися
+#ifndef NONCOMERSORG_H
+#define NONCOMERSORG_H 
+#include "organization.h" 
+#include <string> 
 
-class Noncomersorg : public Organization // неком. орг. - наследник\дочерний класс класса Organization
+class Noncomersorg : public Organization 
 {
-private: // защищённые штуки класса неком.орг.
-	const std::string purpose; //цель орг.
-	const std::string foundingSource; // источник финансирования.
+private: 
+	const std::string purpose;
+	const std::string foundingSource;
 public:
 	Noncomersorg(
 		const std::string& name,
@@ -17,18 +15,13 @@ public:
 		int employees,
 		const std::string& purpose,
 		const std::string& foundingSource);
-	// конструктору всё равно нужно заполнить унаследованные поля
 
+	int payTaxes() override;
+	std::string report() override;
 
-	//Переопределённые
-	int payTaxes() override;//Переопределяем функцию т.к расчёт другой для неком.
-	std::string report() override; //Переопределяем функцию т.к отчёт другой для неком.
-
-
-	//Уникалные
 	void conductProgram(
-		std::string& programName);
+		const std::string& programName) override;
 	bool attractFunding(
-		std::string& source);
+		const std::string& source) override;
 };
 #endif // !NONCOMERSORG_H
