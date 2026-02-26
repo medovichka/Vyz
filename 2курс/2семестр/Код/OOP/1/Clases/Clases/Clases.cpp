@@ -38,7 +38,7 @@ int main() {
 	std::cout << "\n";
 	std::cout << ARGANIZATII[2]->report();
 	std::cout << "\n";
-	std::cout << ARGANIZATII[2]->expandBusiness();
+	ARGANIZATII[2]->expandBusiness();
 	std::cout << "\n";
 	ARGANIZATII[2]->distributeProfit();
 	for (size_t i = 0; i < ARGANIZATII.size(); i++){

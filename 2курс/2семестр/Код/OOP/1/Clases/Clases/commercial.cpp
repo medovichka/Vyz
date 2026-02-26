@@ -56,7 +56,7 @@ std::string Commersorg::report() {
     return result;
 }
 
-bool Commersorg::expandBusiness() {
+void Commersorg::expandBusiness() {
     subscribers += 100;
     std::cout << "Расширение выполнено! новые подписчики: " << subscribers;
 }

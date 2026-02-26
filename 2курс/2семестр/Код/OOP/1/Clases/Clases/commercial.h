@@ -34,6 +34,6 @@ public:
 	std::string report() override;
 
 	void distributeProfit() override;
-	bool expandBusiness() override;
+	void expandBusiness() override;
 };
 #endif // !COMERSORG_H

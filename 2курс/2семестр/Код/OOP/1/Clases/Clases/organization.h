@@ -21,7 +21,7 @@ public:
 
 
 	virtual void distributeProfit() {}
-	virtual bool expandBusiness() {return false;}
+	virtual void expandBusiness() {}
 	virtual void conductProgram(const std::string& programName) {}
 	virtual bool attractFunding(const std::string& source) {
 		return false;}
