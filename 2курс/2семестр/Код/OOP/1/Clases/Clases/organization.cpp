@@ -3,20 +3,21 @@
 #include <iostream>
 
 Organization::Organization(
-	const std::string& name, 
-	const std::string& inn,
-	int employees) 
-	: name(name), 
-	  inn(inn), 
+	const std::string &name,
+	const std::string &inn,
+	int employees)
+	: name(name),
+	  inn(inn),
 	  employees(employees) {}
 
-void Organization::hireEmployee() {
+void Organization::hireEmployee()
+{
 	employees++;
-	std::cout << 
-		"Наняты новые сотрудники! Всего сотрудников: " 
-		<< employees << std::endl;
+	std::cout << "Наняты новые сотрудники! Всего сотрудников: "
+			  << employees << std::endl;
 }
 
-void Organization::reklama() {
-	std::cout << "Реклвма: "+name+" оч крутая";
+void Organization::reklama()
+{
+	std::cout << "Реклвма: " + name + " оч крутая";
 }

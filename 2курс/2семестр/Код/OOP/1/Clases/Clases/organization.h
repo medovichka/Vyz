@@ -1,30 +1,31 @@
-#ifndef ORGANIZATION_H 
-#define ORGANIZATION_H 
+#ifndef ORGANIZATION_H
+#define ORGANIZATION_H
 
-#include <string> 
+#include <string>
 
-class Organization 
+class Organization
 {
 protected:
 	const std::string name;
 	const std::string inn;
 	int employees;
 
-public: 
+public:
 	Organization(
-		const std::string& name, 
-		const std::string& inn, 
-		int employees); 
+		const std::string &name,
+		const std::string &inn,
+		int employees);
 
-	virtual int payTaxes() =0; 
-	virtual std::string report() =0; 
-
+	virtual int payTaxes() = 0;
+	virtual std::string report() = 0;
 
 	virtual void distributeProfit() {}
 	virtual void expandBusiness() {}
-	virtual void conductProgram(const std::string& programName) {}
-	virtual bool attractFunding(const std::string& source) {
-		return false;}
+	virtual void conductProgram(const std::string &programName) {}
+	virtual bool attractFunding(const std::string &source)
+	{
+		return false;
+	}
 
 	void reklama();
 	void hireEmployee();

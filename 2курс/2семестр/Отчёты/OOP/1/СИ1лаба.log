@@ -1,17 +1,17 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.2) (preloaded format=pdflatex 2026.2.25)  26 FEB 2026 19:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.2) (preloaded format=pdflatex 2026.2.28)  28 FEB 2026 14:37
 entering extended mode
  restricted \write18 enabled.
+ file:line:error style messages enabled.
  %&-line parsing enabled.
-**./РЎР1Р»Р°Р±Р°.tex
-(РЎР1Р»Р°Р±Р°.tex
+**f:/Yandex.Disk/Р’РЈР—/2РєСѓСЂСЃ/2СЃРµРјРµСЃС‚СЂ/РћС‚С‡С‘С‚С‹/OOP/1/РЎР1Р»Р°Р±Р°.tex
+(f:/Yandex.Disk/Р’РЈР—/2РєСѓСЂСЃ/2СЃРµРјРµСЃС‚СЂ/РћС‚С‡С‘С‚С‹/OOP/1/РЎР1Р»Р°Р±Р°.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
 (D:\Progi\MikTek\tex/latex/extsizes\extarticle.cls
 Document Class: extarticle 1996/10/08 v1.0 Non Standard LaTeX document class
 (D:\Progi\MikTek\tex/latex/extsizes\size14.clo
 File: size14.clo 1999/11/11 v1.4a NON-Standard LaTeX file (size option)
-)
-(D:\Progi\MikTek\tex/latex/base\exscale.sty
+) (D:\Progi\MikTek\tex/latex/base\exscale.sty
 Package: exscale 2025/06/05 v2.1i Standard LaTeX package exscale
 LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 57.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
@@ -31,16 +31,13 @@ LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 \abovecaptionskip=\skip49
 \belowcaptionskip=\skip50
 \bibindent=\dimen149
-)
-(D:\Progi\MikTek\tex/latex/base\fontenc.sty
+) (D:\Progi\MikTek\tex/latex/base\fontenc.sty
 Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
-
-(D:\Progi\MikTek\tex/latex/cyrillic\t2aenc.def
+ (D:\Progi\MikTek\tex/latex/cyrillic\t2aenc.def
 File: t2aenc.def 2023/11/07 v1.0k Cyrillic encoding definition file
 Now handling font encoding T2A ...
 ... processing UTF-8 mapping file for font encoding T2A
-
-(D:\Progi\MikTek\tex/latex/base\t2aenc.dfu
+ (D:\Progi\MikTek\tex/latex/base\t2aenc.dfu
 File: t2aenc.dfu 2022/06/07 v1.3c UTF-8 support
    defining Unicode char U+00A4 (decimal 164)
    defining Unicode char U+00A7 (decimal 167)
@@ -241,23 +238,17 @@ File: t2aenc.dfu 2022/06/07 v1.3c UTF-8 support
    defining Unicode char U+FB05 (decimal 64261)
    defining Unicode char U+FB06 (decimal 64262)
 ))
-LaTeX Font Info:    Trying to load font information for T2A+cmr on input line 1
-16.
-
-(D:\Progi\MikTek\tex/latex/cyrillic\t2acmr.fd
+LaTeX Font Info:    Trying to load font information for T2A+cmr on input line 116.
+ (D:\Progi\MikTek\tex/latex/cyrillic\t2acmr.fd
 File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
-))
-(D:\Progi\MikTek\tex/latex/geometry\geometry.sty
+)) (D:\Progi\MikTek\tex/latex/geometry\geometry.sty
 Package: geometry 2020/01/02 v5.9 Page Geometry
-
-(D:\Progi\MikTek\tex/latex/graphics\keyval.sty
+ (D:\Progi\MikTek\tex/latex/graphics\keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
 \KV@toks@=\toks17
-)
-(D:\Progi\MikTek\tex/generic/iftex\ifvtex.sty
+) (D:\Progi\MikTek\tex/generic/iftex\ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
-
-(D:\Progi\MikTek\tex/generic/iftex\iftex.sty
+ (D:\Progi\MikTek\tex/generic/iftex\iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
 ))
 \Gm@cnth=\count283
@@ -272,26 +263,21 @@ Package: iftex 2024/12/12 v1.0g TeX engine tests
 \Gm@layouthoffset=\dimen156
 \Gm@layoutvoffset=\dimen157
 \Gm@dimlist=\toks18
-
-(D:\Progi\MikTek\tex/latex/geometry\geometry.cfg))
-(D:\Progi\MikTek\tex/latex/amsmath\amsmath.sty
+ (D:\Progi\MikTek\tex/latex/geometry\geometry.cfg)) (D:\Progi\MikTek\tex/latex/amsmath\amsmath.sty
 Package: amsmath 2025/07/09 v2.17z AMS math features
 \@mathmargin=\skip51
 
 For additional information on amsmath, use the `?' option.
 (D:\Progi\MikTek\tex/latex/amsmath\amstext.sty
 Package: amstext 2024/11/17 v2.01 AMS text
-
-(D:\Progi\MikTek\tex/latex/amsmath\amsgen.sty
+ (D:\Progi\MikTek\tex/latex/amsmath\amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks19
 \ex@=\dimen158
-))
-(D:\Progi\MikTek\tex/latex/amsmath\amsbsy.sty
+)) (D:\Progi\MikTek\tex/latex/amsmath\amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen159
-)
-(D:\Progi\MikTek\tex/latex/amsmath\amsopn.sty
+) (D:\Progi\MikTek\tex/latex/amsmath\amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
 \inf@bad=\count286
@@ -341,45 +327,32 @@ LaTeX Info: Redefining \Relbar on input line 970.
 \mathdisplay@stack=\toks23
 LaTeX Info: Redefining \[ on input line 2950.
 LaTeX Info: Redefining \] on input line 2951.
-)
-(D:\Progi\MikTek\tex/latex/amsfonts\amssymb.sty
+) (D:\Progi\MikTek\tex/latex/amsfonts\amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
-
-(D:\Progi\MikTek\tex/latex/amsfonts\amsfonts.sty
+ (D:\Progi\MikTek\tex/latex/amsfonts\amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-))
-(D:\Progi\MikTek\tex/latex/base\inputenc.sty
+)) (D:\Progi\MikTek\tex/latex/base\inputenc.sty
 Package: inputenc 2024/02/08 v1.3d Input encoding file
 \inpenc@prehook=\toks24
 \inpenc@posthook=\toks25
-)
-(D:\Progi\MikTek\tex/generic/babel\babel.sty
-Package: babel 2026/02/14 v26.3 The multilingual framework for LuaLaTeX, pdfLaT
-eX and XeLaTeX
+) (D:\Progi\MikTek\tex/generic/babel\babel.sty
+Package: babel 2026/02/14 v26.3 The multilingual framework for LuaLaTeX, pdfLaTeX and XeLaTeX
 \babel@savecnt=\count298
-LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input li
-ne 2078.
-LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input li
-ne 2080.
-LaTeX Encoding Info:    Redeclaring text command \ij (encoding T1) on input lin
-e 2082.
-LaTeX Encoding Info:    Redeclaring text command \IJ (encoding T1) on input lin
-e 2083.
-LaTeX Encoding Info:    Ignoring declaration for text command \ij (encoding ?) 
-on input line 2084.
-LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) 
-on input line 2086.
-LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) 
-on input line 2111.
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input line 2078.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input line 2080.
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding T1) on input line 2082.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding T1) on input line 2083.
+LaTeX Encoding Info:    Ignoring declaration for text command \ij (encoding ?) on input line 2084.
+LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) on input line 2086.
+LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) on input line 2111.
 \U@D=\dimen167
 \l@unhyphenated=\language79
-
-(D:\Progi\MikTek\tex/generic/babel\txtbabel.def)
+ (D:\Progi\MikTek\tex/generic/babel\txtbabel.def)
 \bbl@readstream=\read2
 \bbl@dirlevel=\count299
 Package babel Info: Configuration files are deprecated, as
@@ -390,62 +363,46 @@ Package babel Info: Configuration files are deprecated, as
 * Local config file bblopts.cfg used
 *
 (D:\Progi\MikTek\tex/latex/arabi\bblopts.cfg
-File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of
- babel
-)
-(D:\Progi\MikTek\tex/generic/babel/locale/ru\babel-russian.tex)
+File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of babel
+) (D:\Progi\MikTek\tex/generic/babel/locale/ru\babel-russian.tex)
 Package babel Info: Importing font and identification data for russian
 (babel)             from babel-ru.ini. Reported on input line 4330.
-
-(D:\Progi\MikTek\tex/latex/babel-russian\russianb.ldf
+ (D:\Progi\MikTek\tex/latex/babel-russian\russianb.ldf
 File: russianb.ldf 2021/01/10 1.3m Russian support for the Babel system
 Language: russian 2020/09/09 1.3k Russian support for the Babel system
 Package babel Info: Making " an active character on input line 124.
 Package babel Info: Default for \cyrdash is provided on input line 163.
-))
-(D:\Progi\MikTek\tex/latex/base\textcomp.sty
+)) (D:\Progi\MikTek\tex/latex/base\textcomp.sty
 Package: textcomp 2024/04/24 v2.1b Standard LaTeX package
-)
-(D:\Progi\MikTek\tex/latex/tools\indentfirst.sty
+) (D:\Progi\MikTek\tex/latex/tools\indentfirst.sty
 Package: indentfirst 2023/07/02 v1.03 Indent first paragraph (DPC)
-)
-(D:\Progi\MikTek\tex/latex/graphics\graphicx.sty
+) (D:\Progi\MikTek\tex/latex/graphics\graphicx.sty
 Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
-
-(D:\Progi\MikTek\tex/latex/graphics\graphics.sty
+ (D:\Progi\MikTek\tex/latex/graphics\graphics.sty
 Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
-
-(D:\Progi\MikTek\tex/latex/graphics\trig.sty
+ (D:\Progi\MikTek\tex/latex/graphics\trig.sty
 Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
-)
-(D:\Progi\MikTek\tex/latex/graphics-cfg\graphics.cfg
+) (D:\Progi\MikTek\tex/latex/graphics-cfg\graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 106.
-
-(D:\Progi\MikTek\tex/latex/graphics-def\pdftex.def
+ (D:\Progi\MikTek\tex/latex/graphics-def\pdftex.def
 File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen168
 \Gin@req@width=\dimen169
-)
-(D:\Progi\MikTek\tex/latex/float\float.sty
+) (D:\Progi\MikTek\tex/latex/float\float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count300
 \float@exts=\toks26
 \float@box=\box55
 \@float@everytoks=\toks27
 \@floatcapt=\box56
-)
-(D:\Progi\MikTek\tex/latex/mwe\mwe.sty
+) (D:\Progi\MikTek\tex/latex/mwe\mwe.sty
 Package: mwe 2018/03/30 v0.5 Package to support minimal working examples (MWE)
-
-(D:\Progi\MikTek\tex/latex/lipsum\lipsum.sty
-(D:\Progi\MikTek\tex/latex/l3packages/l3keys2e\l3keys2e.sty
-(D:\Progi\MikTek\tex/latex/l3kernel\expl3.sty
+ (D:\Progi\MikTek\tex/latex/lipsum\lipsum.sty (D:\Progi\MikTek\tex/latex/l3packages/l3keys2e\l3keys2e.sty (D:\Progi\MikTek\tex/latex/l3kernel\expl3.sty
 Package: expl3 2026-01-19 L3 programming layer (loader) 
-
-(D:\Progi\MikTek\tex/latex/l3backend\l3backend-pdftex.def
+ (D:\Progi\MikTek\tex/latex/l3backend\l3backend-pdftex.def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count301
 ))
@@ -455,12 +412,9 @@ Package: lipsum 2021-09-20 v2.7 150 paragraphs of Lorem Ipsum dummy text
 \g__lipsum_par_int=\count302
 \l__lipsum_a_int=\count303
 \l__lipsum_b_int=\count304
-
-(D:\Progi\MikTek\tex/latex/lipsum\lipsum.ltd.tex))
-(D:\Progi\MikTek\tex/latex/blindtext\blindtext.sty
+ (D:\Progi\MikTek\tex/latex/lipsum\lipsum.ltd.tex)) (D:\Progi\MikTek\tex/latex/blindtext\blindtext.sty
 Package: blindtext 2012/01/06 V2.0 blindtext-Package
-
-(D:\Progi\MikTek\tex/latex/tools\xspace.sty
+ (D:\Progi\MikTek\tex/latex/tools\xspace.sty
 Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
 )
 \c@blindtext=\count305
@@ -481,19 +435,16 @@ Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
 \c@blind@randommax=\count320
 \c@blind@pangramcount=\count321
 \c@blind@pangrammax=\count322
-))
-(D:\Progi\MikTek\tex/latex/wrapfig\wrapfig.sty
+)) (D:\Progi\MikTek\tex/latex/wrapfig\wrapfig.sty
 \wrapoverhang=\dimen170
 \WF@size=\dimen171
 \c@WF@wrappedlines=\count323
 \WF@box=\box57
 \WF@everypar=\toks28
 Package: wrapfig 2003/01/31  v 3.6
-)
-(D:\Progi\MikTek\tex/latex/caption\caption.sty
+) (D:\Progi\MikTek\tex/latex/caption\caption.sty
 Package: caption 2023/08/05 v3.6o Customizing captions (AR)
-
-(D:\Progi\MikTek\tex/latex/caption\caption3.sty
+ (D:\Progi\MikTek\tex/latex/caption\caption3.sty
 Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
 \caption@tempdima=\dimen172
 \captionmargin=\dimen173
@@ -509,8 +460,7 @@ Package caption Info: Standard document class detected.
 \c@continuedfloat=\count325
 Package caption Info: float package is loaded.
 Package caption Info: wrapfig package is loaded.
-)
-(D:\Progi\MikTek\tex/latex/tocloft\tocloft.sty
+) (D:\Progi\MikTek\tex/latex/tocloft\tocloft.sty
 Package: tocloft 2017/08/31 v2.3i parameterised ToC, etc., typesetting
 Package tocloft Info: The document has section divisions on input line 51.
 \cftparskip=\skip54
@@ -546,8 +496,7 @@ Package tocloft Info: The document has section divisions on input line 51.
 \cftbeforetabskip=\skip82
 \cfttabindent=\skip83
 \cfttabnumwidth=\skip84
-)
-(D:\Progi\MikTek\tex/latex/tools\longtable.sty
+) (D:\Progi\MikTek\tex/latex/tools\longtable.sty
 Package: longtable 2025-10-13 v4.24 Multi-page Table package (DPC)
 \LTleft=\skip85
 \LTright=\skip86
@@ -565,8 +514,7 @@ Package: longtable 2025-10-13 v4.24 Multi-page Table package (DPC)
 \c@LT@tables=\count331
 \c@LT@chunks=\count332
 \LT@p@ftn=\toks29
-)
-(D:\Progi\MikTek\tex/latex/amscls\amsthm.sty
+) (D:\Progi\MikTek\tex/latex/amscls\amsthm.sty
 Package: amsthm 2020/05/29 v2.20.6
 \thm@style=\toks30
 \thm@bodyfont=\toks31
@@ -577,11 +525,7 @@ Package: amsthm 2020/05/29 v2.20.6
 \thm@postskip=\skip90
 \thm@headsep=\skip91
 \dth@everypar=\toks35
-)
-(D:\Progi\MikTek\tex/generic/xypic\xy.sty
-(D:\Progi\MikTek\tex/generic/xypic\xy.tex Bootstrap'ing: catcodes, docmode,
-(D:\Progi\MikTek\tex/generic/xypic\xyrecat.tex)
-(D:\Progi\MikTek\tex/generic/xypic\xyidioms.tex)
+) (D:\Progi\MikTek\tex/generic/xypic\xy.sty (D:\Progi\MikTek\tex/generic/xypic\xy.tex Bootstrap'ing: catcodes, docmode, (D:\Progi\MikTek\tex/generic/xypic\xyrecat.tex) (D:\Progi\MikTek\tex/generic/xypic\xyidioms.tex)
 
  Xy-pic version 3.8.9 <2013/10/06>
  Copyright (c) 1991-2013 by Kristoffer H. Rose <krisrose@tug.org> and others
@@ -627,24 +571,16 @@ Loading kernel: messages; fonts; allocations: state,
 \xywrite@=\write3
 \csp@=\count336
 \quotPTK@=\dimen264
-
-utility macros; pictures: \xy, positions,
+ utility macros; pictures: \xy, positions,
 \swaptoks@@=\toks38
 \connectobjectbox@@=\box65
  objects,
 \styletoks@=\toks39
- decorations;
-kernel objects: directionals, circles, text; options; algorithms: directions,
-edges, connections;  Xy-pic loaded)
-(D:\Progi\MikTek\tex/generic/iftex\ifpdf.sty
+ decorations; kernel objects: directionals, circles, text; options; algorithms: directions, edges, connections;  Xy-pic loaded) (D:\Progi\MikTek\tex/generic/iftex\ifpdf.sty
 Package: ifpdf 2019/10/25 v3.4 ifpdf legacy package. Use iftex instead.
 )
 Package: xy 2013/10/06 Xy-pic version 3.8.9
-
-(D:\Progi\MikTek\tex/generic/xypic\xyall.tex
- Xy-pic option: All features v.3.8
-(D:\Progi\MikTek\tex/generic/xypic\xycurve.tex
- Xy-pic option: Curve and Spline extension v.3.12 curve,
+ (D:\Progi\MikTek\tex/generic/xypic\xyall.tex  Xy-pic option: All features v.3.8 (D:\Progi\MikTek\tex/generic/xypic\xycurve.tex  Xy-pic option: Curve and Spline extension v.3.12 curve,
 \crv@cnt@=\count337
 \crvpts@=\toks40
 \splinebox@=\box66
@@ -654,23 +590,9 @@ Package: xy 2013/10/06 Xy-pic version 3.8.9
 \splinelength@=\dimen268
  circles,
 \L@=\dimen269
- loaded)
-(D:\Progi\MikTek\tex/generic/xypic\xyframe.tex
- Xy-pic option: Frame and Bracket extension v.3.14 loaded)
-(D:\Progi\MikTek\tex/generic/xypic\xycmtip.tex
- Xy-pic option: Computer Modern tip extension v.3.7
-(D:\Progi\MikTek\tex/generic/xypic\xytips.tex
- Xy-pic option: More Tips extension v.3.11 loaded) loaded)
-(D:\Progi\MikTek\tex/generic/xypic\xyline.tex
- Xy-pic option: Line styles extension v.3.10
+ loaded) (D:\Progi\MikTek\tex/generic/xypic\xyframe.tex  Xy-pic option: Frame and Bracket extension v.3.14 loaded) (D:\Progi\MikTek\tex/generic/xypic\xycmtip.tex  Xy-pic option: Computer Modern tip extension v.3.7 (D:\Progi\MikTek\tex/generic/xypic\xytips.tex  Xy-pic option: More Tips extension v.3.11 loaded) loaded) (D:\Progi\MikTek\tex/generic/xypic\xyline.tex  Xy-pic option: Line styles extension v.3.10
 \xylinethick@=\dimen270
- loaded)
-(D:\Progi\MikTek\tex/generic/xypic\xyrotate.tex
- Xy-pic option: Rotate and Scale extension v.3.8 loaded)
-(D:\Progi\MikTek\tex/generic/xypic\xycolor.tex
- Xy-pic option: Colour extension v.3.11 loaded)
-(D:\Progi\MikTek\tex/generic/xypic\xymatrix.tex
- Xy-pic option: Matrix feature v.3.14
+ loaded) (D:\Progi\MikTek\tex/generic/xypic\xyrotate.tex  Xy-pic option: Rotate and Scale extension v.3.8 loaded) (D:\Progi\MikTek\tex/generic/xypic\xycolor.tex  Xy-pic option: Colour extension v.3.11 loaded) (D:\Progi\MikTek\tex/generic/xypic\xymatrix.tex  Xy-pic option: Matrix feature v.3.14
 \Row=\count338
 \Col=\count339
 \queue@=\toks41
@@ -678,88 +600,54 @@ Package: xy 2013/10/06 Xy-pic version 3.8.9
 \qcount@=\count340
 \qcount@@=\count341
 \matrixsize@=\count342
- loaded)
-(D:\Progi\MikTek\tex/generic/xypic\xyarrow.tex
- Xy-pic option: Arrow and Path feature v.3.9 path, \ar, loaded)
-(D:\Progi\MikTek\tex/generic/xypic\xygraph.tex
- Xy-pic option: Graph feature v.3.11 loaded) loaded)
-(D:\Progi\MikTek\tex/generic/xypic\xypdf.tex  Xy-pic option: PDF driver v.1.7
-Xy-pic pdf driver: `color' extension support
-(D:\Progi\MikTek\tex/generic/xypic\xypdf-co.tex loaded)
-Xy-pic pdf driver: `curve' extension support
-(D:\Progi\MikTek\tex/generic/xypic\xypdf-cu.tex loaded)
-Xy-pic pdf driver: `frame' extension support
-(D:\Progi\MikTek\tex/generic/xypic\xypdf-fr.tex loaded)
-Xy-pic pdf driver: `line' extension support
-(D:\Progi\MikTek\tex/generic/xypic\xypdf-li.tex loaded)
-Xy-pic pdf driver: `rotate' extension support
-(D:\Progi\MikTek\tex/generic/xypic\xypdf-ro.tex loaded) loaded))
-(D:\Progi\MikTek\tex/latex/hyperref\hyperref.sty
+ loaded) (D:\Progi\MikTek\tex/generic/xypic\xyarrow.tex  Xy-pic option: Arrow and Path feature v.3.9 path, \ar, loaded) (D:\Progi\MikTek\tex/generic/xypic\xygraph.tex  Xy-pic option: Graph feature v.3.11 loaded) loaded) (D:\Progi\MikTek\tex/generic/xypic\xypdf.tex  Xy-pic option: PDF driver v.1.7 Xy-pic pdf driver: `color' extension support (D:\Progi\MikTek\tex/generic/xypic\xypdf-co.tex loaded) Xy-pic pdf driver: `curve' extension support (D:\Progi\MikTek\tex/generic/xypic\xypdf-cu.tex loaded) Xy-pic pdf driver: `frame' extension support (D:\Progi\MikTek\tex/generic/xypic\xypdf-fr.tex loaded) Xy-pic pdf driver: `line' extension support (D:\Progi\MikTek\tex/generic/xypic\xypdf-li.tex loaded) Xy-pic pdf driver: `rotate' extension support (D:\Progi\MikTek\tex/generic/xypic\xypdf-ro.tex loaded) loaded)) (D:\Progi\MikTek\tex/latex/hyperref\hyperref.sty
 Package: hyperref 2026-01-29 v7.01p Hypertext links for LaTeX
-
-(D:\Progi\MikTek\tex/latex/kvsetkeys\kvsetkeys.sty
+ (D:\Progi\MikTek\tex/latex/kvsetkeys\kvsetkeys.sty
 Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
-)
-(D:\Progi\MikTek\tex/generic/kvdefinekeys\kvdefinekeys.sty
+) (D:\Progi\MikTek\tex/generic/kvdefinekeys\kvdefinekeys.sty
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
-)
-(D:\Progi\MikTek\tex/generic/pdfescape\pdfescape.sty
+) (D:\Progi\MikTek\tex/generic/pdfescape\pdfescape.sty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
-
-(D:\Progi\MikTek\tex/generic/ltxcmds\ltxcmds.sty
+ (D:\Progi\MikTek\tex/generic/ltxcmds\ltxcmds.sty
 Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
-)
-(D:\Progi\MikTek\tex/generic/pdftexcmds\pdftexcmds.sty
-Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
-)
-
-(D:\Progi\MikTek\tex/generic/infwarerr\infwarerr.sty
+) (D:\Progi\MikTek\tex/generic/pdftexcmds\pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
+ (D:\Progi\MikTek\tex/generic/infwarerr\infwarerr.sty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
-))
-(D:\Progi\MikTek\tex/latex/hycolor\hycolor.sty
+)) (D:\Progi\MikTek\tex/latex/hycolor\hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
-)
-(D:\Progi\MikTek\tex/latex/hyperref\nameref.sty
+) (D:\Progi\MikTek\tex/latex/hyperref\nameref.sty
 Package: nameref 2026-01-29 v2.58 Cross-referencing by name of section
-
-(D:\Progi\MikTek\tex/latex/refcount\refcount.sty
+ (D:\Progi\MikTek\tex/latex/refcount\refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
-)
-(D:\Progi\MikTek\tex/generic/gettitlestring\gettitlestring.sty
+) (D:\Progi\MikTek\tex/generic/gettitlestring\gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
-
-(D:\Progi\MikTek\tex/latex/kvoptions\kvoptions.sty
+ (D:\Progi\MikTek\tex/latex/kvoptions\kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
 \c@section@level=\count343
-)
-(D:\Progi\MikTek\tex/latex/etoolbox\etoolbox.sty
+) (D:\Progi\MikTek\tex/latex/etoolbox\etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count344
-)
-(D:\Progi\MikTek\tex/generic/stringenc\stringenc.sty
-Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
-)
+) (D:\Progi\MikTek\tex/generic/stringenc\stringenc.sty
+Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO)
 )
 \@linkdim=\dimen271
 \Hy@linkcounter=\count345
 \Hy@pagecounter=\count346
-
-(D:\Progi\MikTek\tex/latex/hyperref\pd1enc.def
+ (D:\Progi\MikTek\tex/latex/hyperref\pd1enc.def
 File: pd1enc.def 2026-01-29 v7.01p Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
 ... no UTF-8 mapping file for font encoding PD1
-)
-(D:\Progi\MikTek\tex/generic/intcalc\intcalc.sty
+) (D:\Progi\MikTek\tex/generic/intcalc\intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
 \Hy@SavedSpaceFactor=\count347
-
-(D:\Progi\MikTek\tex/latex/hyperref\puenc.def
+ (D:\Progi\MikTek\tex/latex/hyperref\puenc.def
 File: puenc.def 2026-01-29 v7.01p Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
 ... no UTF-8 mapping file for font encoding PU
@@ -774,20 +662,16 @@ Package hyperref Info: Backreferencing OFF on input line 4221.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4468.
 \c@Hy@tempcnt=\count348
-
-(D:\Progi\MikTek\tex/latex/url\url.sty
+ (D:\Progi\MikTek\tex/latex/url\url.sty
 \Urlmuskip=\muskip18
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4807.
 \XeTeXLinkMargin=\dimen272
-
-(D:\Progi\MikTek\tex/generic/bitset\bitset.sty
+ (D:\Progi\MikTek\tex/generic/bitset\bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
-
-(D:\Progi\MikTek\tex/generic/bigintcalc\bigintcalc.sty
-Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
-)
+ (D:\Progi\MikTek\tex/generic/bigintcalc\bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
 ))
 \Fld@menulength=\count349
 \Field@Width=\dimen273
@@ -804,24 +688,19 @@ Package hyperref Info: PDF/A mode OFF on input line 6114.
 \c@Hfootnote=\count352
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
-
-(D:\Progi\MikTek\tex/latex/hyperref\hpdftex.def
+ (D:\Progi\MikTek\tex/latex/hyperref\hpdftex.def
 File: hpdftex.def 2026-01-29 v7.01p Hyperref driver for pdfTeX
 \Fld@listcount=\count353
 \c@bookmark@seq@number=\count354
-
-(D:\Progi\MikTek\tex/latex/rerunfilecheck\rerunfilecheck.sty
+ (D:\Progi\MikTek\tex/latex/rerunfilecheck\rerunfilecheck.sty
 Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
-
-(D:\Progi\MikTek\tex/generic/uniquecounter\uniquecounter.sty
+ (D:\Progi\MikTek\tex/generic/uniquecounter\uniquecounter.sty
 Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
-Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
-84.
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 284.
 )
 \Hy@SectionHShift=\skip92
-)
-(D:\Progi\MikTek\tex/latex/titlesec\titlesec.sty
+) (D:\Progi\MikTek\tex/latex/titlesec\titlesec.sty
 Package: titlesec 2025/01/04 v2.17 Sectioning titles
 \ttl@box=\box67
 \beforetitleunit=\skip93
@@ -832,8 +711,7 @@ Package: titlesec 2025/01/04 v2.17 Sectioning titles
 \titlewidth=\dimen277
 \titlewidthlast=\dimen278
 \titlewidthfirst=\dimen279
-)
-(D:\Progi\MikTek\tex/latex/fancyvrb\fancyvrb.sty
+) (D:\Progi\MikTek\tex/latex/fancyvrb\fancyvrb.sty
 Package: fancyvrb 2025/07/28 4.6 verbatim text (tvz,hv)
 \FV@CodeLineNo=\count355
 \FV@InFile=\read4
@@ -841,8 +719,7 @@ Package: fancyvrb 2025/07/28 4.6 verbatim text (tvz,hv)
 \c@FancyVerbLine=\count356
 \FV@StepNumber=\count357
 \FV@OutFile=\write4
-)
-(D:\Progi\MikTek\tex/latex/paracol\paracol.sty
+) (D:\Progi\MikTek\tex/latex/paracol\paracol.sty
 Package: paracol 2025/07/14 1.37 typeset columns in parallel
 \pcol@currcol=\count358
 \pcol@nextcol=\count359
@@ -946,118 +823,103 @@ LaTeX Info: Redefining \th on input line 35.
 \everyMPtoPDFconversion=\toks46
 ) (D:\Progi\MikTek\tex/latex/epstopdf-pkg\epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
-Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
-85.
-
-(D:\Progi\MikTek\tex/latex/00miktex\epstopdf-sys.cfg
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+ (D:\Progi\MikTek\tex/latex/00miktex\epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: longtable package is loaded.
-
-(D:\Progi\MikTek\tex/latex/caption\ltcaption.sty
+ (D:\Progi\MikTek\tex/latex/caption\ltcaption.sty
 Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
 )
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Trying to load font information for U+msa on input line 35.
-
-
-(D:\Progi\MikTek\tex/latex/amsfonts\umsa.fd
+ (D:\Progi\MikTek\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 35.
-
-
-(D:\Progi\MikTek\tex/latex/amsfonts\umsb.fd
+ (D:\Progi\MikTek\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 Package xypdf Info: Line width: 0.57597pt on input line 35.
 Package hyperref Info: Link coloring OFF on input line 35.
- (РЎР1Р»Р°Р±Р°.out)
-(РЎР1Р»Р°Р±Р°.out)
+ (РЎР1Р»Р°Р±Р°.out) (РЎР1Р»Р°Р±Р°.out)
 \@outlinefile=\write5
 \openout5 = `РЎР1Р»Р°Р±Р°.out'.
 
 
-Overfull \hbox (10.18944pt too wide) in paragraph at lines 57--59
+Overfull \hbox (10.18944pt too wide) in paragraph at lines 58--60
 []\T2A/cmr/m/n/14.4 Выполнил сту-дент гр. ИВТб-2301-05-00  [] 
  []
 
 [1
 
-{C:/Users/killo/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
-(РЎР1Р»Р°Р±Р°.toc)
+{C:/Users/killo/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] (РЎР1Р»Р°Р±Р°.toc)
 \tf@toc=\write6
 \openout6 = `РЎР1Р»Р°Р±Р°.toc'.
 
 
-pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
-been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.72 	\newpage
-               [1]
-Overfull \hbox (13.3075pt too wide) in paragraph at lines 76--77
-[]\T2A/cmr/m/n/14.4 Изучение прин-ци-пов объектно-ориентированного про-грам-ми-
-ро-ва-ния на язы-
+l.73 \newpage
+              [1]
+Overfull \hbox (13.3075pt too wide) in paragraph at lines 77--78
+[]\T2A/cmr/m/n/14.4 Изучение прин-ци-пов объектно-ориентированного про-грам-ми-ро-ва-ния на язы-
  []
 
 [2]
 
 Package hyperref Warning: The anchor of a bookmark and its parent's must not
-(hyperref)                be the same. Added a new anchor on input line 97.
+(hyperref)                be the same. Added a new anchor on input line 98.
 
 [3]
-LaTeX Font Info:    Trying to load font information for T2A+cmtt on input line 
-105.
+LaTeX Font Info:    Trying to load font information for T2A+cmtt on input line 106.
  (D:\Progi\MikTek\tex/latex/cyrillic\t2acmtt.fd
 File: t2acmtt.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 )
-Overfull \hbox (14.74718pt too wide) in paragraph at lines 105--106
-\T2A/cmr/m/n/14.4 го аб-стракт-но-го ба-зо-во-го клас-са \T2A/cmtt/m/n/14.4 Org
-anization \T2A/cmr/m/n/14.4 и его до-чер-них клас-сов: \T2A/cmtt/m/n/14.4 Comme
-rsorg
+Overfull \hbox (14.74718pt too wide) in paragraph at lines 106--107
+\T2A/cmr/m/n/14.4 го аб-стракт-но-го ба-зо-во-го клас-са \T2A/cmtt/m/n/14.4 Organization \T2A/cmr/m/n/14.4 и его до-чер-них клас-сов: \T2A/cmtt/m/n/14.4 Commersorg
  []
 
 
-Overfull \hbox (7.22946pt too wide) in paragraph at lines 140--142
+Overfull \hbox (7.22946pt too wide) in paragraph at lines 141--143
 []\T2A/cmr/m/n/12 Переопределјнные ме-то-
  []
 
 LaTeX Font Info:    Font shape `T2A/cmtt/bx/n' in size <14.4> not available
-(Font)              Font shape `T2A/cmtt/m/n' tried instead on input line 152.
+(Font)              Font shape `T2A/cmtt/m/n' tried instead on input line 153.
 
-Overfull \hbox (7.22946pt too wide) in paragraph at lines 180--182
+Overfull \hbox (7.22946pt too wide) in paragraph at lines 181--183
 []\T2A/cmr/m/n/12 Переопределјнные ме-то-
  []
 
-[4] [5]
-Overfull \hbox (12.32445pt too wide) in paragraph at lines 240--242
-[]\T2A/cmr/bx/n/14.4 Демонстрация ин-кап-су-ля-ции: \T2A/cmr/m/n/14.4 Дан-ные к
-лас-сов (\T2A/cmtt/m/n/14.4 revenue\T2A/cmr/m/n/14.4 , \T2A/cmtt/m/n/14.4 purpo
-se\T2A/cmr/m/n/14.4 ) скры-
+[4]
+Overfull \hbox (9.25008pt too wide) in paragraph at lines 213--215
+[]\T2A/cmr/m/n/14.4 Собственные чле-ны д=анных: \T2A/cmtt/m/n/14.4 revenue\T2A/cmr/m/n/14.4 , \T2A/cmtt/m/n/14.4 taxRate\T2A/cmr/m/n/14.4 , \T2A/cmtt/m/n/14.4 subscribers \T2A/cmr/m/n/14.4 (int), \T2A/cmtt/m/n/14.4 socSeti
+ []
+
+[5]
+Overfull \hbox (12.32445pt too wide) in paragraph at lines 241--243
+[]\T2A/cmr/bx/n/14.4 Демонстрация ин-кап-су-ля-ции: \T2A/cmr/m/n/14.4 Дан-ные клас-сов (\T2A/cmtt/m/n/14.4 revenue\T2A/cmr/m/n/14.4 , \T2A/cmtt/m/n/14.4 purpose\T2A/cmr/m/n/14.4 ) скры-
  []
 
 
-Overfull \hbox (169.25583pt too wide) in paragraph at lines 243--245
-\T2A/cmr/m/n/14.4 со-дер-жат все по-ля и ме-то-ды клас-са \T2A/cmtt/m/n/14.4 Or
-ganization\T2A/cmr/m/n/14.4 .При вы-зо-ве ме-то-да \T2A/cmtt/m/n/14.4 ARGANIZAT
-II[2]->expandBusiness()\T2A/cmr/m/n/14.4 ,
+Overfull \hbox (169.25583pt too wide) in paragraph at lines 244--246
+\T2A/cmr/m/n/14.4 со-дер-жат все по-ля и ме-то-ды клас-са \T2A/cmtt/m/n/14.4 Organization\T2A/cmr/m/n/14.4 .При вы-зо-ве ме-то-да \T2A/cmtt/m/n/14.4 ARGANIZATII[2]->expandBusiness()\T2A/cmr/m/n/14.4 ,
  []
 
 [6]
 <Р”РёР°РіСЂР°РјРјР° РєР»Р°СЃСЃРѕРІ.jpg, id=76, 560.69475pt x 810.6285pt>
 File: Р”РёР°РіСЂР°РјРјР° РєР»Р°СЃСЃРѕРІ.jpg Graphic file (type jpg)
 <use Р”РёР°РіСЂР°РјРјР° РєР»Р°СЃСЃРѕРІ.jpg>
-Package pdftex.def Info: Р”РёР°РіСЂР°РјРјР° РєР»Р°СЃСЃРѕРІ.jpg  used on input l
-ine 255.
+Package pdftex.def Info: Р”РёР°РіСЂР°РјРјР° РєР»Р°СЃСЃРѕРІ.jpg  used on input line 256.
 (pdftex.def)             Requested size: 450.43253pt x 651.21254pt.
 
 Overfull \vbox (2.66357pt too high) has occurred while \output is active []
 
-
-[7 <./Р”РёР°РіСЂР°РјРјР° РєР»Р°СЃСЃРѕРІ.jpg>] [8] (РЎР1Р»Р°Р±Р°.aux)
+ [7 <./Р”РёР°РіСЂР°РјРјР° РєР»Р°СЃСЃРѕРІ.jpg>] [8] (РЎР1Р»Р°Р±Р°.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1066,23 +928,17 @@ Package rerunfilecheck Info: File `РЎР1Р»Р°Р±Р°.out' has not changed.
 (rerunfilecheck)             Checksum: 8BBBDF5DE010C779715329B3D2E36B94;1656.
  ) 
 Here is how much of TeX's memory you used:
- 19303 strings out of 467866
- 298390 string characters out of 5432262
+ 19305 strings out of 467866
+ 298591 string characters out of 5432262
  866756 words of memory out of 5000000
  47881 multiletter control sequences out of 15000+600000
  637243 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 88i,6n,91p,3259b,898s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\killo\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm
-1440.pk> <C:\Users\killo\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\
-larm1200.pk> <C:\Users\killo\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi
-600\latt1440.pk> <C:\Users\killo\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a
-/dpi600\labx1440.pk> <C:\Users\killo\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh
--t2a/dpi600\labx2074.pk> <C:\Users\killo\AppData\Local\MiKTeX\fonts/pk/ljfour/l
-h/lh-t2a/dpi600\larm1440.pk>
-Output written on РЎР1Р»Р°Р±Р°.pdf (9 pages, 494325 bytes).
+ 88i,6n,91p,3324b,898s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\killo\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1440.pk> <C:\Users\killo\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1200.pk> <C:\Users\killo\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\latt1440.pk> <C:\Users\killo\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\labx1440.pk> <C:\Users\killo\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\labx2074.pk> <C:\Users\killo\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk>
+Output written on РЎР1Р»Р°Р±Р°.pdf (9 pages, 494586 bytes).
 PDF statistics:
- 359 PDF objects out of 1000 (max. 8388607)
+ 360 PDF objects out of 1000 (max. 8388607)
  15 named destinations out of 1000 (max. 500000)
  70 words of extra memory for PDF output out of 10000 (max. 10000000)
 

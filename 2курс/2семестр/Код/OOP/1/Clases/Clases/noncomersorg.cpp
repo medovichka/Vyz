@@ -3,31 +3,35 @@
 #include <iostream>
 
 Noncomersorg::Noncomersorg(
-	const std::string& name,
-	const std::string& inn,
+	const std::string &name,
+	const std::string &inn,
 	int employees,
-	const std::string& purpose,
-	const std::string& foundingSource)
-	:	Organization(name, inn, employees),
-		purpose(purpose),
-		foundingSource(foundingSource){}
+	const std::string &purpose,
+	const std::string &foundingSource)
+	: Organization(name, inn, employees),
+	  purpose(purpose),
+	  foundingSource(foundingSource) {}
 
-int Noncomersorg::payTaxes() {
+int Noncomersorg::payTaxes()
+{
 	return employees * 10;
 }
-std::string Noncomersorg::report() {
+
+std::string Noncomersorg::report()
+{
 	std::string result = "Некоммерческая организация: " + name +
-		", цель: " + purpose +
-		", сотрудники: " + std::to_string(employees) +
-		", Источники финансирования: " +foundingSource;
+						 ", цель: " + purpose +
+						 ", сотрудники: " + std::to_string(employees) +
+						 ", Источники финансирования: " + foundingSource;
 	return result;
 }
-
-void Noncomersorg::conductProgram(const std::string& programName) {
+void Noncomersorg::conductProgram(const std::string &programName)
+{
 	std::cout << "Программа: " << programName << std::endl;
 }
 
-bool Noncomersorg::attractFunding(const std::string& source) {
+bool Noncomersorg::attractFunding(const std::string &source)
+{
 	std::cout << "Привлечение из: " << source << std::endl;
 	return true;
 }

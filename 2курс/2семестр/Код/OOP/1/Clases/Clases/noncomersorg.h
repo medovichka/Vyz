@@ -1,27 +1,28 @@
 #ifndef NONCOMERSORG_H
-#define NONCOMERSORG_H 
-#include "organization.h" 
-#include <string> 
+#define NONCOMERSORG_H
+#include "organization.h"
+#include <string>
 
-class Noncomersorg : public Organization 
+class Noncomersorg : public Organization
 {
-private: 
+private:
 	const std::string purpose;
 	const std::string foundingSource;
+
 public:
 	Noncomersorg(
-		const std::string& name,
-		const std::string& inn,
+		const std::string &name,
+		const std::string &inn,
 		int employees,
-		const std::string& purpose,
-		const std::string& foundingSource);
+		const std::string &purpose,
+		const std::string &foundingSource);
 
 	int payTaxes() override;
 	std::string report() override;
 
 	void conductProgram(
-		const std::string& programName) override;
+		const std::string &programName) override;
 	bool attractFunding(
-		const std::string& source) override;
+		const std::string &source) override;
 };
 #endif // !NONCOMERSORG_H

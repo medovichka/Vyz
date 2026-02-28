@@ -4,7 +4,7 @@
 #include "organization.h"
 #include <string>
 #include <vector>
-	
+
 class Commersorg : public Organization
 {
 private:
@@ -12,21 +12,21 @@ private:
 	int taxRate;
 	int subscribers;
 	std::vector<std::string> socSeti;
-public:
 
+public:
 	Commersorg(
-		const std::string &name, 
+		const std::string &name,
 		const std::string &inn,
-		int employees, 
-		int revenue, 
+		int employees,
+		int revenue,
 		int taxRate);
 	Commersorg();
 	Commersorg(
 		const std::string &name,
 		const std::string &inn,
-		int employees, 
-		int revenue, 
-		int taxRate, 
+		int employees,
+		int revenue,
+		int taxRate,
 		int subscribers,
 		const std::vector<std::string> &socSeti);
 
