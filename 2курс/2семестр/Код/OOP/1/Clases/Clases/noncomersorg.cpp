@@ -30,8 +30,7 @@ void Noncomersorg::conductProgram(const std::string &programName)
 	std::cout << "Программа: " << programName << std::endl;
 }
 
-bool Noncomersorg::attractFunding(const std::string &source)
+void Noncomersorg::attractFunding(const std::string &source)
 {
-	std::cout << "Привлечение из: " << source << std::endl;
-	return true;
+	std::cout << "Привлечение финансирования из: " << source << std::endl;
 }

@@ -22,10 +22,7 @@ public:
 	virtual void distributeProfit() {}
 	virtual void expandBusiness() {}
 	virtual void conductProgram(const std::string &programName) {}
-	virtual bool attractFunding(const std::string &source)
-	{
-		return false;
-	}
+	virtual void attractFunding(const std::string &source) {}
 
 	void reklama();
 	void hireEmployee();

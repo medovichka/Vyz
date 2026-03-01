@@ -22,7 +22,7 @@ public:
 
 	void conductProgram(
 		const std::string &programName) override;
-	bool attractFunding(
+	void attractFunding(
 		const std::string &source) override;
 };
 #endif // !NONCOMERSORG_H

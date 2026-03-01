@@ -31,7 +31,7 @@ int main() {
 		komercial_kampaniya_1,
 		komercial_kampaniya_2,
 		komercial_kampaniya_3,
-		nekomrecheskaya}; //плохо, уникальные поля классов отрезаются
+		nekomrecheskaya};
 	
 	
 	std::cout << ARGANIZATII[2]->payTaxes();
@@ -41,6 +41,10 @@ int main() {
 	ARGANIZATII[2]->expandBusiness();
 	std::cout << "\n";
 	ARGANIZATII[2]->distributeProfit();
+	ARGANIZATII[3]->attractFunding("ООО АВШОРЫ");
+	ARGANIZATII[3]->conductProgram("Dobro");
+	
+	
 	for (size_t i = 0; i < ARGANIZATII.size(); i++){
 		delete(ARGANIZATII[i]);
 	}
