@@ -1,4 +1,4 @@
-namespace WinFormsApp1
+namespace Lab2
 {
     public partial class Form1 : Form
     {
