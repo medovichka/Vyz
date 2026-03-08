@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 namespace Lab2
 {
-    public abstract class organization
+    public abstract class Organization
     {
         private int _id;
         private string _name;
@@ -17,6 +17,7 @@ namespace Lab2
             {
                 return _id;
             }
+            protected set { _id = value; }
         }
         public string Name
         {
@@ -34,23 +35,34 @@ namespace Lab2
             set { _employees = value; }
         }
    
-        protected organization(
-            int id= 0,
-            string name= "Organization",
-            string inn="1234567890",
-            int employees=0
-            )
+        protected Organization()
         {
-            _id = id;
-            _employees = employees;
+            _id = 0;
+            _name = "Organization";
+            _inn = "1234567890";
+            _employees = 0;
+        }
+        protected Organization(string name, string inn, int employees)
+        {
+            _id = 0;
             _name = name;
             _inn = inn;
-
+            _employees = employees;
         }
+        protected Organization(int id, string name, string inn, int employees)
+        {
+            _id = id;
+            _name = name;
+            _inn = inn;
+            _employees = employees;
+        }
+
+
 
 
         public abstract int Taxes();
         public abstract string Report();
+
         public virtual void Distribute() { }
         public virtual void Expand() { }
         public virtual void Program(string program) { }
@@ -61,10 +73,12 @@ namespace Lab2
         public void Hire()
         {
             _employees++;
+            Console.WriteLine($"Наняты новые сотрудники! Всего сотрудников: {_employees}");
+
         }
-        public void Reklama()
+        public string Reklama()
         {
-            string _dialog = $"{_name} оч крутая!";
+            return $"{_name} оч крутая!";
         }
     }
 }

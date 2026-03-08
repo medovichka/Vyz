@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lab2
 {
-    internal class noncomorg : organization
+    internal class NonComOrg : Organization
     {
         private string _purpose;
         private string _foundingSource;
@@ -21,17 +21,23 @@ namespace Lab2
             set { _foundingSource = value; }
         }
 
-        public noncomorg(
-            int id,
-            string name, 
-            string inn, 
-            int employees, 
-            string purpose, 
-            string foundingSource
-            ) : base(id,name, inn, employees)
+        public NonComOrg(int id, string name, string inn, int employees, string purpose, string foundingSource)
+            : base(id, name, inn, employees)
         {
-            _purpose=purpose;
-            _foundingSource=foundingSource;
+            _purpose = purpose;
+            _foundingSource = foundingSource;
+        }
+        public NonComOrg(string name, string inn, int employees, string purpose, string foundingSource)
+            : base(name, inn, employees)
+        {
+            _purpose = purpose;
+            _foundingSource = foundingSource;
+        }
+
+        public NonComOrg() : base("Фонд Помощи", "0987654321", 10)
+        {
+            _purpose = "Помощь нуждающимся";
+            _foundingSource = "Гранты";
         }
 
         public override string Report()
@@ -47,6 +53,11 @@ namespace Lab2
         public override void Program(string program)
         {
             Console.WriteLine($"Программа: {program}");
+        }
+        public void AttractFunding(string source)
+        {
+            Console.WriteLine($"Привлечение финансирования из: {source}");
+            _foundingSource = source;
         }
 
     } 

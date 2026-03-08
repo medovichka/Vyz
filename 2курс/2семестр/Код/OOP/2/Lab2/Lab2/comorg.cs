@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lab2
 {
-    internal class comorg : organization
+    internal class ComOrg : Organization
     {
         private int _profit;
         private string _businessType;
@@ -19,7 +19,7 @@ namespace Lab2
             get { return _businessType; }
             set { _businessType = value; }
         }
-        public comorg
+        public ComOrg
             (
             int id,
             string name,
@@ -32,6 +32,20 @@ namespace Lab2
             _profit = profit;
             _businessType = businessType;
         }
+        public ComOrg(string name, string inn, int employees, int profit, string businessType)
+           : base(name, inn, employees)
+        {
+            _profit = profit;
+            _businessType = businessType;
+        }
+        public ComOrg() : base("ООО Дылды", "458358238", 5)
+        {
+            _profit = 100;
+            _businessType = "Розничная торговля";
+        }
+
+
+
 
         public override int Taxes()
         {
@@ -39,8 +53,16 @@ namespace Lab2
         }
         public override string Report()
         {
-            return $"Коммерческая организация: {Name}\nИНН: {Inn}\nСотрудников: {Employees}\nПрибыль: {_profit}\nТип бизнеса: {_businessType}";
+            return $"Коммерческая организация: {Name}\n" +
+                   $"ИНН: {Inn}\n" +
+                   $"Сотрудников: {Employees}\n" +
+                   $"Прибыль: {_profit}\n" +
+                   $"Тип бизнеса: {_businessType}";
         }
+        public void ExpandBusiness()
+        {
+            Console.WriteLine("Расширение бизнеса...");
+        }   
         public override void Distribute()
         {
             Console.WriteLine($"Распределяем прибыль {_profit} среди акционеров");

@@ -1,52 +1,48 @@
 ﻿#include <iostream>
+#include <vector>
+#include <memory>
 #include "commercial.h"
 #include "noncomersorg.h"
-int main() {
-	Organization* komercial_kampaniya_1 = new Commersorg;
 
-	Organization* komercial_kampaniya_2 = new Commersorg(
-		"Название2",
-		"234567891",
-		123,
-		100000,
-		13);
+int main()
+{
+    std::vector<Organization*> organizations;
 
-	Organization* komercial_kampaniya_3 = new Commersorg(
-		"Название3",
-		"098765432",
-		400,
-		100000,
-		13,
-		2000000,
-		{"Youtube","Tik TOk"});
+    organizations.push_back(new Commersorg("ООО Ромашка", "12345", 50, 1000000, 20));
+    organizations.push_back(new Commersorg());
+    organizations.push_back(new Noncomersorg("Фонд Мира", "54321", 15, "Помощь детям", "Пожертвования"));
 
-	Organization* nekomrecheskaya = new Noncomersorg(
-		"Рамашка",
-		"16734890",
-		123213123123123123,
-		"дабро",
-		"На велосипеди");
 
-	std::vector<Organization*> ARGANIZATII{ 
-		komercial_kampaniya_1,
-		komercial_kampaniya_2,
-		komercial_kampaniya_3,
-		nekomrecheskaya};
-	
-	
-	std::cout << ARGANIZATII[2]->payTaxes();
-	std::cout << "\n";
-	std::cout << ARGANIZATII[2]->report();
-	std::cout << "\n";
-	ARGANIZATII[2]->expandBusiness();
-	std::cout << "\n";
-	ARGANIZATII[2]->distributeProfit();
-	ARGANIZATII[3]->attractFunding("ООО АВШОРЫ");
-	ARGANIZATII[3]->conductProgram("Dobro");
-	
-	
-	for (size_t i = 0; i < ARGANIZATII.size(); i++){
-		delete(ARGANIZATII[i]);
-	}
-	return 0;
+    Commersorg com1("->com1<-", "11111", 10, 500000, 15);
+
+
+    std::cout << com1.report() << std::endl;
+
+
+    com1.setRevenue(600000);
+    com1.setEmployees(12);
+    com1.expandBusiness();
+    com1.addSocSeti("VK");
+    com1.addSocSeti("Telegram");
+
+
+    std::cout << com1.report() << std::endl;
+    std::cout << "|||||||||||||||||||||||||" << std::endl;
+    com1.expandBusiness();
+    std::cout << std::endl << "/////////////////////////" << std::endl;
+
+
+    for (auto org : organizations)
+    {
+        std::cout << org->report() << std::endl;
+        std::cout << "Налоги: " << org->payTaxes() << std::endl;
+        org->hireEmployee();
+        std::cout << "------------------------" << std::endl;
+    }
+    for (auto org : organizations)
+    {
+        delete org;
+    }
+
+    return 0;
 }
