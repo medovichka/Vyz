@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Npgsql; // Используем драйвер PostgreSQL
+using Npgsql;
 
 namespace Lab2
 {
     public class DatabaseHelper
     {
-        // ВНИМАНИЕ: укажите ваш пароль, порт (обычно 5432) и имя созданной БД
         private string connectionString = "Host=localhost;Port=5432;Database=lab2_db;Username=postgres;Password=aklsdfjuqh3t92h3gu32h4go8h235giu23hr8g23n08ufg2h394g;";
 
         public void InitializeDatabase()
@@ -16,8 +15,6 @@ namespace Lab2
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    // В PostgreSQL для автоинкремента используется тип SERIAL
-                    // ON DELETE CASCADE позволяет удалять дочерние записи при удалении родительской
                     command.CommandText = @"
                         CREATE TABLE IF NOT EXISTS Organizations (
                             Id SERIAL PRIMARY KEY,
@@ -29,7 +26,7 @@ namespace Lab2
                         
                         CREATE TABLE IF NOT EXISTS ComOrgs (
                             Id INTEGER PRIMARY KEY REFERENCES Organizations(Id) ON DELETE CASCADE,
-                            Profit INTEGER,
+                            Profit VARCHAR(60),
                             BusinessType VARCHAR(255)
                         );
                         
@@ -127,7 +124,7 @@ namespace Lab2
 
                             if (type == "ComOrg")
                             {
-                                int profit = reader.IsDBNull(5) ? 0 : reader.GetInt32(5);
+                                string profit = reader.IsDBNull(5) ? "" : reader.GetString(5);
                                 string busType = reader.IsDBNull(6) ? "" : reader.GetString(6);
                                 list.Add(new ComOrg(id, name, inn, emp, profit, busType));
                             }

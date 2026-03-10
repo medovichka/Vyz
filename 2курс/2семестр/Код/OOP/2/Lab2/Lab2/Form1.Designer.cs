@@ -28,282 +28,413 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBoxOrgs = new System.Windows.Forms.ListBox();
-            this.groupBoxData = new System.Windows.Forms.GroupBox();
-            this.labelSource = new System.Windows.Forms.Label();
-            this.txtSource = new System.Windows.Forms.TextBox();
-            this.labelPurpose = new System.Windows.Forms.Label();
-            this.txtPurpose = new System.Windows.Forms.TextBox();
-            this.labelBusinessType = new System.Windows.Forms.Label();
-            this.txtBusinessType = new System.Windows.Forms.TextBox();
-            this.labelProfit = new System.Windows.Forms.Label();
-            this.txtProfit = new System.Windows.Forms.TextBox();
-            this.rbNonComOrg = new System.Windows.Forms.RadioButton();
-            this.rbComOrg = new System.Windows.Forms.RadioButton();
-            this.labelEmployees = new System.Windows.Forms.Label();
-            this.txtEmployees = new System.Windows.Forms.TextBox();
-            this.labelInn = new System.Windows.Forms.Label();
-            this.txtInn = new System.Windows.Forms.TextBox();
-            this.labelName = new System.Windows.Forms.Label();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.groupBoxCRUD = new System.Windows.Forms.GroupBox();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.btnAdd = new System.Windows.Forms.Button();
-            this.groupBoxMethods = new System.Windows.Forms.GroupBox();
-            this.btnTaxes = new System.Windows.Forms.Button();
-            this.btnReport = new System.Windows.Forms.Button();
-            this.groupBoxData.SuspendLayout();
-            this.groupBoxCRUD.SuspendLayout();
-            this.groupBoxMethods.SuspendLayout();
-            this.SuspendLayout();
+            listBoxOrgs = new ListBox();
+            groupBoxData = new GroupBox();
+            UpdateButton = new Button();
+            labelSource = new Label();
+            txtSource = new TextBox();
+            labelPurpose = new Label();
+            txtPurpose = new TextBox();
+            labelBusinessType = new Label();
+            txtBusinessType = new TextBox();
+            labelProfit = new Label();
+            txtProfit = new TextBox();
+            rbNonComOrg = new RadioButton();
+            rbComOrg = new RadioButton();
+            labelEmployees = new Label();
+            txtEmployees = new TextBox();
+            labelInn = new Label();
+            txtInn = new TextBox();
+            labelName = new Label();
+            txtName = new TextBox();
+            groupBoxCRUD = new GroupBox();
+            btnDelete = new Button();
+            btnAdd = new Button();
+            groupBoxMethods = new GroupBox();
+            button2 = new Button();
+            button1 = new Button();
+            btnTaxes = new Button();
+            btnReport = new Button();
+            label1 = new Label();
+            info1 = new TextBox();
+            label2 = new Label();
+            info2 = new TextBox();
+            label3 = new Label();
+            info3 = new TextBox();
+            label4 = new Label();
+            info4 = new TextBox();
+            button4 = new Button();
+            groupBoxData.SuspendLayout();
+            groupBoxCRUD.SuspendLayout();
+            groupBoxMethods.SuspendLayout();
+            SuspendLayout();
             // 
             // listBoxOrgs
             // 
-            this.listBoxOrgs.FormattingEnabled = true;
-            this.listBoxOrgs.ItemHeight = 20;
-            this.listBoxOrgs.Location = new System.Drawing.Point(12, 12);
-            this.listBoxOrgs.Name = "listBoxOrgs";
-            this.listBoxOrgs.Size = new System.Drawing.Size(350, 504);
-            this.listBoxOrgs.TabIndex = 0;
+            listBoxOrgs.FormattingEnabled = true;
+            listBoxOrgs.Location = new Point(12, 12);
+            listBoxOrgs.Name = "listBoxOrgs";
+            listBoxOrgs.Size = new Size(350, 504);
+            listBoxOrgs.TabIndex = 0;
+            listBoxOrgs.SelectedIndexChanged += UpdateListBoxSelection;
             // 
             // groupBoxData
             // 
-            this.groupBoxData.Controls.Add(this.labelSource);
-            this.groupBoxData.Controls.Add(this.txtSource);
-            this.groupBoxData.Controls.Add(this.labelPurpose);
-            this.groupBoxData.Controls.Add(this.txtPurpose);
-            this.groupBoxData.Controls.Add(this.labelBusinessType);
-            this.groupBoxData.Controls.Add(this.txtBusinessType);
-            this.groupBoxData.Controls.Add(this.labelProfit);
-            this.groupBoxData.Controls.Add(this.txtProfit);
-            this.groupBoxData.Controls.Add(this.rbNonComOrg);
-            this.groupBoxData.Controls.Add(this.rbComOrg);
-            this.groupBoxData.Controls.Add(this.labelEmployees);
-            this.groupBoxData.Controls.Add(this.txtEmployees);
-            this.groupBoxData.Controls.Add(this.labelInn);
-            this.groupBoxData.Controls.Add(this.txtInn);
-            this.groupBoxData.Controls.Add(this.labelName);
-            this.groupBoxData.Controls.Add(this.txtName);
-            this.groupBoxData.Location = new System.Drawing.Point(380, 12);
-            this.groupBoxData.Name = "groupBoxData";
-            this.groupBoxData.Size = new System.Drawing.Size(440, 330);
-            this.groupBoxData.TabIndex = 1;
-            this.groupBoxData.TabStop = false;
-            this.groupBoxData.Text = "Данные организации";
+            groupBoxData.Controls.Add(UpdateButton);
+            groupBoxData.Controls.Add(labelSource);
+            groupBoxData.Controls.Add(txtSource);
+            groupBoxData.Controls.Add(labelPurpose);
+            groupBoxData.Controls.Add(txtPurpose);
+            groupBoxData.Controls.Add(labelBusinessType);
+            groupBoxData.Controls.Add(txtBusinessType);
+            groupBoxData.Controls.Add(labelProfit);
+            groupBoxData.Controls.Add(txtProfit);
+            groupBoxData.Controls.Add(rbNonComOrg);
+            groupBoxData.Controls.Add(rbComOrg);
+            groupBoxData.Controls.Add(labelEmployees);
+            groupBoxData.Controls.Add(txtEmployees);
+            groupBoxData.Controls.Add(labelInn);
+            groupBoxData.Controls.Add(txtInn);
+            groupBoxData.Controls.Add(labelName);
+            groupBoxData.Controls.Add(txtName);
+            groupBoxData.Location = new Point(380, 12);
+            groupBoxData.Name = "groupBoxData";
+            groupBoxData.Size = new Size(440, 330);
+            groupBoxData.TabIndex = 1;
+            groupBoxData.TabStop = false;
+            groupBoxData.Text = "Данные организации";
+            // 
+            // UpdateButton
+            // 
+            UpdateButton.Location = new Point(340, -1);
+            UpdateButton.Name = "UpdateButton";
+            UpdateButton.Size = new Size(94, 29);
+            UpdateButton.TabIndex = 2;
+            UpdateButton.Text = "Обновить";
+            UpdateButton.UseVisualStyleBackColor = true;
+            UpdateButton.Click += btnUpdate_Click;
             // 
             // labelSource
             // 
-            this.labelSource.AutoSize = true;
-            this.labelSource.Location = new System.Drawing.Point(15, 290);
-            this.labelSource.Name = "labelSource";
-            this.labelSource.Size = new System.Drawing.Size(86, 20);
-            this.labelSource.TabIndex = 15;
-            this.labelSource.Text = "Источник:";
+            labelSource.AutoSize = true;
+            labelSource.Location = new Point(15, 290);
+            labelSource.Name = "labelSource";
+            labelSource.Size = new Size(78, 20);
+            labelSource.TabIndex = 15;
+            labelSource.Text = "Источник:";
             // 
             // txtSource
             // 
-            this.txtSource.Location = new System.Drawing.Point(130, 287);
-            this.txtSource.Name = "txtSource";
-            this.txtSource.Size = new System.Drawing.Size(290, 27);
-            this.txtSource.TabIndex = 14;
+            txtSource.Location = new Point(130, 287);
+            txtSource.Name = "txtSource";
+            txtSource.Size = new Size(290, 27);
+            txtSource.TabIndex = 14;
             // 
             // labelPurpose
             // 
-            this.labelPurpose.AutoSize = true;
-            this.labelPurpose.Location = new System.Drawing.Point(15, 257);
-            this.labelPurpose.Name = "labelPurpose";
-            this.labelPurpose.Size = new System.Drawing.Size(47, 20);
-            this.labelPurpose.TabIndex = 13;
-            this.labelPurpose.Text = "Цель:";
+            labelPurpose.AutoSize = true;
+            labelPurpose.Location = new Point(15, 257);
+            labelPurpose.Name = "labelPurpose";
+            labelPurpose.Size = new Size(47, 20);
+            labelPurpose.TabIndex = 13;
+            labelPurpose.Text = "Цель:";
             // 
             // txtPurpose
             // 
-            this.txtPurpose.Location = new System.Drawing.Point(130, 254);
-            this.txtPurpose.Name = "txtPurpose";
-            this.txtPurpose.Size = new System.Drawing.Size(290, 27);
-            this.txtPurpose.TabIndex = 12;
+            txtPurpose.Location = new Point(130, 254);
+            txtPurpose.Name = "txtPurpose";
+            txtPurpose.Size = new Size(290, 27);
+            txtPurpose.TabIndex = 12;
             // 
             // labelBusinessType
             // 
-            this.labelBusinessType.AutoSize = true;
-            this.labelBusinessType.Location = new System.Drawing.Point(15, 224);
-            this.labelBusinessType.Name = "labelBusinessType";
-            this.labelBusinessType.Size = new System.Drawing.Size(95, 20);
-            this.labelBusinessType.TabIndex = 11;
-            this.labelBusinessType.Text = "Тип бизнеса:";
+            labelBusinessType.AutoSize = true;
+            labelBusinessType.Location = new Point(15, 224);
+            labelBusinessType.Name = "labelBusinessType";
+            labelBusinessType.Size = new Size(99, 20);
+            labelBusinessType.TabIndex = 11;
+            labelBusinessType.Text = "Тип бизнеса:";
             // 
             // txtBusinessType
             // 
-            this.txtBusinessType.Location = new System.Drawing.Point(130, 221);
-            this.txtBusinessType.Name = "txtBusinessType";
-            this.txtBusinessType.Size = new System.Drawing.Size(290, 27);
-            this.txtBusinessType.TabIndex = 10;
+            txtBusinessType.Location = new Point(130, 221);
+            txtBusinessType.Name = "txtBusinessType";
+            txtBusinessType.Size = new Size(290, 27);
+            txtBusinessType.TabIndex = 10;
             // 
             // labelProfit
             // 
-            this.labelProfit.AutoSize = true;
-            this.labelProfit.Location = new System.Drawing.Point(15, 191);
-            this.labelProfit.Name = "labelProfit";
-            this.labelProfit.Size = new System.Drawing.Size(76, 20);
-            this.labelProfit.TabIndex = 9;
-            this.labelProfit.Text = "Прибыль:";
+            labelProfit.AutoSize = true;
+            labelProfit.Location = new Point(15, 191);
+            labelProfit.Name = "labelProfit";
+            labelProfit.Size = new Size(77, 20);
+            labelProfit.TabIndex = 9;
+            labelProfit.Text = "Прибыль:";
             // 
             // txtProfit
             // 
-            this.txtProfit.Location = new System.Drawing.Point(130, 188);
-            this.txtProfit.Name = "txtProfit";
-            this.txtProfit.Size = new System.Drawing.Size(290, 27);
-            this.txtProfit.TabIndex = 8;
+            txtProfit.Location = new Point(130, 188);
+            txtProfit.Name = "txtProfit";
+            txtProfit.Size = new Size(290, 27);
+            txtProfit.TabIndex = 8;
             // 
             // rbNonComOrg
             // 
-            this.rbNonComOrg.AutoSize = true;
-            this.rbNonComOrg.Location = new System.Drawing.Point(230, 140);
-            this.rbNonComOrg.Name = "rbNonComOrg";
-            this.rbNonComOrg.Size = new System.Drawing.Size(148, 24);
-            this.rbNonComOrg.TabIndex = 7;
-            this.rbNonComOrg.Text = "Некоммерческая";
-            this.rbNonComOrg.UseVisualStyleBackColor = true;
+            rbNonComOrg.AutoSize = true;
+            rbNonComOrg.Location = new Point(230, 140);
+            rbNonComOrg.Name = "rbNonComOrg";
+            rbNonComOrg.Size = new Size(150, 24);
+            rbNonComOrg.TabIndex = 7;
+            rbNonComOrg.Text = "Некоммерческая";
+            rbNonComOrg.UseVisualStyleBackColor = true;
             // 
             // rbComOrg
             // 
-            this.rbComOrg.AutoSize = true;
-            this.rbComOrg.Checked = true;
-            this.rbComOrg.Location = new System.Drawing.Point(70, 140);
-            this.rbComOrg.Name = "rbComOrg";
-            this.rbComOrg.Size = new System.Drawing.Size(131, 24);
-            this.rbComOrg.TabIndex = 6;
-            this.rbComOrg.TabStop = true;
-            this.rbComOrg.Text = "Коммерческая";
-            this.rbComOrg.UseVisualStyleBackColor = true;
-            this.rbComOrg.CheckedChanged += new System.EventHandler(this.rbComOrg_CheckedChanged);
+            rbComOrg.AutoSize = true;
+            rbComOrg.Checked = true;
+            rbComOrg.Location = new Point(70, 140);
+            rbComOrg.Name = "rbComOrg";
+            rbComOrg.Size = new Size(133, 24);
+            rbComOrg.TabIndex = 6;
+            rbComOrg.TabStop = true;
+            rbComOrg.Text = "Коммерческая";
+            rbComOrg.UseVisualStyleBackColor = true;
+            rbComOrg.CheckedChanged += rbComOrg_CheckedChanged;
             // 
             // labelEmployees
             // 
-            this.labelEmployees.AutoSize = true;
-            this.labelEmployees.Location = new System.Drawing.Point(15, 103);
-            this.labelEmployees.Name = "labelEmployees";
-            this.labelEmployees.Size = new System.Drawing.Size(95, 20);
-            this.labelEmployees.TabIndex = 5;
-            this.labelEmployees.Text = "Сотрудники:";
+            labelEmployees.AutoSize = true;
+            labelEmployees.Location = new Point(15, 103);
+            labelEmployees.Name = "labelEmployees";
+            labelEmployees.Size = new Size(94, 20);
+            labelEmployees.TabIndex = 5;
+            labelEmployees.Text = "Сотрудники:";
             // 
             // txtEmployees
             // 
-            this.txtEmployees.Location = new System.Drawing.Point(130, 100);
-            this.txtEmployees.Name = "txtEmployees";
-            this.txtEmployees.Size = new System.Drawing.Size(290, 27);
-            this.txtEmployees.TabIndex = 4;
+            txtEmployees.Location = new Point(130, 100);
+            txtEmployees.Name = "txtEmployees";
+            txtEmployees.Size = new Size(290, 27);
+            txtEmployees.TabIndex = 4;
             // 
             // labelInn
             // 
-            this.labelInn.AutoSize = true;
-            this.labelInn.Location = new System.Drawing.Point(15, 70);
-            this.labelInn.Name = "labelInn";
-            this.labelInn.Size = new System.Drawing.Size(45, 20);
-            this.labelInn.TabIndex = 3;
-            this.labelInn.Text = "ИНН:";
+            labelInn.AutoSize = true;
+            labelInn.Location = new Point(15, 70);
+            labelInn.Name = "labelInn";
+            labelInn.Size = new Size(45, 20);
+            labelInn.TabIndex = 3;
+            labelInn.Text = "ИНН:";
             // 
             // txtInn
             // 
-            this.txtInn.Location = new System.Drawing.Point(130, 67);
-            this.txtInn.Name = "txtInn";
-            this.txtInn.Size = new System.Drawing.Size(290, 27);
-            this.txtInn.TabIndex = 2;
+            txtInn.Location = new Point(130, 67);
+            txtInn.Name = "txtInn";
+            txtInn.Size = new Size(290, 27);
+            txtInn.TabIndex = 2;
             // 
             // labelName
             // 
-            this.labelName.AutoSize = true;
-            this.labelName.Location = new System.Drawing.Point(15, 37);
-            this.labelName.Name = "labelName";
-            this.labelName.Size = new System.Drawing.Size(80, 20);
-            this.labelName.TabIndex = 1;
-            this.labelName.Text = "Название:";
+            labelName.AutoSize = true;
+            labelName.Location = new Point(15, 37);
+            labelName.Name = "labelName";
+            labelName.Size = new Size(80, 20);
+            labelName.TabIndex = 1;
+            labelName.Text = "Название:";
             // 
             // txtName
             // 
-            this.txtName.Location = new System.Drawing.Point(130, 34);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(290, 27);
-            this.txtName.TabIndex = 0;
+            txtName.Location = new Point(130, 34);
+            txtName.Name = "txtName";
+            txtName.Size = new Size(290, 27);
+            txtName.TabIndex = 0;
             // 
             // groupBoxCRUD
             // 
-            this.groupBoxCRUD.Controls.Add(this.btnDelete);
-            this.groupBoxCRUD.Controls.Add(this.btnAdd);
-            this.groupBoxCRUD.Location = new System.Drawing.Point(380, 350);
-            this.groupBoxCRUD.Name = "groupBoxCRUD";
-            this.groupBoxCRUD.Size = new System.Drawing.Size(440, 80);
-            this.groupBoxCRUD.TabIndex = 2;
-            this.groupBoxCRUD.TabStop = false;
-            this.groupBoxCRUD.Text = "Операции с БД";
+            groupBoxCRUD.Controls.Add(btnDelete);
+            groupBoxCRUD.Controls.Add(btnAdd);
+            groupBoxCRUD.Location = new Point(380, 350);
+            groupBoxCRUD.Name = "groupBoxCRUD";
+            groupBoxCRUD.Size = new Size(440, 80);
+            groupBoxCRUD.TabIndex = 2;
+            groupBoxCRUD.TabStop = false;
+            groupBoxCRUD.Text = "Операции с БД";
             // 
             // btnDelete
             // 
-            this.btnDelete.Location = new System.Drawing.Point(230, 30);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(190, 35);
-            this.btnDelete.TabIndex = 1;
-            this.btnDelete.Text = "Удалить выбранное";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            btnDelete.Location = new Point(230, 30);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(190, 35);
+            btnDelete.TabIndex = 1;
+            btnDelete.Text = "Удалить выбранное";
+            btnDelete.UseVisualStyleBackColor = true;
+            btnDelete.Click += btnDelete_Click;
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(20, 30);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(190, 35);
-            this.btnAdd.TabIndex = 0;
-            this.btnAdd.Text = "Добавить в БД";
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            btnAdd.Location = new Point(20, 30);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(190, 35);
+            btnAdd.TabIndex = 0;
+            btnAdd.Text = "Добавить в БД";
+            btnAdd.UseVisualStyleBackColor = true;
+            btnAdd.Click += btnAdd_Click;
             // 
             // groupBoxMethods
             // 
-            this.groupBoxMethods.Controls.Add(this.btnTaxes);
-            this.groupBoxMethods.Controls.Add(this.btnReport);
-            this.groupBoxMethods.Location = new System.Drawing.Point(380, 440);
-            this.groupBoxMethods.Name = "groupBoxMethods";
-            this.groupBoxMethods.Size = new System.Drawing.Size(440, 80);
-            this.groupBoxMethods.TabIndex = 3;
-            this.groupBoxMethods.TabStop = false;
-            this.groupBoxMethods.Text = "Методы классов";
+            groupBoxMethods.Controls.Add(button2);
+            groupBoxMethods.Controls.Add(button1);
+            groupBoxMethods.Controls.Add(btnTaxes);
+            groupBoxMethods.Controls.Add(btnReport);
+            groupBoxMethods.Location = new Point(380, 440);
+            groupBoxMethods.Name = "groupBoxMethods";
+            groupBoxMethods.Size = new Size(440, 127);
+            groupBoxMethods.TabIndex = 3;
+            groupBoxMethods.TabStop = false;
+            groupBoxMethods.Text = "Методы классов";
+            // 
+            // button2
+            // 
+            button2.Location = new Point(230, 86);
+            button2.Name = "button2";
+            button2.Size = new Size(190, 35);
+            button2.TabIndex = 3;
+            button2.Text = "Уникальная функция 2";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += btnUnique2;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(20, 86);
+            button1.Name = "button1";
+            button1.Size = new Size(190, 35);
+            button1.TabIndex = 2;
+            button1.Text = "Уникальная функция 1";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += btnUnique1;
             // 
             // btnTaxes
             // 
-            this.btnTaxes.Location = new System.Drawing.Point(230, 30);
-            this.btnTaxes.Name = "btnTaxes";
-            this.btnTaxes.Size = new System.Drawing.Size(190, 35);
-            this.btnTaxes.TabIndex = 1;
-            this.btnTaxes.Text = "Рассчитать налог";
-            this.btnTaxes.UseVisualStyleBackColor = true;
-            this.btnTaxes.Click += new System.EventHandler(this.btnTaxes_Click);
+            btnTaxes.Location = new Point(230, 30);
+            btnTaxes.Name = "btnTaxes";
+            btnTaxes.Size = new Size(190, 35);
+            btnTaxes.TabIndex = 1;
+            btnTaxes.Text = "Рассчитать налог";
+            btnTaxes.UseVisualStyleBackColor = true;
+            btnTaxes.Click += btnTaxes_Click;
             // 
             // btnReport
             // 
-            this.btnReport.Location = new System.Drawing.Point(20, 30);
-            this.btnReport.Name = "btnReport";
-            this.btnReport.Size = new System.Drawing.Size(190, 35);
-            this.btnReport.TabIndex = 0;
-            this.btnReport.Text = "Вывести отчет";
-            this.btnReport.UseVisualStyleBackColor = true;
-            this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
+            btnReport.Location = new Point(20, 30);
+            btnReport.Name = "btnReport";
+            btnReport.Size = new Size(190, 35);
+            btnReport.TabIndex = 0;
+            btnReport.Text = "Вывести отчет";
+            btnReport.UseVisualStyleBackColor = true;
+            btnReport.Click += btnReport_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(9, 576);
+            label1.Name = "label1";
+            label1.Size = new Size(77, 20);
+            label1.TabIndex = 11;
+            label1.Text = "Прибыль:";
+            label1.Click += UpdateListBoxSelection;
+            // 
+            // info1
+            // 
+            info1.Location = new Point(124, 573);
+            info1.Name = "info1";
+            info1.Size = new Size(290, 27);
+            info1.TabIndex = 10;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(9, 609);
+            label2.Name = "label2";
+            label2.Size = new Size(99, 20);
+            label2.TabIndex = 13;
+            label2.Text = "Тип бизнеса:";
+            // 
+            // info2
+            // 
+            info2.Location = new Point(124, 606);
+            info2.Name = "info2";
+            info2.Size = new Size(290, 27);
+            info2.TabIndex = 12;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(9, 642);
+            label3.Name = "label3";
+            label3.Size = new Size(78, 20);
+            label3.TabIndex = 15;
+            label3.Text = "Источник:";
+            // 
+            // info3
+            // 
+            info3.Location = new Point(124, 639);
+            info3.Name = "info3";
+            info3.Size = new Size(290, 27);
+            info3.TabIndex = 14;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(9, 672);
+            label4.Name = "label4";
+            label4.Size = new Size(47, 20);
+            label4.TabIndex = 17;
+            label4.Text = "Цель:";
+            // 
+            // info4
+            // 
+            info4.Location = new Point(124, 669);
+            info4.Name = "info4";
+            info4.Size = new Size(290, 27);
+            info4.TabIndex = 16;
+            // 
+            // button4
+            // 
+            button4.Location = new Point(179, 526);
+            button4.Name = "button4";
+            button4.Size = new Size(94, 29);
+            button4.TabIndex = 18;
+            button4.Text = "Изменить";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(832, 533);
-            this.Controls.Add(this.groupBoxMethods);
-            this.Controls.Add(this.groupBoxCRUD);
-            this.Controls.Add(this.groupBoxData);
-            this.Controls.Add(this.listBoxOrgs);
-            this.Name = "Form1";
-            this.Text = "Организации (CRUD PostgreSQL)";
-            this.groupBoxData.ResumeLayout(false);
-            this.groupBoxData.PerformLayout();
-            this.groupBoxCRUD.ResumeLayout(false);
-            this.groupBoxMethods.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(832, 708);
+            Controls.Add(button4);
+            Controls.Add(label4);
+            Controls.Add(info4);
+            Controls.Add(label3);
+            Controls.Add(info3);
+            Controls.Add(label2);
+            Controls.Add(info2);
+            Controls.Add(label1);
+            Controls.Add(info1);
+            Controls.Add(groupBoxMethods);
+            Controls.Add(groupBoxCRUD);
+            Controls.Add(groupBoxData);
+            Controls.Add(listBoxOrgs);
+            Name = "Form1";
+            Text = "Организации (CRUD PostgreSQL)";
+            Load += Form1_Load;
+            groupBoxData.ResumeLayout(false);
+            groupBoxData.PerformLayout();
+            groupBoxCRUD.ResumeLayout(false);
+            groupBoxMethods.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
@@ -333,5 +464,17 @@
         private System.Windows.Forms.GroupBox groupBoxMethods;
         private System.Windows.Forms.Button btnTaxes;
         private System.Windows.Forms.Button btnReport;
+        private Button UpdateButton;
+        private Button button2;
+        private Button button1;
+        private Label label1;
+        private TextBox info1;
+        private Label label2;
+        private TextBox info2;
+        private Label label3;
+        private TextBox info3;
+        private Label label4;
+        private TextBox info4;
+        private Button button4;
     }
 }

@@ -64,7 +64,7 @@ std::string Commersorg::report()
 
 void Commersorg::expandBusiness(){
     subscribers += 100;
-    std::cout << "Расширение выполнено! новые подписчики: " << subscribers;}
+    std::cout << "Расширение выполнено! новые подписчики: " << subscribers << std::endl;}
 
 void Commersorg::distributeProfit(){
     std::cout << "Бюджет для распределения: " << revenue * 5 << std::endl;}

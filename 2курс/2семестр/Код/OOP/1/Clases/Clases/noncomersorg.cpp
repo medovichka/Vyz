@@ -41,10 +41,10 @@ std::string Noncomersorg::report()
 
 void Noncomersorg::conductProgram(const std::string& programName)
 {
-    std::cout << "Программа: " << programName << std::endl;
+    std::cout << "Программа: " << programName << "| | |Организация:" << getName() << std::endl;
 }
 
 void Noncomersorg::attractFunding(const std::string& source)
 {
-    std::cout << "Привлечение финансирования из: " << source << std::endl;
+    std::cout << "Привлечение финансирования из: " << source << "| | |Для: " << getName()<< std::endl;
     setFoundingSource(source);}

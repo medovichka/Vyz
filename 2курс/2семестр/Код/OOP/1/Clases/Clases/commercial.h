@@ -56,7 +56,8 @@ public:
 
     int payTaxes() override;
     std::string report() override;
-    void distributeProfit() override;
-    void expandBusiness() override;
+
+    void distributeProfit();
+    void expandBusiness();
 };
 #endif

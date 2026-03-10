@@ -50,14 +50,13 @@ namespace Lab2
         {
             return Employees * 10;
         }
-        public override void Program(string program)
+        public string Program(string program)
         {
-            Console.WriteLine($"Программа: {program}");
+            return program;
         }
-        public void AttractFunding(string source)
+        public string AttractFunding(string source)
         {
-            Console.WriteLine($"Привлечение финансирования из: {source}");
-            _foundingSource = source;
+            return source;
         }
 
     } 

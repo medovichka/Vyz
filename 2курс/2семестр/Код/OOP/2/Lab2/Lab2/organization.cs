@@ -63,12 +63,6 @@ namespace Lab2
         public abstract int Taxes();
         public abstract string Report();
 
-        public virtual void Distribute() { }
-        public virtual void Expand() { }
-        public virtual void Program(string program) { }
-        public virtual void Attract(string source) { }
-
-
 
         public void Hire()
         {

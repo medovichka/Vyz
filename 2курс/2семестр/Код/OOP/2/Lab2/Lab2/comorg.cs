@@ -6,10 +6,10 @@ namespace Lab2
 {
     internal class ComOrg : Organization
     {
-        private int _profit;
+        private string _profit;
         private string _businessType;
 
-        public int Profit
+        public string Profit
         {
             get { return _profit; }
             set { _profit = value; }
@@ -25,14 +25,14 @@ namespace Lab2
             string name,
             string inn,
             int employees,
-            int profit,
+            string profit,
             string businessType
             ) : base(id,name,inn,employees)
         {
             _profit = profit;
             _businessType = businessType;
         }
-        public ComOrg(string name, string inn, int employees, int profit, string businessType)
+        public ComOrg(string name, string inn, int employees, string profit, string businessType)
            : base(name, inn, employees)
         {
             _profit = profit;
@@ -40,7 +40,7 @@ namespace Lab2
         }
         public ComOrg() : base("ООО Дылды", "458358238", 5)
         {
-            _profit = 100;
+            _profit = "100";
             _businessType = "Розничная торговля";
         }
 
@@ -49,8 +49,19 @@ namespace Lab2
 
         public override int Taxes()
         {
-            return (int)(_profit * 0.2);
+            if (string.IsNullOrEmpty(_profit))
+                return 0;
+
+            if (int.TryParse(_profit, out int profitValue))
+            {
+                return profitValue * 20 / 100; // 20 % налог с прибыли
+            }
+            else
+            {
+                return 0;
+            }
         }
+
         public override string Report()
         {
             return $"Коммерческая организация: {Name}\n" +
@@ -59,13 +70,17 @@ namespace Lab2
                    $"Прибыль: {_profit}\n" +
                    $"Тип бизнеса: {_businessType}";
         }
-        public void ExpandBusiness()
+        public string ExpandBusiness()
         {
-            Console.WriteLine("Расширение бизнеса...");
+            int.TryParse(_profit, out int profitValue);
+            profitValue = profitValue + profitValue * 20;
+            return profitValue.ToString();
         }   
-        public override void Distribute()
+        public string Distribute()
         {
-            Console.WriteLine($"Распределяем прибыль {_profit} среди акционеров");
+            int.TryParse(_profit, out int profitValue);
+            profitValue = profitValue / 22 * 3;
+            return profitValue.ToString();
         }
     }
 }

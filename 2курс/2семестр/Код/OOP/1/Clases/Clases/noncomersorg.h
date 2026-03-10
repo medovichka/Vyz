@@ -21,7 +21,6 @@ public:
     Noncomersorg(const Noncomersorg& other);
 
 
-
     std::string getPurpose() const {
         return purpose;}
     std::string getFoundingSource() const {
@@ -40,8 +39,10 @@ public:
 
     int payTaxes() override;
     std::string report() override;
-    void conductProgram(const std::string& programName) override;
-    void attractFunding(const std::string& source) override;
+
+
+    void conductProgram(const std::string& programName);
+    void attractFunding(const std::string& source);
 };
 
 #endif

@@ -37,11 +37,6 @@ public:
 	virtual int payTaxes() = 0;
 	virtual std::string report() = 0;
 
-	virtual void distributeProfit() {}
-	virtual void expandBusiness() {}
-	virtual void conductProgram(const std::string &programName) {}
-	virtual void attractFunding(const std::string &source) {}
-
 	void reklama();
 	void hireEmployee();
 };
