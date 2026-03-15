@@ -1,0 +1,21 @@
+{
+	"nodes":[
+		{"id":"cc4156ef79ad2cf4","type":"group","x":-1240,"y":720,"width":1520,"height":1020,"label":"Сюжет"},
+		{"id":"e87ff827a3a8e847","type":"group","x":516,"y":870,"width":1393,"height":870,"label":"Геймлпей"},
+		{"id":"7c863dae70baa5d2","type":"file","file":"РМП/Novizmy.md","x":316,"y":65,"width":544,"height":400},
+		{"id":"0a6a6a2f65c3795e","type":"text","text":"[[Novizmy]]","x":391,"y":560,"width":250,"height":73},
+		{"id":"d5136951eb9a5c6e","type":"text","text":"[[Novizmy#Механики]]","x":1529,"y":920,"width":250,"height":60},
+		{"id":"9d2263baf88cb43c","type":"text","text":"[[Novizmy#Геймплей]]","x":669,"y":920,"width":250,"height":60},
+		{"id":"3372623ac2210862","type":"text","text":"[[Novizmy#Персонажи]]","x":-1240,"y":730,"width":320,"height":60,"color":"5"},
+		{"id":"4fb451d4ceb0080b","type":"text","text":"[[Novizmy#Окружение]]","x":-600,"y":730,"width":287,"height":60,"color":"5"},
+		{"id":"45c6aa8e5213079f","type":"text","text":"[[Novizmy#Сюжет]]","x":-120,"y":730,"width":304,"height":60,"color":"5"},
+		{"id":"3691748aebbc2528","type":"link","url":"https://store.steampowered.com/app/2433730/Unsorted_Horror/?curator_clanid=45275615","x":1009,"y":265,"width":520,"height":455},
+		{"id":"bbe05485fb03ec5d","type":"link","url":"https://store.steampowered.com/app/871720/Ultimate_Custom_Night/","x":1560,"y":265,"width":540,"height":455},
+		{"id":"a195b903cf7f0445","x":2120,"y":265,"width":540,"height":455,"type":"link","url":"https://store.steampowered.com/app/3180070/No_Im_not_a_Human/"}
+	],
+	"edges":[
+		{"id":"0d278f0b89d1fbba","fromNode":"7c863dae70baa5d2","fromSide":"bottom","toNode":"0a6a6a2f65c3795e","toSide":"top"},
+		{"id":"417f040cb03287f8","fromNode":"0a6a6a2f65c3795e","fromSide":"bottom","toNode":"cc4156ef79ad2cf4","toSide":"top"},
+		{"id":"7bd5fdf4d8fab148","fromNode":"0a6a6a2f65c3795e","fromSide":"bottom","toNode":"e87ff827a3a8e847","toSide":"top"}
+	]
+}
