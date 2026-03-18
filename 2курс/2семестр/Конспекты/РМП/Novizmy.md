@@ -1,6 +1,5 @@
 [[Novizmy mindmap.canvas]]
 
-
 # Сюжет
 
 # Геймплей
@@ -12,11 +11,11 @@
 1) Запертое пространство
 2) "События", продвигающие сюжет
 
-[Ultimate Custom NIght][https://store.steampowered.com/app/871720/Ultimate_Custom_Night/] - 
+[Ultimate Custom NIght][https://store.steampowered.com/app/871720/Ultimate_Custom_Night/] -
 Схожесть:
 1) Запертое пространство
 2) Система "Продержись 6 часов"
-3) 
+3)
 
 [No im not a human][https://store.steampowered.com/app/3180070/No_Im_not_a_Human/]
 Схожесть:
@@ -27,6 +26,6 @@
 # Механики
 
 # Персонажи
-**Главный герой** - Лёха.  
+**Главный герой** - Лёха.
 # Окружение
 Локация - комната Владоса Санька.
