@@ -6,7 +6,7 @@ namespace Lab2
 {
     public class DatabaseHelper
     {
-        private string connectionString = "Host=localhost;Port=5432;Database=lab2_db;Username=postgres;Password=aklsdfjuqh3t92h3gu32h4go8h235giu23hr8g23n08ufg2h394g;";
+        private string connectionString = "Host=localhost;Port=5432;Database=lab2_db;Username=postgres;Password=postgres;";
 
         public void InitializeDatabase()
         {

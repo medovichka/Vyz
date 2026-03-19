@@ -97,11 +97,14 @@ namespace Lab2
             info2.Text = "";
             info3.Text = "";
             info4.Text = "";
-            button4.Enabled=false;
+            info5.Text = "";
+            button4.Enabled = false;
             info1.Enabled = false;
             info2.Enabled = false;
             info3.Enabled = false;
             info4.Enabled = false;
+            info5.Enabled = false;
+
 
             if (listBoxOrgs.SelectedIndex != -1)
             {
@@ -122,11 +125,14 @@ namespace Lab2
                     info2.Text = comOrg.BusinessType;
                     info3.Enabled = false;
                     info4.Enabled = false;
+                    info5.Enabled = true;
+                    info5.Text = comOrg.Name;
+
                 }
                 else if (selectedOrg is NonComOrg nonComOrg)
                 {
                     button1.Text = $"Провести программу";
-                    button2.Text = $"Дайте денег";
+                    button2.Text = $"Сбросить цель";
 
                     info3.Enabled = true;
                     info4.Enabled = true;
@@ -134,6 +140,8 @@ namespace Lab2
                     info4.Text = nonComOrg.Purpose;
                     info1.Enabled = false;
                     info2.Enabled = false;
+                    info5.Enabled= true;
+                    info5.Text = nonComOrg.Name;
                 }
             }
         }
@@ -220,8 +228,9 @@ namespace Lab2
                 var selectedOrg = currentOrgs[listBoxOrgs.SelectedIndex];
                 if (selectedOrg is NonComOrg nonCom)
                 {
-                    MessageBox.Show($"Хотим денег от {nonCom.AttractFunding("Яндекс")}", "Некоммерческая организация",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    nonCom.Purpose = "Ничего";
+                    UpdateListBoxSelection(sender, e);
+
                 }
                 else if (selectedOrg is ComOrg comOrg)
                 {
@@ -243,6 +252,7 @@ namespace Lab2
                 var selectedOrg = currentOrgs[listBoxOrgs.SelectedIndex];
                 if (selectedOrg is NonComOrg nonCom)
                 {
+                    nonCom.Name = info5.Text;
                     nonCom.FoundingSource = info4.Text;
                     nonCom.Purpose = info3.Text;
                     dbHelper.UpdateOrganization(nonCom);
@@ -250,12 +260,18 @@ namespace Lab2
                 }
                 else if (selectedOrg is ComOrg comOrg)
                 {
+                    comOrg.Name = info5.Text;
                     comOrg.Profit = info1.Text;
                     comOrg.BusinessType = info2.Text;
                     dbHelper.UpdateOrganization(comOrg);
                     btnUpdate_Click(sender, e);
                 }
             }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

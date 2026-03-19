@@ -64,6 +64,8 @@
             label4 = new Label();
             info4 = new TextBox();
             button4 = new Button();
+            label5 = new Label();
+            info5 = new TextBox();
             groupBoxData.SuspendLayout();
             groupBoxCRUD.SuspendLayout();
             groupBoxMethods.SuspendLayout();
@@ -408,11 +410,30 @@
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(415, 609);
+            label5.Name = "label5";
+            label5.Size = new Size(80, 20);
+            label5.TabIndex = 20;
+            label5.Text = "Название:";
+            // 
+            // info5
+            // 
+            info5.Location = new Point(530, 606);
+            info5.Name = "info5";
+            info5.Size = new Size(290, 27);
+            info5.TabIndex = 19;
+            info5.TextChanged += textBox1_TextChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(832, 708);
+            Controls.Add(label5);
+            Controls.Add(info5);
             Controls.Add(button4);
             Controls.Add(label4);
             Controls.Add(info4);
@@ -476,5 +497,7 @@
         private Label label4;
         private TextBox info4;
         private Button button4;
+        private Label label5;
+        private TextBox info5;
     }
 }
