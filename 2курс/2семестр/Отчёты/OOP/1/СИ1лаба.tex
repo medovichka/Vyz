@@ -23,11 +23,39 @@
 \usepackage{titlesec}
 \usepackage{fancyvrb}
 \usepackage{paracol}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{cppstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    language=C++
+}
+
+\lstset{style=cppstyle}
 
 \titleformat{\section}{\normalsize\bfseries}{\thesection}{1em}{}
 \titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
 \titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
-\captionsetup[figure]{name=Рисунок,labelsep=endash}
 \renewcommand\baselinestretch{1.33}\normalsize
 \setlength{\parindent}{1.25cm}
 
@@ -73,14 +101,15 @@
 
 \section*{Цель работы}
 \addcontentsline{toc}{section}{Цель работы}
-Изучение принципов объектно ориентированного программирования на языке C++.
+Изучение принципов объектно-ориентированного программирования на языке C++.
+
 \section*{Задание}
-\addcontentsline{toc}{section}{ Задание }
+\addcontentsline{toc}{section}{Задание}
 
 \begin{enumerate}
 	\item Выбрать и согласовать с преподавателем предметную область.
 	\item Создать иерархию классов, состоящую не менее чем из одного родительского и двух дочерних классов.
-	\item В каждом классе определить не менее двух членов данных, не менее двух собственных, а для дочерних — не менее двух унаследованных и двух переопределенных (перекрытых) член-функций.
+	\item В каждом классе определить не менее двух членов данных, не менее двух собственных, а для дочерних - не менее двух унаследованных и двух переопределенных (перекрытых) член-функций.
 	\item Разработать приложение, демонстрирующее принципы инкапсуляции, наследования и полиморфизма.
 \end{enumerate}
 * Работу с объектами осуществлять только через переменные родительского типа. \\
@@ -98,151 +127,168 @@
 
 \subsection*{Создание иерархии классов}
 \addcontentsline{toc}{subsection}{Создание иерархии классов}
-В соответствии с заданием была разработана иерархия, состоящая из одного абстрактного базового класса Organization и его дочерних классов: Commersorg (коммерческая организация) и Noncomersorg (некоммерческая организация).
+В соответствии с заданием была разработана иерархия, состоящая из одного абстрактного базового класса \texttt{Organization} и его дочерних классов: \texttt{Commersorg} (коммерческая организация) и \texttt{Noncomersorg} (некоммерческая организация).
 
 \newpage
-\hfil\textbf{Базовый класс Organization}
+
+
+
+\newpage
+\subsection*{Базовый класс Organization}
+
+\begin{paracol}{3}
+  \textbf{Базовые поля:}
+  \begin{itemize}
+    \item \texttt{name}
+    \item \texttt{inn}
+    \item \texttt{employees}
+  \end{itemize}
+
+  \switchcolumn
+  \textbf{Функции для переопределения:}
+  \begin{itemize}
+    \item \texttt{payTaxes()}
+    \item \texttt{report()}
+  \end{itemize}
+
+  \switchcolumn
+  \textbf{Общие методы:}
+  \begin{itemize}
+    \item \texttt{hireEmployee()}
+    \item \texttt{reklama()}
+  \end{itemize}
+\end{paracol}
+
+
+\subsection*{Класс Commersorg}
+
 \begin{paracol}{2}
-	\switchcolumn
-	Базовые поля:
-	\begin{itemize}
-		\item name
-		\item inn
-		\item epmloyees
-	\end{itemize}
-	\switchcolumn
-	Функции для переопределения:
-	\begin{itemize}
-		\item payTaxes()
-		\item report()
-		\item hireEmployee()
-		\item reklama()
-		\item distributeProfit()
-		\item expandBusiness()
-	\end{itemize}
+  \textbf{Поля:}
+  \begin{itemize}
+    \item \textit{Наследуемые:}
+      \begin{itemize}
+        \item \texttt{name}
+        \item \texttt{inn}
+        \item \texttt{employees}
+      \end{itemize}
+    \item \textit{Собственные:}
+      \begin{itemize}
+        \item \texttt{revenue}
+        \item \texttt{taxRate}
+        \item \texttt{subscribers}
+        \item \texttt{socSeti}
+      \end{itemize}
+  \end{itemize}
+
+  \switchcolumn
+  \textbf{Методы:}
+  \begin{itemize}
+    \item \textit{Переопределённые:}
+      \begin{itemize}
+        \item \texttt{payTaxes()}
+        \item \texttt{report()}
+      \end{itemize}
+    \item \textit{Собственные:}
+      \begin{itemize}
+        \item \texttt{expandBusiness()}
+        \item \texttt{distributeProfit()}
+      \end{itemize}
+  \end{itemize}
 \end{paracol}
 
-\hfil\textbf{Класс Commersorg}
-\begin{paracol}{3}
-	\switchcolumn
-	Наследуемые поля:
-	\begin{itemize}
-		\item name
-		\item inn
-		\item employees
-	\end{itemize}
-	\switchcolumn
-	Собственные поля:
-	\begin{itemize}
-		\item revenue
-		\item taxRate
-		\item subscribers
-		\item socSeti
-	\end{itemize}
-	\switchcolumn
-	\hbox{Переопределённые методы:}
-	\begin{itemize}
-		\item payTaxes
-		\item report
-		\item expandBusiness
-		\item distributeProfit
-	\end{itemize}
-\end{paracol}
+\newpage
+\subsection*{Класс Noncomersorg}
 
-\hfil\textbf{Класс Noncomersorg}
-\begin{paracol}{3}
-	\switchcolumn
-	Наследуемые поля:
-	\begin{itemize}
-		\item name
-		\item inn
-		\item employees
-	\end{itemize}
-	\switchcolumn
-	Собственные поля:
-	\begin{itemize}
-		\item purpose
-		\item foundingSource
-	\end{itemize}
-	\switchcolumn
-	\hbox{Переопределённые методы:}
-	\begin{itemize}
-		\item payTaxes
-		\item report
-		\item conductProgram
-		\item attractFunding
-	\end{itemize}
+\begin{paracol}{2}
+  \textbf{Поля:}
+  \begin{itemize}
+    \item \textit{Наследуемые:}
+      \begin{itemize}
+        \item \texttt{name}
+        \item \texttt{inn}
+        \item \texttt{employees}
+      \end{itemize}
+    \item \textit{Собственные:}
+      \begin{itemize}
+        \item \texttt{purpose}
+        \item \texttt{foundingSource}
+      \end{itemize}
+  \end{itemize}
+
+  \switchcolumn
+  \textbf{Методы:}
+  \begin{itemize}
+    \item \textit{Переопределённые:}
+      \begin{itemize}
+        \item \texttt{payTaxes()}
+        \item \texttt{report()}
+      \end{itemize}
+    \item \textit{Собственные:}
+      \begin{itemize}
+        \item \texttt{conductProgram()}
+        \item \texttt{attractFunding()}
+      \end{itemize}
+  \end{itemize}
 \end{paracol}
 
 \newpage
 
 \subsection*{Определение классов}
 \addcontentsline{toc}{subsection}{Определение классов}
-\textbf{Класс Organization :}
-organization.h / organization.cpp
+
+\textbf{Класс Organization (organization.h / organization.cpp):}
 \begin{itemize}
-	\item Члены данных:
-	      name, inn (const string),
-	      employees (int).
-	\item Чистые виртуальные методы: payTaxes(),
-	      report().
-	      Они делают класс абстрактным.
-	\item Виртуальные методы с реализацией по умолчанию: distributeProfit(), expandBusiness(), conductProgram(), attractFunding().
-	\item Общие методы: hireEmployee(), reklama().
+	\item Члены данных: \texttt{name} (string), \texttt{inn} (string), \texttt{employees} (int).
+	\item Чистые виртуальные методы: \texttt{payTaxes()}, \texttt{report()}. Эти методы делают класс абстрактным.
+	\item Конструкторы: конструктор по умолчанию, конструктор с параметрами, конструктор копирования.
+	\item Общие методы: \texttt{hireEmployee()} (увеличивает количество сотрудников), \texttt{reklama()} (выводит рекламное сообщение).
 \end{itemize}
-\textbf{Класс Commersorg:}
-commercial.h / commercial.cpp
+
+\textbf{Класс Commersorg (commercial.h / commercial.cpp):}
 \begin{itemize}
-	\item Собственные члены д=анных: revenue, taxRate, subscribers (int),
-	      socSeti (вектор string).
-	\item Унаследованные члены данных: name,
-	      inn,
-	      employees.
-	\item Переопределенные методы: payTaxes(),
-	      report().
-	\item Собственные переопределения: expandBusiness(), distributeProfit().
-	\item
+	\item Собственные члены данных: \texttt{revenue} (int), \texttt{taxRate} (int), \texttt{subscribers} (int), \texttt{socSeti} (vector<string>).
+	\item Унаследованные члены данных: \texttt{name}, \texttt{inn}, \texttt{employees}.
+	\item Конструкторы: конструктор по умолчанию, конструктор с параметрами (название, ИНН, сотрудники, выручка, ставка), конструктор с параметрами (включая подписчиков и соцсети), конструктор копирования.
+	\item Переопределенные методы: \texttt{payTaxes()} (возвращает \texttt{revenue * taxRate / 100}), \texttt{report()} (формирует строку с информацией об организации, включая соцсети при наличии).
+	\item Собственные методы: \texttt{expandBusiness()} (увеличивает количество подписчиков на 100), \texttt{distributeProfit()} (выводит бюджет для распределения).
 \end{itemize}
-\textbf{Класс Noncomersorg :}
-noncomersorg.h / noncomersorg.cpp
+
+\newpage
+
+\textbf{Класс Noncomersorg (noncomersorg.h / noncomersorg.cpp):}
 \begin{itemize}
-	\item Собственные члены данных: purpose, foundingSource (const string).
-	\item Унаследованные члены данных: name,
-	      inn,
-	      employees.
-	\item Переопределенные методы: payTaxes(),
-	      report().
-	\item Собственные переопределения: conductProgram(), attractFunding().
+	\item Собственные члены данных: \texttt{purpose} (string), \texttt{foundingSource} (string).
+	\item Унаследованные члены данных: \texttt{name}, \texttt{inn}, \texttt{employees}.
+	\item Конструкторы: конструктор по умолчанию, конструктор с параметрами (название, ИНН, сотрудники, цель, источники), конструктор копирования.
+	\item Переопределенные методы: \texttt{payTaxes()} (возвращает \texttt{employees * 10}), \texttt{report()} (формирует строку с информацией об организации, включая цель и источники финансирования).
+	\item Собственные методы: \texttt{conductProgram()} (выводит информацию о проводимой программе), \texttt{attractFunding()} (выводит информацию о привлечении финансирования и обновляет источник).
 \end{itemize}
 
 \newpage
 
 \subsection*{Разработка демонстрационного приложения}
 \addcontentsline{toc}{subsection}{Разработка демонстрационного приложения}
-Для демонстрации созданной структуры разработано конскольное приложение.
+Для демонстрации созданной структуры разработано консольное приложение (Clases.cpp).
 
 \textbf{Демонстрация инкапсуляции:}
 
-Данные классов (revenue, purpose) скрыты в секции private. Доступ к ним и изменение состояния объектов возможны только через публичные методы.
+Данные классов (\texttt{revenue}, \texttt{purpose}) скрыты в секции \texttt{private}. Доступ к ним и изменение состояния объектов возможны только через публичные методы-геттеры и сеттеры.
 
 \textbf{Демонстрация наследования:}
 
-Объекты Commersorg и Noncomersorg содержат все поля и методы класса Organization.При вызове метода ARGANIZATII[2]->expandBusiness(), который не определен в базовом классе, но успешно вызывается у объекта дочерней коммерческой организации благодаря наследованию и полиморфизму.
+Объекты \texttt{Commersorg} и \texttt{Noncomersorg} содержат все поля и методы класса \texttt{Organization}. При вызове методов, унаследованных от базового класса, таких как \texttt{hireEmployee()}, объекты дочерних классов корректно используют свою реализацию.
 
 \textbf{Демонстрация полиморфизма:}
 
-Все объекты хранятся в векторе указателей на базовый класс std::vector<Organization*>. При вызове виртуальных методов (payTaxes(), report()) программа автоматически выполняет версию метода, соответствующую реальному классу объекта.
+Все объекты хранятся в векторе умных указателей на базовый класс \texttt{vector<unique\_ptr<Organization>>}. При вызове виртуальных методов (\texttt{payTaxes()}, \texttt{report()}) программа автоматически выполняет версию метода, соответствующую реальному классу объекта, благодаря механизму позднего связывания (динамическому полиморфизму).
 
-В консоль будет выведен налог для коммерческой организации, отчет для коммерческой организации, и вызван метод expandBusiness(), который увеличит количество подписчиков.
-
-\newpage
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.9\linewidth]{Диаграмма классов.jpg}
-	\caption{Диаграмма классов}
-	\label{fig:class_diagram}
-\end{figure}
+В приложении продемонстрированы:
+\begin{itemize}
+	\item Создание объектов различных типов с использованием различных конструкторов.
+	\item Использование \texttt{static\_cast} для вызова специфических методов дочерних классов.
+	\item Хранение объектов в контейнере через указатели на базовый класс.
+	\item Вызов виртуальных методов через указатели на базовый класс.
+\end{itemize}
 
 \newpage
 
@@ -250,8 +296,8 @@ noncomersorg.h / noncomersorg.cpp
 \addcontentsline{toc}{section}{Вывод}
 В ходе выполнения лабораторной работы была успешно создана иерархия классов, моделирующая различные типы организаций.
 
-Были на практике реализованы и изучены основные принципы объектно ориентированного программирования.
+Были на практике реализованы и изучены основные принципы объектно-ориентированного программирования:
 
-Разработанное демонстрационное приложение наглядно показывает преимущества объектно ориентированного программирования: единообразную работу с разнотипными объектами и возможность расширения системы.
+Разработанное демонстрационное приложение наглядно показывает преимущества объектно-ориентированного программирования: единообразную работу с разнотипными объектами и возможность расширения системы без изменения существующего кода. Использование умных указателей (\texttt{unique\_ptr}) обеспечивает автоматическое управление памятью и предотвращает утечки.
 
-\end{document}%
+\end{document}
