@@ -1,0 +1,21 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- подключение -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/lab3_db</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">aklsdfjuqh3t92h3gu32h4go8h235giu23hr8g23n08ufg2h394g</property>
+
+        <!-- Hibernate -->
+        <!-- update если таблиц нет - создать, если изменились классы - обновить таблицы -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- классы-сущности -->
+        <mapping class="ru.university.lab3.entity.Organization"/>
+        <mapping class="ru.university.lab3.entity.ComOrg"/>
+        <mapping class="ru.university.lab3.entity.NonComOrg"/>
+    </session-factory>
+</hibernate-configuration>

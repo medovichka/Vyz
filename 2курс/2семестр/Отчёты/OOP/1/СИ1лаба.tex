@@ -127,21 +127,26 @@
 
 \subsection*{Создание иерархии классов}
 \addcontentsline{toc}{subsection}{Создание иерархии классов}
-В соответствии с заданием была разработана иерархия, состоящая из одного абстрактного базового класса \texttt{Organization} и его дочерних классов: \texttt{Commersorg} (коммерческая организация) и \texttt{Noncomersorg} (некоммерческая организация).
+В соответствии с заданием была разработана иерархия, состоящая из одного абстрактного базового класса \texttt{Organization} и его дочерних классов: \texttt{Commersorg} и \texttt{Noncomersorg}.
 
 \newpage
 
-
+\begin{figure}
+  \includegraphics[width=0.8\textwidth]{Диаграмма классов.png}
+  \caption{Диаграмма классов}
+  \label{fig:landscape}
+\end{figure}
 
 \newpage
-\subsection*{Базовый класс Organization}
+
+\subsection*{\hfil Базовый класс Organization}
 
 \begin{paracol}{3}
   \textbf{Базовые поля:}
   \begin{itemize}
-    \item \texttt{name}
-    \item \texttt{inn}
-    \item \texttt{employees}
+   \item \texttt{name}
+   \item \texttt{inn}
+   \item \texttt{employees}
   \end{itemize}
 
   \switchcolumn
@@ -160,7 +165,7 @@
 \end{paracol}
 
 
-\subsection*{Класс Commersorg}
+\subsection*{\hfil Класс Commersorg}
 
 \begin{paracol}{2}
   \textbf{Поля:}
@@ -197,7 +202,7 @@
 \end{paracol}
 
 \newpage
-\subsection*{Класс Noncomersorg}
+\subsection*{\hfil Класс Noncomersorg}
 
 \begin{paracol}{2}
   \textbf{Поля:}
@@ -268,7 +273,7 @@
 
 \subsection*{Разработка демонстрационного приложения}
 \addcontentsline{toc}{subsection}{Разработка демонстрационного приложения}
-Для демонстрации созданной структуры разработано консольное приложение (Clases.cpp).
+Для демонстрации созданной структуры разработано консольное приложение.
 
 \textbf{Демонстрация инкапсуляции:}
 
@@ -281,14 +286,6 @@
 \textbf{Демонстрация полиморфизма:}
 
 Все объекты хранятся в векторе умных указателей на базовый класс \texttt{vector<unique\_ptr<Organization>>}. При вызове виртуальных методов (\texttt{payTaxes()}, \texttt{report()}) программа автоматически выполняет версию метода, соответствующую реальному классу объекта, благодаря механизму позднего связывания (динамическому полиморфизму).
-
-В приложении продемонстрированы:
-\begin{itemize}
-	\item Создание объектов различных типов с использованием различных конструкторов.
-	\item Использование \texttt{static\_cast} для вызова специфических методов дочерних классов.
-	\item Хранение объектов в контейнере через указатели на базовый класс.
-	\item Вызов виртуальных методов через указатели на базовый класс.
-\end{itemize}
 
 \newpage
 
