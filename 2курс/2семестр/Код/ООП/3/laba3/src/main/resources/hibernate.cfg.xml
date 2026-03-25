@@ -17,5 +17,7 @@
         <mapping class="ru.university.lab3.entity.Organization"/>
         <mapping class="ru.university.lab3.entity.ComOrg"/>
         <mapping class="ru.university.lab3.entity.NonComOrg"/>
+        <mapping class="ru.university.lab3.entity.Employees"/>
+
     </session-factory>
 </hibernate-configuration>

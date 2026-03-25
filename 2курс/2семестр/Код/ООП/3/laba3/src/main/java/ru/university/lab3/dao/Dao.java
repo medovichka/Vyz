@@ -1,93 +1,152 @@
-// src/main/java/com/lab3/dao/OrganizationDAO.java
 package ru.university.lab3.dao;
 
-import ru.university.lab3.entity.*;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import ru.university.lab3.entity.Employees;
+import ru.university.lab3.entity.Organization;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Dao {
-    // SessionFactory - "фабрика" для создания сессий. Создается один раз.
     private final SessionFactory sessionFactory;
 
     public Dao() {
-        // Загружаем конфигурацию из hibernate.cfg.xml и строим SessionFactory
         sessionFactory = new Configuration().configure().buildSessionFactory();
     }
 
-    //CREATE
-
-    public void save(Object obj) { // Универсальный метод для сохранения любого объекта
-        Session session = sessionFactory.openSession();
+    public void save(Object obj) {
         Transaction tx = null;
-        try {
+        try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
-            session.persist(obj); // persist - современный метод для сохранения
+            session.persist(obj);
             tx.commit();
         } catch (Exception e) {
-            if (tx != null) tx.rollback(); // Если ошибка, откатываем транзакцию
+            if (tx != null)
+                tx.rollback();
             e.printStackTrace();
-        } finally {
-            session.close(); // Всегда закрываем сессию
         }
     }
 
-    //READ
-
     public Organization findOrganizationById(int id) {
-        Session session = sessionFactory.openSession();
-        Organization org = session.get(Organization.class, id);
-        session.close();
-        return org;
+        try (Session session = sessionFactory.openSession()) {
+            Organization org = session.get(Organization.class, id);
+
+            if (org != null) {
+                Hibernate.initialize(org.getEmployeesList());
+            }
+
+            return org;
+        }
+    }
+
+    public Employees findEmployeeById(int id) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.get(Employees.class, id);
+        }
+    }
+
+    public List<Employees> getEmployeesByOrganizationId(int orgId) {
+        try (Session session = sessionFactory.openSession()) {
+            Organization org = session.get(Organization.class, orgId);
+            if (org == null) {
+                return List.of();
+            }
+            Hibernate.initialize(org.getEmployeesList());
+            return new ArrayList<>(org.getEmployeesList());
+        }
     }
 
     public List<Organization> getAllOrganizations() {
-        Session session = sessionFactory.openSession();
-        List<Organization> list = session.createQuery("FROM Organization", Organization.class).list();
-        session.close();
-        return list;
-    }
+        try (Session session = sessionFactory.openSession()) {
 
-    // UPDATE
+            var cb = session.getCriteriaBuilder();
+            var cq = cb.createQuery(Organization.class);
+            var root = cq.from(Organization.class);
 
-    public void update(Organization org) {
-        Session session = sessionFactory.openSession();
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-            session.merge(org);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
+            cq.select(root);
+
+            List<Organization> list = session.createQuery(cq).getResultList();
+
+            for (Organization org : list) {
+                Hibernate.initialize(org.getEmployeesList());
+            }
+
+            return new ArrayList<>(list);
         }
     }
 
-    //DELETE
+    public List<Employees> getAllEmployees() {
+        try (Session session = sessionFactory.openSession()) {
+
+            var cb = session.getCriteriaBuilder();
+            var cq = cb.createQuery(Employees.class);
+            var root = cq.from(Employees.class);
+
+            cq.select(root);
+
+            List<Employees> list = session.createQuery(cq).getResultList();
+
+            return new ArrayList<>(list);
+        }
+    }
+
+    public void update(Object obj) {
+        Transaction tx = null;
+        try (Session session = sessionFactory.openSession()) {
+            tx = session.beginTransaction();
+            session.merge(obj);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null)
+                tx.rollback();
+            e.printStackTrace();
+        }
+    }
 
     public void deleteOrganizationById(int id) {
-        Session session = sessionFactory.openSession();
         Transaction tx = null;
-        try {
+        try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
+
             Organization org = session.get(Organization.class, id);
+
             if (org != null) {
                 session.remove(org);
             }
+
             tx.commit();
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
+            if (tx != null)
+                tx.rollback();
             e.printStackTrace();
-        } finally {
-            session.close();
+        }
+    }
+
+    public void deleteEmployeeById(int id) {
+        Transaction tx = null;
+        try (Session session = sessionFactory.openSession()) {
+            tx = session.beginTransaction();
+
+            Employees emp = session.get(Employees.class, id);
+
+            if (emp != null) {
+                session.remove(emp);
+            }
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null)
+                tx.rollback();
+            e.printStackTrace();
         }
     }
 
     public void close() {
-        sessionFactory.close();
+        if (sessionFactory != null) {
+            sessionFactory.close();
+        }
     }
 }

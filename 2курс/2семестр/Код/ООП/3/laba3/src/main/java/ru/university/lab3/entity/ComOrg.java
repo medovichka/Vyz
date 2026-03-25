@@ -1,6 +1,7 @@
 package ru.university.lab3.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,20 +16,22 @@ import lombok.NoArgsConstructor;
 public class ComOrg extends Organization {
     private String profit;
     private String businessType;
-    public ComOrg(String name, String inn, int employees, String profit, String businessType) {
+
+    public ComOrg(String name, String inn, int employeesCount, String profit, String businessType) {
         this.setName(name);
         this.setInn(inn);
-        this.setEmployees(employees);
+        this.setEmployeesCount(employeesCount);
         this.profit = profit;
         this.businessType = businessType;
     }
+
     @Override
     public String report() {
-        return "Коммерческая организация:" + getName()
-                + "ИНН:" + getInn()
-                + "Тип:" + getBusinessType()
-                + "Сотрудники:" + getEmployees()
-                + "\nПрибыль:" + getProfit();
+        return "Коммерческая организация: " + getName()
+                + " | ИНН: " + getInn()
+                + " | Тип: " + getBusinessType()
+                + " | Сотрудники(по штату): " + getEmployeesCount()
+                + " | Прибыль: " + getProfit();
     }
 
     @Override
@@ -37,8 +40,8 @@ public class ComOrg extends Organization {
             return 0;
         }
         try {
-            int Value = Integer.parseInt(this.profit);
-            return Value * 20 / 100; // налог с прибыли
+            int value = Integer.parseInt(this.profit);
+            return value * 20 / 100; // налог с прибыли
         } catch (NumberFormatException e) {
             return 0; // прибыль не число
         }
