@@ -16,7 +16,7 @@
 *~
 # Created by https://www.toptal.com/developers/gitignore/api/windows,c++,python,lazarus,latex,obsidian,visualstudio,visualstudiocode,androidstudio,android,flutter,jupyternotebooks
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,c++,python,lazarus,latex,obsidian,visualstudio,visualstudiocode,androidstudio,android,flutter,jupyternotebooks
-
+*.7z
 ### Android ###
 # Gradle files
 .gradle/
