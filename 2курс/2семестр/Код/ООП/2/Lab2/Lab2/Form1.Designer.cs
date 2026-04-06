@@ -448,7 +448,7 @@
             Controls.Add(groupBoxData);
             Controls.Add(listBoxOrgs);
             Name = "Form1";
-            Text = "Организации (CRUD PostgreSQL)";
+            Text = "Организации";
             Load += Form1_Load;
             groupBoxData.ResumeLayout(false);
             groupBoxData.PerformLayout();
