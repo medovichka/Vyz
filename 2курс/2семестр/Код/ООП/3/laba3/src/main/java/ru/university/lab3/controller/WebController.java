@@ -1,50 +1,71 @@
 package ru.university.lab3.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import ru.university.lab3.dao.Dao;
-import ru.university.lab3.entity.ComOrg;
-import ru.university.lab3.entity.Employees;
-import ru.university.lab3.entity.NonComOrg;
-import ru.university.lab3.entity.Organization;
+import org.springframework.web.bind.annotation.*;
+import ru.university.lab3.entity.*;
+import ru.university.lab3.repository.*;
+
+import java.util.Optional;
+import java.util.List;
 
 @Controller
 public class WebController {
 
-    private final Dao dao = new Dao();
+    @Autowired
+    private OrganizationRep organizationRep;
+
+    @Autowired
+    private ComOrgRep comOrgRep;
+
+    @Autowired
+    private NonComOrgRep nonComOrgRep;
+
+    @Autowired
+    private EmployeesRep employeesRep;
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("organizations", dao.getAllOrganizations());
-        model.addAttribute("employees", dao.getAllEmployees());
+        model.addAttribute("organizations", organizationRep.findAll());
+        model.addAttribute("employees", employeesRep.findAll());
         return "index";
     }
 
-    // ================= УДАЛЕНИЕ (DELETE) =================
+    @GetMapping("/showOrgEmployees")
+    public String showOrgEmployees(@RequestParam int id,Model model) {
+        Organization org = organizationRep.findById(id).orElse(null);
+        List<Employees> emp = org.getEmployeesList();
+        model.addAttribute("organization", org);
+        model.addAttribute("employees", emp);
+        return "employeesList";
+    }
+
+
+
+
+    // ================= УДАЛЕНИЕ =================
 
     @PostMapping("/deleteOrg")
     public String deleteOrg(@RequestParam int id) {
-        dao.deleteOrganizationById(id);
+        organizationRep.deleteById(id);
         return "redirect:/";
     }
 
     @PostMapping("/deleteEmp")
     public String deleteEmp(@RequestParam int id) {
-        dao.deleteEmployeeById(id);
+        employeesRep.deleteById(id);
         return "redirect:/";
     }
 
-    // ================= ДОБАВЛЕНИЕ (CREATE) =================
+    // ================= ДОБАВЛЕНИЕ =================
 
     @PostMapping("/addComOrg")
     public String addComOrg(@RequestParam String name, @RequestParam String inn,
                             @RequestParam int employeesCount, @RequestParam String profit,
                             @RequestParam String businessType) {
         ComOrg org = new ComOrg(name, inn, employeesCount, profit, businessType);
-        dao.save(org);
+        comOrgRep.save(org);
         return "redirect:/";
     }
 
@@ -53,7 +74,7 @@ public class WebController {
                                @RequestParam int employeesCount, @RequestParam String purpose,
                                @RequestParam String source) {
         NonComOrg org = new NonComOrg(name, inn, employeesCount, purpose, source);
-        dao.save(org);
+        nonComOrgRep.save(org);
         return "redirect:/";
     }
 
@@ -62,62 +83,65 @@ public class WebController {
                          @RequestParam(required = false, defaultValue = "0") int orgId) {
         Employees emp = new Employees(name, position);
         if (orgId > 0) {
-            Organization org = dao.findOrganizationById(orgId);
-            if (org != null) emp.setOrganization(org);
+            Optional<Organization> org = organizationRep.findById(orgId);
+            org.ifPresent(emp::setOrganization);
         }
-        dao.save(emp);
+        employeesRep.save(emp);
         return "redirect:/";
     }
 
-    // ================= РЕДАКТИРОВАНИЕ (UPDATE) =================
+    // ================= РЕДАКТИРОВАНИЕ =================
 
     @PostMapping("/updateComOrg")
-    public String updateComOrg(@RequestParam int id, @RequestParam String name, @RequestParam String inn,
-                               @RequestParam int employeesCount, @RequestParam String profit,
-                               @RequestParam String businessType) {
-        Organization baseOrg = dao.findOrganizationById(id);
-        if (baseOrg instanceof ComOrg org) {
+    public String updateComOrg(@RequestParam int id, @RequestParam String name,
+                               @RequestParam String inn, @RequestParam int employeesCount,
+                               @RequestParam String profit, @RequestParam String businessType) {
+        Optional<ComOrg> optionalOrg = comOrgRep.findById(id);
+        if (optionalOrg.isPresent()) {
+            ComOrg org = optionalOrg.get();
             org.setName(name);
             org.setInn(inn);
             org.setEmployeesCount(employeesCount);
             org.setProfit(profit);
             org.setBusinessType(businessType);
-            dao.update(org);
+            comOrgRep.save(org);
         }
         return "redirect:/";
     }
 
     @PostMapping("/updateNonComOrg")
-    public String updateNonComOrg(@RequestParam int id, @RequestParam String name, @RequestParam String inn,
-                                  @RequestParam int employeesCount, @RequestParam String purpose,
-                                  @RequestParam String source) {
-        Organization baseOrg = dao.findOrganizationById(id);
-        if (baseOrg instanceof NonComOrg org) {
+    public String updateNonComOrg(@RequestParam int id, @RequestParam String name,
+                                  @RequestParam String inn, @RequestParam int employeesCount,
+                                  @RequestParam String purpose, @RequestParam String source) {
+        Optional<NonComOrg> optionalOrg = nonComOrgRep.findById(id);
+        if (optionalOrg.isPresent()) {
+            NonComOrg org = optionalOrg.get();
             org.setName(name);
             org.setInn(inn);
             org.setEmployeesCount(employeesCount);
             org.setPurpose(purpose);
             org.setSource(source);
-            dao.update(org);
+            nonComOrgRep.save(org);
         }
         return "redirect:/";
     }
 
     @PostMapping("/updateEmp")
-    public String updateEmp(@RequestParam int id, @RequestParam String name, @RequestParam String position,
+    public String updateEmp(@RequestParam int id, @RequestParam String name,
+                            @RequestParam String position,
                             @RequestParam(required = false, defaultValue = "0") int orgId) {
-        Employees emp = dao.findEmployeeById(id);
-        if (emp != null) {
+        Optional<Employees> optionalEmp = employeesRep.findById(id);
+        if (optionalEmp.isPresent()) {
+            Employees emp = optionalEmp.get();
             emp.setName(name);
             emp.setPosition(position);
 
             if (orgId > 0) {
-                Organization org = dao.findOrganizationById(orgId);
-                emp.setOrganization(org);
+                organizationRep.findById(orgId).ifPresent(emp::setOrganization);
             } else {
-                emp.setOrganization(null); // Если выбрали "Без организации"
+                emp.setOrganization(null);
             }
-            dao.update(emp);
+            employeesRep.save(emp);
         }
         return "redirect:/";
     }

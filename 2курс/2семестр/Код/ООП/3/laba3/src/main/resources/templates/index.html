@@ -74,7 +74,12 @@
                                                 <i class="bi bi-trash"></i> Удалить
                                             </button>
                                         </form>
-
+                                        <form th:action="@{/showOrgEmployees}" method="get" class="d-inline">
+                                            <input type="hidden" name="id" th:value="${org.id}"/>
+                                            <button type="submit" class="btn btn-info btn-sm">
+                                                <i class="bi bi-people"></i> Сотрудники
+                                            </button>
+                                        </form>
                                         <!-- Модальное окно редактирования конкретной организации -->
                                         <div class="modal fade" th:id="'editOrgModal' + ${org.id}" tabindex="-1" aria-hidden="true">
                                             <div class="modal-dialog">

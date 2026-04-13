@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Сотрудники организации</title>
+</head>
+<body>
+    <h2>Сотрудники организации: <span th:text="${organization.name}"></span></h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Должность</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="emp : ${employees}">
+                <td th:text="${emp.name}"></td>
+                <td th:text="${emp.position}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="/">Назад</a>
+</body>
+</html>
