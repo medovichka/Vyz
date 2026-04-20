@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель управления (ЛР №4)</title>
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { background-color: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .header-card {
+            background: linear-gradient(135deg, #4f69c6 0%, #3f51b5 100%);
+            color: white; border-radius: 1rem; box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .total-tax { font-size: 2rem; font-weight: 700; background: rgba(255,255,255,0.1); padding: 0.5rem 1.5rem; border-radius: 50px; }
+        .card-custom { border: none; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+        .card-header-custom { background-color: #fff; border-bottom: 1px solid #e9ecef; border-radius: 1rem 1rem 0 0 !important; font-weight: 600; }
+        .table-responsive-custom { border-radius: 1rem; overflow: hidden; }
+        .btn-action { min-width: 100px; }
+        .badge-tax { background-color: #198754; }
+        .btn-delete { background-color: #f8f9fa; color: #dc3545; border: 1px solid #dc3545; }
+        .btn-delete:hover { background-color: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container py-4">
+
+    <!-- ========== ЗАГОЛОВОК И ОСНОВНЫЕ МЕТРИКИ ========== -->
+    <div class="header-card p-4 mb-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <div>
+                <h1 class="display-6 fw-bold"><i class="fas fa-cubes me-2"></i>Dashboard</h1>
+                <p class="mb-0 opacity-75">Go + Python | PostgreSQL | REST API</p>
+            </div>
+            <div class="text-center mt-3 mt-md-0">
+                <div class="total-tax" data-bs-toggle="tooltip" title="Сумма налогов со всех организаций">
+                    <i class="fas fa-coins me-2"></i>{{ .TotalTaxes }} ₽
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ПАНЕЛЬ УПРАВЛЕНИЯ ========== -->
+    <div class="card card-custom mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Единый реестр</h5>
+            <button class="btn btn-primary fw-semibold" data-bs-toggle="modal" data-bs-target="#addEntityModal">
+                <i class="fas fa-plus me-2"></i>Добавить запись
+            </button>
+        </div>
+    </div>
+
+    <!-- ========== ТАБЛИЦА: КОММЕРЧЕСКИЕ ОРГАНИЗАЦИИ ========== -->
+    <div class="card card-custom mb-4">
+        <div class="card-header-custom"><i class="fas fa-chart-line text-primary me-2"></i>Коммерческие организации</div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>ID</th><th>Название</th><th>Сотр.</th><th>Прибыль</th><th>Налог</th><th>Действия</th></tr></thead>
+                <tbody>
+                    {{ range .ComOrgs }}
+                    <tr>
+                        <td>{{ .ID }}</td><td><strong>{{ .Name }}</strong><br><small class="text-muted">ИНН: {{.Inn}}</small></td><td>{{ .EmployeesCount }}</td><td>{{ .Profit }} ₽</td><td><span class="badge rounded-pill badge-tax">{{ .Taxes }} ₽</span></td>
+                        <td>
+                            <div class="dropdown"><button class="btn btn-sm btn-outline-secondary dropdown-toggle btn-action" type="button" data-bs-toggle="dropdown">Методы</button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" onclick="submitActionForm({{.ID}}, 'comorgs', 'hireEmployee')">Нанять сотрудника</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="submitActionForm({{.ID}}, 'comorgs', 'expandBusiness')">Расширить бизнес</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#" onclick="alert('Реклама: {{.Name}} оч крутая!')">Запустить рекламу</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="alert('Распределено: ' + ({{.Profit}} * 0.25) + ' ₽')">Распределить прибыль</a></li>
+                                </ul>
+                            </div>
+                            <form method="post" action="/delete" onsubmit="return confirm('Удалить организацию {{.Name}}?')" class="d-inline ms-1">
+                                <input type="hidden" name="id" value="{{.ID}}"><input type="hidden" name="type" value="comorgs">
+                                <button type="submit" class="btn btn-sm btn-delete" title="Удалить"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ========== ТАБЛИЦА: НЕКОММЕРЧЕСКИЕ ОРГАНИЗАЦИИ ========== -->
+    <div class="card card-custom mb-4">
+        <div class="card-header-custom"><i class="fas fa-hand-holding-heart text-success me-2"></i>Некоммерческие организации</div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>ID</th><th>Название</th><th>Сотр.</th><th>Источник</th><th>Налог</th><th>Действия</th></tr></thead>
+                <tbody>
+                    {{ range .NonComOrgs }}
+                    <tr>
+                        <td>{{ .ID }}</td><td><strong>{{ .Name }}</strong><br><small class="text-muted">ИНН: {{.Inn}}</small></td><td>{{ .EmployeesCount }}</td><td>{{ .Source }}</td><td><span class="badge rounded-pill badge-tax">{{ .Taxes }} ₽</span></td>
+                        <td>
+                            <div class="dropdown"><button class="btn btn-sm btn-outline-secondary dropdown-toggle btn-action" type="button" data-bs-toggle="dropdown">Методы</button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" onclick="submitActionForm({{.ID}}, 'noncomorgs', 'hireEmployee')">Нанять сотрудника</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="openParamModal({{.ID}}, 'noncomorgs', 'attractFunding', 'Источник финансирования')">Привлечь средства</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#" onclick="alert('Реклама: {{.Name}} оч крутая!')">Запустить рекламу</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="alert('Программа запущена!')">Провести программу</a></li>
+                                </ul>
+                            </div>
+                            <form method="post" action="/delete" onsubmit="return confirm('Удалить организацию {{.Name}}?')" class="d-inline ms-1">
+                                <input type="hidden" name="id" value="{{.ID}}"><input type="hidden" name="type" value="noncomorgs">
+                                <button type="submit" class="btn btn-sm btn-delete" title="Удалить"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- ========== МОДАЛЬНОЕ ОКНО ДЛЯ ДОБАВЛЕНИЯ ========== -->
+<div class="modal fade" id="addEntityModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Добавить новую запись</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" id="addEntityTab" role="tablist">
+                    <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#com-tab" type="button">Коммерческая</button></li>
+                    <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#noncom-tab" type="button">Некоммерческая</button></li>
+                    <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#emp-tab" type="button">Сотрудник</button></li>
+                </ul>
+                <div class="tab-content pt-3">
+                    <!-- Форма Коммерческой -->
+                    <div class="tab-pane fade show active" id="com-tab" role="tabpanel">
+                        <form method="post" action="/addComOrg" class="row g-3">
+                            <div class="col-md-6"><label class="form-label">Название *</label><input type="text" name="name" class="form-control" required></div>
+                            <div class="col-md-6"><label class="form-label">ИНН</label><input type="text" name="inn" class="form-control"></div>
+                            <div class="col-md-4"><label class="form-label">Сотрудники</label><input type="number" name="employeesCount" class="form-control" value="0"></div>
+                            <div class="col-md-4"><label class="form-label">Прибыль</label><input type="text" name="profit" class="form-control" value="0"></div>
+                            <div class="col-md-4"><label class="form-label">Тип бизнеса</label><input type="text" name="businessType" class="form-control"></div>
+                            <div class="col-12 text-end"><button type="submit" class="btn btn-primary">Сохранить</button></div>
+                        </form>
+                    </div>
+                    <!-- Форма Некоммерческой -->
+                    <div class="tab-pane fade" id="noncom-tab" role="tabpanel">
+                        <form method="post" action="/addNonComOrg" class="row g-3">
+                            <div class="col-md-6"><label class="form-label">Название *</label><input type="text" name="name" class="form-control" required></div>
+                            <div class="col-md-6"><label class="form-label">ИНН</label><input type="text" name="inn" class="form-control"></div>
+                            <div class="col-md-4"><label class="form-label">Сотрудники</label><input type="number" name="employeesCount" class="form-control" value="0"></div>
+                            <div class="col-md-4"><label class="form-label">Цель</label><input type="text" name="purpose" class="form-control"></div>
+                            <div class="col-md-4"><label class="form-label">Источник</label><input type="text" name="source" class="form-control"></div>
+                            <div class="col-12 text-end"><button type="submit" class="btn btn-success">Сохранить</button></div>
+                        </form>
+                    </div>
+                    <!-- Форма Сотрудника -->
+                    <div class="tab-pane fade" id="emp-tab" role="tabpanel">
+                        <form method="post" action="/addEmp" class="row g-3">
+                            <div class="col-md-6"><label class="form-label">ФИО *</label><input type="text" name="name" class="form-control" required></div>
+                            <div class="col-md-6"><label class="form-label">Должность</label><input type="text" name="position" class="form-control"></div>
+                            <div class="col-12"><label class="form-label">Организация</label><select name="orgId" class="form-select"><option value="0">Без организации</option>{{ range .AllOrgs }}<option value="{{.ID}}">{{.Name}}</option>{{end}}</select></div>
+                            <div class="col-12 text-end"><button type="submit" class="btn btn-info text-white">Сохранить</button></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== МОДАЛЬНОЕ ОКНО ДЛЯ ВВОДА ПАРАМЕТРА ========== -->
+<div class="modal fade" id="paramModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title" id="paramModalLabel"></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <input type="text" id="paramInput" class="form-control">
+                <input type="hidden" id="paramId"><input type="hidden" id="paramType"><input type="hidden" id="paramAction">
+            </div>
+            <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="submitParamForm()">Сохранить</button></div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Инициализация всплывающих подсказок Bootstrap
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+
+    // Динамически создает и отправляет скрытую форму для выполнения действий
+    function submitActionForm(id, type, action, param = '') {
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = '/action';
+
+        const fields = { id: id, type: type, action: action, param: param };
+        for (const key in fields) {
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = key;
+            hiddenField.value = fields[key];
+            form.appendChild(hiddenField);
+        }
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    // Открывает модальное окно для ввода параметра (например, источника финансирования)
+    function openParamModal(id, type, action, label) {
+        document.getElementById('paramModalLabel').textContent = label;
+        document.getElementById('paramId').value = id;
+        document.getElementById('paramType').value = type;
+        document.getElementById('paramAction').value = action;
+        document.getElementById('paramInput').value = '';
+        new bootstrap.Modal(document.getElementById('paramModal')).show();
+    }
+
+    // Отправляет данные из модального окна с параметром
+    function submitParamForm() {
+        const id = document.getElementById('paramId').value;
+        const type = document.getElementById('paramType').value;
+        const action = document.getElementById('paramAction').value;
+        const param = document.getElementById('paramInput').value;
+        if (param.trim() !== "") {
+            submitActionForm(id, type, action, param);
+        }
+    }
+</script>
+
+</body>
+</html>
