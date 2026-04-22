@@ -1,8 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
+
 class CRUDRepository:
     """Универсальный репозиторий для любых моделей SQLAlchemy"""
+
     def __init__(self, session: Session, model):
         self.session = session
         self.model = model

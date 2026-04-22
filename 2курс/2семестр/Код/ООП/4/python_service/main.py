@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 from models import Base, ComOrg, NonComOrg, Employee
 
-# ПОМЕНЯЙТЕ ДАННЫЕ ДЛЯ ПОДКЛЮЧЕНИЯ
+
 DATABASE_URL = "postgresql://postgres:aklsdfjuqh3t92h3gu32h4go8h235giu23hr8g23n08ufg2h394g@localhost/lab4_db"
 
 engine = create_engine(DATABASE_URL)
@@ -25,18 +25,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 def get_db():
     db = SessionLocal()
-    try: yield db
-    finally: db.close()
+    try:
+        yield db
+    finally:
+        db.close()
 
-# --- РЕПОЗИТОРИЙ (Добавлен update) ---
+
 class CRUDRepository:
     def __init__(self, session: Session, model):
         self.session = session
         self.model = model
 
-    def get_all(self): return self.session.query(self.model).all()
+    def get_all(self):
+        return self.session.query(self.model).all()
 
     def get_by_id(self, item_id: int):
         return self.session.query(self.model).filter(self.model.id == item_id).first()
@@ -52,7 +56,7 @@ class CRUDRepository:
         obj = self.get_by_id(item_id)
         if obj:
             for key, value in data.items():
-                if hasattr(obj, key) and key != 'id': # id не перезаписываем
+                if hasattr(obj, key) and key != "id":
                     setattr(obj, key, value)
             self.session.commit()
             self.session.refresh(obj)
@@ -65,18 +69,32 @@ class CRUDRepository:
             self.session.commit()
         return obj
 
-# --- СХЕМЫ PYDANTIC ---
+
 class ComOrgSchema(BaseModel):
-    name: str; inn: str; employees_count: int; profit: str; business_type: str
+    name: str
+    inn: str
+    employees_count: int
+    profit: str
+    business_type: str
+
 
 class NonComOrgSchema(BaseModel):
-    name: str; inn: str; employees_count: int; purpose: str; source: str
+    name: str
+    inn: str
+    employees_count: int
+    purpose: str
+    source: str
+
 
 class EmployeeSchema(BaseModel):
-    name: str; position: str; org_id: Optional[int] = None
+    name: str
+    position: str
+    org_id: Optional[int] = None
 
-# --- ФАБРИКА РОУТЕРОВ (Добавлены GET /id и PUT /id) ---
-def create_crud_router(model: Type[Any], schema: Type[BaseModel], prefix: str, tags: list) -> APIRouter:
+
+def create_crud_router(
+    model: Type[Any], schema: Type[BaseModel], prefix: str, tags: list
+) -> APIRouter:
     router = APIRouter(prefix=prefix, tags=tags)
 
     @router.get("")
@@ -86,7 +104,8 @@ def create_crud_router(model: Type[Any], schema: Type[BaseModel], prefix: str, t
     @router.get("/{item_id}")
     def get_item(item_id: int, db: Session = Depends(get_db)):
         item = CRUDRepository(db, model).get_by_id(item_id)
-        if not item: raise HTTPException(status_code=404)
+        if not item:
+            raise HTTPException(status_code=404)
         return item
 
     @router.post("")
@@ -96,7 +115,8 @@ def create_crud_router(model: Type[Any], schema: Type[BaseModel], prefix: str, t
     @router.put("/{item_id}")
     def update_item(item_id: int, item: schema, db: Session = Depends(get_db)):
         updated = CRUDRepository(db, model).update(item_id, item.dict())
-        if not updated: raise HTTPException(status_code=404)
+        if not updated:
+            raise HTTPException(status_code=404)
         return updated
 
     @router.delete("/{item_id}")
@@ -107,6 +127,13 @@ def create_crud_router(model: Type[Any], schema: Type[BaseModel], prefix: str, t
 
     return router
 
-app.include_router(create_crud_router(ComOrg, ComOrgSchema, "/api/comorgs", ["ComOrgs"]))
-app.include_router(create_crud_router(NonComOrg, NonComOrgSchema, "/api/noncomorgs", ["NonComOrgs"]))
-app.include_router(create_crud_router(Employee, EmployeeSchema, "/api/employees", ["Employees"]))
+
+app.include_router(
+    create_crud_router(ComOrg, ComOrgSchema, "/api/comorgs", ["ComOrgs"])
+)
+app.include_router(
+    create_crud_router(NonComOrg, NonComOrgSchema, "/api/noncomorgs", ["NonComOrgs"])
+)
+app.include_router(
+    create_crud_router(Employee, EmployeeSchema, "/api/employees", ["Employees"])
+)

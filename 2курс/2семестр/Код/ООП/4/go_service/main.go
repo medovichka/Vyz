@@ -8,26 +8,41 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
 
 type ComOrg struct {
-	ID             int    `json:"id"`
-	Name           string `json:"name"`
-	Inn            string `json:"inn"`
-	EmployeesCount int    `json:"employees_count"`
-	Profit         string `json:"profit"`
-	BusinessType   string `json:"business_type"`
+	ID           int    `json:"id"`
+	Name         string `json:"name"`
+	Inn          string `json:"inn"`
+	Profit       string `json:"profit"`
+	BusinessType string `json:"business_type"`
+}
+
+// Taxes для коммерческих - 20% от прибыли
+func (c ComOrg) Taxes() int {
+	if c.Profit == "" {
+		return 0
+	}
+	p, err := strconv.Atoi(c.Profit)
+	if err != nil || p < 0 {
+		return 0
+	}
+	tax := p * 20 / 100
+	if tax < 0 {
+		return 0
+	}
+	return tax
 }
 
 type NonComOrg struct {
-	ID             int    `json:"id"`
-	Name           string `json:"name"`
-	Inn            string `json:"inn"`
-	EmployeesCount int    `json:"employees_count"`
-	Purpose        string `json:"purpose"`
-	Source         string `json:"source"`
+	ID      int    `json:"id"`
+	Name    string `json:"name"`
+	Inn     string `json:"inn"`
+	Purpose string `json:"purpose"`
+	Source  string `json:"source"`
 }
 
 type Employee struct {
@@ -35,18 +50,36 @@ type Employee struct {
 	Name     string `json:"name"`
 	Position string `json:"position"`
 	OrgID    int    `json:"org_id"`
+	OrgName  string `json:"org_name"` // Добавлено поле для названия организации
 }
 
-type OrgOption struct { ID int; Name string }
-
-func (c ComOrg) Taxes() int {
-	if c.Profit == "" { return 0 }
-	p, err := strconv.Atoi(c.Profit)
-	if err != nil { return 0 }
-	return p * 20 / 100
+type OrgOption struct {
+	ID   int
+	Name string
 }
 
-func (n NonComOrg) Taxes() int { return n.EmployeesCount * 10 }
+// Расширенная структура для отображения организации с количеством сотрудников
+type ComOrgDisplay struct {
+	ComOrg
+	EmployeesCount int
+	Taxes          int
+}
+
+type NonComOrgDisplay struct {
+	NonComOrg
+	EmployeesCount int
+	Taxes          int
+}
+
+type TemplateData struct {
+	ComOrgs      []ComOrgDisplay
+	NonComOrgs   []NonComOrgDisplay
+	Employees    []Employee
+	AllOrgs      []OrgOption
+	NameFilter   string
+	MinEmployees int
+	MaxEmployees int
+}
 
 var cache = make(map[string][]byte)
 var expiration = make(map[string]int64)
@@ -58,10 +91,14 @@ func getFromCacheOrFetch(url string) ([]byte, error) {
 	exp := expiration[url]
 	cacheMutex.RUnlock()
 
-	if found && time.Now().Unix() < exp { return val, nil }
+	if found && time.Now().Unix() < exp {
+		return val, nil
+	}
 
 	resp, err := http.Get(url)
-	if err != nil { return nil, err }
+	if err != nil {
+		return nil, err
+	}
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(resp.Body)
 
@@ -88,88 +125,256 @@ func requestJSON(method string, url string, data interface{}) {
 
 const pythonAPI = "http://localhost:8000/api"
 
+// Подсчет сотрудников для организации
+func countEmployees(employees []Employee, orgID int) int {
+	count := 0
+	for _, emp := range employees {
+		if emp.OrgID == orgID {
+			count++
+		}
+	}
+	return count
+}
+
+// Вычисление налога для некоммерческой организации
+func calculateNonComTax(employeesCount int) int {
+	tax := employeesCount * 10
+	if tax < 0 {
+		return 0
+	}
+	return tax
+}
+
+func filterOrgs(comOrgs []ComOrgDisplay, nonComOrgs []NonComOrgDisplay, nameFilter string, minEmp, maxEmp int) ([]ComOrgDisplay, []NonComOrgDisplay) {
+	filteredCom := []ComOrgDisplay{}
+	filteredNon := []NonComOrgDisplay{}
+
+	for _, org := range comOrgs {
+		if nameFilter != "" && !strings.Contains(strings.ToLower(org.Name), strings.ToLower(nameFilter)) {
+			continue
+		}
+		if minEmp > 0 && org.EmployeesCount < minEmp {
+			continue
+		}
+		if maxEmp > 0 && org.EmployeesCount > maxEmp {
+			continue
+		}
+		filteredCom = append(filteredCom, org)
+	}
+
+	for _, org := range nonComOrgs {
+		if nameFilter != "" && !strings.Contains(strings.ToLower(org.Name), strings.ToLower(nameFilter)) {
+			continue
+		}
+		if minEmp > 0 && org.EmployeesCount < minEmp {
+			continue
+		}
+		if maxEmp > 0 && org.EmployeesCount > maxEmp {
+			continue
+		}
+		filteredNon = append(filteredNon, org)
+	}
+
+	return filteredCom, filteredNon
+}
+
 func indexHandler(w http.ResponseWriter, r *http.Request) {
+	nameFilter := r.URL.Query().Get("nameFilter")
+	minEmp, _ := strconv.Atoi(r.URL.Query().Get("minEmployees"))
+	maxEmp, _ := strconv.Atoi(r.URL.Query().Get("maxEmployees"))
+
 	cd, _ := getFromCacheOrFetch(pythonAPI + "/comorgs")
 	nd, _ := getFromCacheOrFetch(pythonAPI + "/noncomorgs")
 	ed, _ := getFromCacheOrFetch(pythonAPI + "/employees")
 
-	var comOrgs []ComOrg; json.Unmarshal(cd, &comOrgs)
-	var nonComOrgs []NonComOrg; json.Unmarshal(nd, &nonComOrgs)
-	var employees []Employee; json.Unmarshal(ed, &employees)
+	var comOrgs []ComOrg
+	var nonComOrgs []NonComOrg
+	var employees []Employee
+	json.Unmarshal(cd, &comOrgs)
+	json.Unmarshal(nd, &nonComOrgs)
+	json.Unmarshal(ed, &employees)
 
-	totalTaxes := 0
+	// Создаем карту для быстрого поиска названия организации
+	orgNameMap := make(map[int]string)
+	for _, org := range comOrgs {
+		orgNameMap[org.ID] = org.Name + " (Ком)"
+	}
+	for _, org := range nonComOrgs {
+		orgNameMap[org.ID] = org.Name + " (Неком)"
+	}
+
+	// Заполняем OrgName для каждого сотрудника
+	for i := range employees {
+		if name, ok := orgNameMap[employees[i].OrgID]; ok {
+			employees[i].OrgName = name
+		} else {
+			employees[i].OrgName = ""
+		}
+	}
+
+	// Преобразуем в отображаемые структуры с подсчетом сотрудников
+	var comOrgsDisplay []ComOrgDisplay
+	for _, org := range comOrgs {
+		empCount := countEmployees(employees, org.ID)
+		comOrgsDisplay = append(comOrgsDisplay, ComOrgDisplay{
+			ComOrg:         org,
+			EmployeesCount: empCount,
+			Taxes:          org.Taxes(),
+		})
+	}
+
+	var nonComOrgsDisplay []NonComOrgDisplay
+	for _, org := range nonComOrgs {
+		empCount := countEmployees(employees, org.ID)
+		nonComOrgsDisplay = append(nonComOrgsDisplay, NonComOrgDisplay{
+			NonComOrg:      org,
+			EmployeesCount: empCount,
+			Taxes:          calculateNonComTax(empCount),
+		})
+	}
+
+	// Применяем фильтрацию
+	filteredCom, filteredNon := filterOrgs(comOrgsDisplay, nonComOrgsDisplay, nameFilter, minEmp, maxEmp)
+
+	// Формируем список всех организаций для выпадающего списка
 	var allOrgs []OrgOption
-	for _, o := range comOrgs { totalTaxes += o.Taxes(); allOrgs = append(allOrgs, OrgOption{ID: o.ID, Name: o.Name + " (Ком)"}) }
-	for _, o := range nonComOrgs { totalTaxes += o.Taxes(); allOrgs = append(allOrgs, OrgOption{ID: o.ID, Name: o.Name + " (Неком)"}) }
+	for _, o := range comOrgs {
+		allOrgs = append(allOrgs, OrgOption{ID: o.ID, Name: o.Name + " (Ком)"})
+	}
+	for _, o := range nonComOrgs {
+		allOrgs = append(allOrgs, OrgOption{ID: o.ID, Name: o.Name + " (Неком)"})
+	}
+
+	data := TemplateData{
+		ComOrgs:      filteredCom,
+		NonComOrgs:   filteredNon,
+		Employees:    employees,
+		AllOrgs:      allOrgs,
+		NameFilter:   nameFilter,
+		MinEmployees: minEmp,
+		MaxEmployees: maxEmp,
+	}
 
 	tmpl := template.Must(template.ParseFiles("templates/index.html"))
-	tmpl.Execute(w, map[string]interface{}{ "ComOrgs": comOrgs, "NonComOrgs": nonComOrgs, "Employees": employees, "TotalTaxes": totalTaxes, "AllOrgs": allOrgs })
+	tmpl.Execute(w, data)
 }
 
-// ========== НОВЫЙ ОБРАБОТЧИК ДЛЯ БИЗНЕС-МЕТОДОВ ==========
+func getOrgHandler(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	orgType := r.URL.Query().Get("type")
+	url := fmt.Sprintf("%s/%s/%s", pythonAPI, orgType, id)
+	resp, err := http.Get(url)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(body)
+}
+
+func editHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	id := r.FormValue("id")
+	orgType := r.FormValue("type")
+	url := fmt.Sprintf("%s/%s/%s", pythonAPI, orgType, id)
+
+	if orgType == "comorgs" {
+		profit := r.FormValue("profit")
+		if profitInt, err := strconv.Atoi(profit); err != nil || profitInt < 0 {
+			profit = "0"
+		}
+
+		org := ComOrg{
+			Name:         r.FormValue("name"),
+			Inn:          r.FormValue("inn"),
+			Profit:       profit,
+			BusinessType: r.FormValue("businessType"),
+		}
+		requestJSON(http.MethodPut, url, org)
+	} else if orgType == "noncomorgs" {
+		org := NonComOrg{
+			Name:    r.FormValue("name"),
+			Inn:     r.FormValue("inn"),
+			Purpose: r.FormValue("purpose"),
+			Source:  r.FormValue("source"),
+		}
+		requestJSON(http.MethodPut, url, org)
+	}
+	invalidateCache()
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+// Бизнес-методы
 func actionHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	action := r.FormValue("action")
 	id := r.FormValue("id")
-	orgType := r.FormValue("type") // comorgs или noncomorgs
-
+	orgType := r.FormValue("type")
 	url := fmt.Sprintf("%s/%s/%s", pythonAPI, orgType, id)
 
-	// 1. Получаем текущую организацию из Python (БД)
 	resp, _ := http.Get(url)
 	body, _ := io.ReadAll(resp.Body)
 
-	// 2. В зависимости от типа меняем данные и отправляем обратно PUT
 	if orgType == "comorgs" {
 		var org ComOrg
 		json.Unmarshal(body, &org)
-
 		switch action {
-		case "hireEmployee":
-			org.EmployeesCount++
 		case "expandBusiness":
-			// Расширение бизнеса: прибыль увеличивается на 20%
 			p, _ := strconv.Atoi(org.Profit)
-			org.Profit = strconv.Itoa(int(float64(p) * 1.2))
+			newProfit := int(float64(p) * 1.2)
+			if newProfit < 0 {
+				newProfit = 0
+			}
+			org.Profit = strconv.Itoa(newProfit)
+			requestJSON(http.MethodPut, url, org)
 		}
-		requestJSON(http.MethodPut, url, org)
-
 	} else if orgType == "noncomorgs" {
 		var org NonComOrg
 		json.Unmarshal(body, &org)
-
 		switch action {
-		case "hireEmployee":
-			org.EmployeesCount++
 		case "attractFunding":
-			// Привлечение финансирования (добавляем строку к источникам)
 			newSource := r.FormValue("param")
 			if org.Source == "" {
 				org.Source = newSource
 			} else {
 				org.Source = org.Source + ", " + newSource
 			}
+			requestJSON(http.MethodPut, url, org)
 		}
-		requestJSON(http.MethodPut, url, org)
 	}
-
-	invalidateCache() // Сбрасываем кэш, чтобы обновить UI
+	invalidateCache()
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-// Стандартные CRUD функции
 func addComOrgHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	ec, _ := strconv.Atoi(r.FormValue("employeesCount"))
-	requestJSON(http.MethodPost, pythonAPI+"/comorgs", ComOrg{Name: r.FormValue("name"), Inn: r.FormValue("inn"), EmployeesCount: ec, Profit: r.FormValue("profit"), BusinessType: r.FormValue("businessType")})
+
+	profit := r.FormValue("profit")
+	if profitInt, err := strconv.Atoi(profit); err != nil || profitInt < 0 {
+		profit = "0"
+	}
+
+	requestJSON(http.MethodPost, pythonAPI+"/comorgs", ComOrg{
+		Name:         r.FormValue("name"),
+		Inn:          r.FormValue("inn"),
+		Profit:       profit,
+		BusinessType: r.FormValue("businessType"),
+	})
 	invalidateCache()
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func addNonComOrgHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	ec, _ := strconv.Atoi(r.FormValue("employeesCount"))
-	requestJSON(http.MethodPost, pythonAPI+"/noncomorgs", NonComOrg{Name: r.FormValue("name"), Inn: r.FormValue("inn"), EmployeesCount: ec, Purpose: r.FormValue("purpose"), Source: r.FormValue("source")})
+
+	requestJSON(http.MethodPost, pythonAPI+"/noncomorgs", NonComOrg{
+		Name:    r.FormValue("name"),
+		Inn:     r.FormValue("inn"),
+		Purpose: r.FormValue("purpose"),
+		Source:  r.FormValue("source"),
+	})
 	invalidateCache()
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
@@ -177,7 +382,11 @@ func addNonComOrgHandler(w http.ResponseWriter, r *http.Request) {
 func addEmpHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	orgID, _ := strconv.Atoi(r.FormValue("orgId"))
-	requestJSON(http.MethodPost, pythonAPI+"/employees", Employee{Name: r.FormValue("name"), Position: r.FormValue("position"), OrgID: orgID})
+	requestJSON(http.MethodPost, pythonAPI+"/employees", Employee{
+		Name:     r.FormValue("name"),
+		Position: r.FormValue("position"),
+		OrgID:    orgID,
+	})
 	invalidateCache()
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
@@ -190,13 +399,25 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
+func deleteEmployeeHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	id := r.FormValue("id")
+	req, _ := http.NewRequest(http.MethodDelete, pythonAPI+"/employees/"+id, nil)
+	http.DefaultClient.Do(req)
+	invalidateCache()
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
 func main() {
 	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/action", actionHandler) // Наш новый маршрут
+	http.HandleFunc("/getOrg", getOrgHandler)
+	http.HandleFunc("/edit", editHandler)
+	http.HandleFunc("/action", actionHandler)
 	http.HandleFunc("/addComOrg", addComOrgHandler)
 	http.HandleFunc("/addNonComOrg", addNonComOrgHandler)
 	http.HandleFunc("/addEmp", addEmpHandler)
 	http.HandleFunc("/delete", deleteHandler)
+	http.HandleFunc("/deleteEmployee", deleteEmployeeHandler)
 
 	fmt.Println("Go Server is running on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)

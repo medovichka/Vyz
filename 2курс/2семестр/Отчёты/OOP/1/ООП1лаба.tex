@@ -144,23 +144,24 @@
 \begin{paracol}{3}
   \textbf{Базовые поля:}
   \begin{itemize}
-   \item \texttt{name}
-   \item \texttt{inn}
-   \item \texttt{employees}
+   \item \texttt{name}: protected string - название организации
+   \item \texttt{inn}: protected int - ИНН организации
+   \item \texttt{employees}: protected int - количество сотрудников
   \end{itemize}
 
   \switchcolumn
   \textbf{Функции для переопределения:}
   \begin{itemize}
-    \item \texttt{payTaxes()}
-    \item \texttt{report()}
+    \item \texttt{payTaxes()}: virtual - возвращает число, находящееся по формуле
+    \item \texttt{report()}: virtual - возвращает отчёт со значениями полей организации
   \end{itemize}
 
   \switchcolumn
   \textbf{Общие методы:}
   \begin{itemize}
-    \item \texttt{hireEmployee()}
-    \item \texttt{reklama()}
+    \item \texttt{hireEmployee()}: void - увеличивает количество сотрудников
+    \item \texttt{reklama()}: void - возвращает рекламную строку с названием организации
+
   \end{itemize}
 \end{paracol}
 
