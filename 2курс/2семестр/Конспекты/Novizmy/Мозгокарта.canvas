@@ -2,7 +2,7 @@
 	"nodes":[
 		{"id":"cc4156ef79ad2cf4","type":"group","x":-1240,"y":720,"width":1520,"height":1020,"label":"Сюжет"},
 		{"id":"e87ff827a3a8e847","type":"group","x":516,"y":870,"width":1393,"height":870,"label":"Геймлпей"},
-		{"id":"7c863dae70baa5d2","type":"file","file":"ВУЗ/2курс/2семестр/Конспекты/Мультимедийка/Novizmy.md","x":316,"y":65,"width":544,"height":400},
+		{"id":"7c863dae70baa5d2","type":"file","file":"ВУЗ/2курс/2семестр/Конспекты/Novizmy/Novizmy.md","x":316,"y":65,"width":544,"height":400},
 		{"id":"0a6a6a2f65c3795e","type":"text","text":"[[Novizmy]]","x":391,"y":560,"width":250,"height":73},
 		{"id":"d5136951eb9a5c6e","type":"text","text":"[[Novizmy#Механики]]","x":1529,"y":920,"width":250,"height":60},
 		{"id":"9d2263baf88cb43c","type":"text","text":"[[Novizmy#Геймплей]]","x":669,"y":920,"width":250,"height":60},
