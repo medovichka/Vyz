@@ -379,6 +379,35 @@ func addNonComOrgHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
+func getEmployeeHandler(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	url := fmt.Sprintf("%s/employees/%s", pythonAPI, id)
+	resp, err := http.Get(url)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(body)
+}
+
+func editEmployeeHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	id := r.FormValue("id")
+	orgID, _ := strconv.Atoi(r.FormValue("orgId"))
+
+	url := fmt.Sprintf("%s/employees/%s", pythonAPI, id)
+	requestJSON(http.MethodPut, url, Employee{
+		Name:     r.FormValue("name"),
+		Position: r.FormValue("position"),
+		OrgID:    orgID,
+	})
+
+	invalidateCache()
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
 func addEmpHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	orgID, _ := strconv.Atoi(r.FormValue("orgId"))
@@ -418,7 +447,11 @@ func main() {
 	http.HandleFunc("/addEmp", addEmpHandler)
 	http.HandleFunc("/delete", deleteHandler)
 	http.HandleFunc("/deleteEmployee", deleteEmployeeHandler)
+	http.HandleFunc("/getEmployee", getEmployeeHandler)
+	http.HandleFunc("/editEmployee", editEmployeeHandler)
 
+	fmt.Println("Go Server is running on http://localhost:8080")
+	http.ListenAndServe(":8080", nil)
 	fmt.Println("Go Server is running on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
 }

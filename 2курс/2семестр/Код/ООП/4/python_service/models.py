@@ -1,3 +1,5 @@
+
+
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship
 
@@ -10,7 +12,8 @@ class Organization(Base):
     name = Column(String)
     inn = Column(String)
 
-    employees_count = Column(Integer)
+
+    employees_count = Column(Integer, default=0, nullable=False)
 
     employees = relationship(
         "Employee", back_populates="organization", cascade="all, delete-orphan"

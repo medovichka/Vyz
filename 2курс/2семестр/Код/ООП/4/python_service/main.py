@@ -2,11 +2,12 @@ from fastapi import FastAPI, Depends, HTTPException, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.exc import SQLAlchemyError
 from typing import Optional, Type, Any
 from pydantic import BaseModel
 
+
 from models import Base, ComOrg, NonComOrg, Employee
+from repository import CRUDRepository
 
 
 DATABASE_URL = "postgresql://postgres:aklsdfjuqh3t92h3gu32h4go8h235giu23hr8g23n08ufg2h394g@localhost/lab4_db"
@@ -34,46 +35,9 @@ def get_db():
         db.close()
 
 
-class CRUDRepository:
-    def __init__(self, session: Session, model):
-        self.session = session
-        self.model = model
-
-    def get_all(self):
-        return self.session.query(self.model).all()
-
-    def get_by_id(self, item_id: int):
-        return self.session.query(self.model).filter(self.model.id == item_id).first()
-
-    def create(self, data: dict):
-        obj = self.model(**data)
-        self.session.add(obj)
-        self.session.commit()
-        self.session.refresh(obj)
-        return obj
-
-    def update(self, item_id: int, data: dict):
-        obj = self.get_by_id(item_id)
-        if obj:
-            for key, value in data.items():
-                if hasattr(obj, key) and key != "id":
-                    setattr(obj, key, value)
-            self.session.commit()
-            self.session.refresh(obj)
-        return obj
-
-    def delete(self, item_id: int):
-        obj = self.get_by_id(item_id)
-        if obj:
-            self.session.delete(obj)
-            self.session.commit()
-        return obj
-
-
 class ComOrgSchema(BaseModel):
     name: str
     inn: str
-    employees_count: int
     profit: str
     business_type: str
 
@@ -81,7 +45,6 @@ class ComOrgSchema(BaseModel):
 class NonComOrgSchema(BaseModel):
     name: str
     inn: str
-    employees_count: int
     purpose: str
     source: str
 
@@ -114,7 +77,9 @@ def create_crud_router(
 
     @router.put("/{item_id}")
     def update_item(item_id: int, item: schema, db: Session = Depends(get_db)):
-        updated = CRUDRepository(db, model).update(item_id, item.dict())
+
+        repo = CRUDRepository(db, model)
+        updated = repo.update(item_id, item.dict())
         if not updated:
             raise HTTPException(status_code=404)
         return updated

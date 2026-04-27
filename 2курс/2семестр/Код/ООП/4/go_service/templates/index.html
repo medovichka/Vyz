@@ -151,7 +151,9 @@
                         <td>{{ .Name }}</td>
                         <td>{{ .Position }}</td>
                         <td>{{ if .OrgName }}{{ .OrgName }}{{ else }}<span class="text-muted">Без организации</span>{{ end }}</td>
+
                         <td>
+                            <button class="btn btn-sm btn-edit" onclick="openEditEmployeeModal({{.ID}})" title="Редактировать / Нанять"><i class="fas fa-edit"></i></button>
                             <form method="post" action="/deleteEmployee" onsubmit="return confirm('Удалить сотрудника {{.Name}}?')" class="d-inline">
                                 <input type="hidden" name="id" value="{{.ID}}">
                                 <button type="submit" class="btn btn-sm btn-delete" title="Удалить"><i class="fas fa-trash"></i></button>
@@ -247,6 +249,41 @@
 </div>
 
 <!-- ========== МОДАЛЬНОЕ ОКНО ДЛЯ РЕДАКТИРОВАНИЯ ========== -->
+ <div class="modal fade" id="editEmployeeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Редактировать сотрудника</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editEmployeeForm" method="post" action="/editEmployee" class="row g-3">
+                    <input type="hidden" name="id" id="editEmpId">
+                    <div class="col-12">
+                        <label class="form-label">ФИО *</label>
+                        <input type="text" name="name" id="editEmpName" class="form-control" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Должность</label>
+                        <input type="text" name="position" id="editEmpPosition" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Организация (Найм / Увольнение)</label>
+                        <select name="orgId" id="editEmpOrg" class="form-select">
+                            <option value="0">Без организации (Уволен)</option>
+                            {{ range .AllOrgs }}
+                            <option value="{{.ID}}">{{.Name}}</option>
+                            {{end}}
+                        </select>
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -385,7 +422,24 @@
             submitActionForm(id, type, action, param);
         }
     }
+    function openEditEmployeeModal(id) {
+        fetch(`/getEmployee?id=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('editEmpId').value = data.id;
+                document.getElementById('editEmpName').value = data.name || '';
+                document.getElementById('editEmpPosition').value = data.position || '';
 
+                // Устанавливаем организацию. Если null, то ставим 0
+                document.getElementById('editEmpOrg').value = data.org_id || 0;
+
+                new bootstrap.Modal(document.getElementById('editEmployeeModal')).show();
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки данных сотрудника:', error);
+                alert('Не удалось загрузить данные сотрудника');
+            });
+    }
     // Открытие модального окна редактирования
     function openEditModal(id, orgType) {
         if (orgType === 'comorgs') {
