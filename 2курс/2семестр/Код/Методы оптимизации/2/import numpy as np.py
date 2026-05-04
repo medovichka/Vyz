@@ -1,22 +1,25 @@
+"""
+Лабораторная работа №2
+Метод ветвей и границ для целочисленного линейного программирования
+(Только максимизация, так как DualSimplex хорошо работает с ней)
+"""
+
 import numpy as np
-from collections import deque
-import heapq
 
-
+# ==================== ВАШ DUAL SIMPLEX (скопируйте сюда) ====================
 class DualSimplex:
-    def __init__(self, c, A, b, is_max=True, verbose=False):
+    def __init__(self, c, A, b, is_max=True):
         self.c = np.array(c, dtype=float)
         self.A = np.array(A, dtype=float).copy()
         self.b = np.array(b, dtype=float).copy()
         self.is_max = is_max
-        self.verbose = verbose
         self._prepare_table()
 
     def _prepare_table(self):
         m, n = self.A.shape
         self.table = np.zeros((m + 1, n + m + 1))
         self.table[:m, :n] = self.A
-        self.table[:m, n : n + m] = np.eye(m)
+        self.table[:m, n:n + m] = np.eye(m)
         self.table[:m, -1] = self.b
         self.table[m, :n] = -self.c if self.is_max else self.c
         self.basis = list(range(n, n + m))
@@ -28,12 +31,10 @@ class DualSimplex:
         return f"x{idx + 1}"
 
     def _print_table(self, iteration):
-        if not self.verbose:
-            return
-        header = "Initial" if iteration == 0 else f"Iteration {iteration}"
+        header = "Начальная таблица" if iteration == 0 else f"Таблица после итерации {iteration}"
         print(f"  {header}")
         col_names = [self._var_name(i) for i in range(self.n_vars)] + ["b"]
-        print(f"{'Basis':<8}", end="")
+        print(f"{'Базис':<8}", end="")
         for h in col_names:
             print(f"{h:>9}", end="")
         print()
@@ -45,32 +46,49 @@ class DualSimplex:
                 print(f"{self.table[i, j]:9.3f}", end="")
             print()
         print(f"{'─' * 65}")
-        rhs = self.table[: self.m, -1]
-        coefs = self.table[self.m, : self.n_vars]
+        rhs = self.table[:self.m, -1]
+        coefs = self.table[self.m, :self.n_vars]
         feasible = np.all(rhs >= -1e-9)
         optimal = np.all(coefs >= -1e-9) if self.is_max else np.all(coefs <= 1e-9)
-        print(f"  Feasible: {feasible}, Optimal: {optimal}")
+        print(f"  Допустимость:  {'✓ все b ≥ 0' if feasible else f'✗ отрицательные b: {np.round(rhs[rhs < 0], 3)}'}")
+        print(f"  Оптимальность: {'✓ оптимум достигнут' if optimal else '✗'}")
         solution = np.zeros(self.n)
         for i in range(self.m):
             idx = self.basis[i]
             if idx < self.n:
                 solution[idx] = self.table[i, -1]
         f_val = self.table[self.m, -1]
-        vals = ",  ".join(
-            f"{self._var_name(i)} = {solution[i]:.4f}" for i in range(self.n)
-        )
-        print(f"  Current solution: {vals}, F = {f_val:.4f}")
+        vals = ",  ".join(f"{self._var_name(i)} = {solution[i]:.4f}" for i in range(self.n))
+        print(f"  Текущее решение: {vals},  F = {f_val:.4f}")
 
     def _pivot(self, row, col):
         pivot = self.table[row, col]
         if abs(pivot) < 1e-12:
-            raise ValueError(f"Pivot too small: {pivot}")
+            raise ValueError(f"Разрешающий элемент слишком мал: {pivot}")
         self.table[row, :] /= pivot
         for i in range(self.m + 1):
             if i != row:
                 self.table[i, :] -= self.table[i, col] * self.table[row, :]
 
-    def _extract_solution_info(self):
+    def _check_alternative_optima(self):
+        zero_tolerance = 1e-9
+        has_alternative = False
+        alternative_vars = []
+        for j in range(self.n_vars):
+            if j not in self.basis:
+                coef = self.table[self.m, j]
+                if abs(coef) < zero_tolerance:
+                    col_vals = self.table[:self.m, j]
+                    if np.any(col_vals > zero_tolerance):
+                        has_alternative = True
+                        alternative_vars.append(self._var_name(j))
+        if has_alternative:
+            print("\n" + "=" * 65)
+            print("  ⚠️ Оптимальное решение не единственно.")
+            print(f"  Небазисные переменные с нулевой оценкой: {', '.join(alternative_vars)}")
+        return has_alternative
+
+    def _extract_solution(self):
         solution = np.zeros(self.n)
         for i in range(self.m):
             idx = self.basis[i]
@@ -79,446 +97,381 @@ class DualSimplex:
         value = self.table[self.m, -1]
         if not self.is_max:
             value = -value
-
-        alt = False
-        zero_tol = 1e-9
-        for j in range(self.n_vars):
-            if j not in self.basis:
-                coef = self.table[self.m, j]
-                if abs(coef) < zero_tol:
-                    col_vals = self.table[: self.m, j]
-                    if np.any(col_vals > zero_tol):
-                        alt = True
-                        break
-        return {"solution": solution, "value": value, "alternative_optima": alt}
-
-    def _check_unbounded(self, col):
-        col_vals = self.table[: self.m, col]
-        return np.all(col_vals <= 1e-9)
+        print(f"\n{'=' * 65}")
+        print("  ОПТИМАЛЬНОЕ РЕШЕНИЕ")
+        print(f"{'=' * 65}")
+        for i in range(self.n):
+            print(f"  {self._var_name(i)} = {solution[i]:.4f}")
+        print(f"\n  F = {value:.4f}")
+        print(f"{'=' * 65}")
+        self._check_alternative_optima()
+        return {"solution": solution, "value": value}
 
     def solve(self):
-        if self.verbose:
-            print("\n" + "=" * 65)
-            print("  DUAL SIMPLEX METHOD")
-            print("=" * 65)
-            print(f" Problem: {'maximization' if self.is_max else 'minimization'}")
-            print(f" Variables: {self.n}, constraints: {self.m}")
+        print("\n" + "=" * 65)
+        print("  ДВОЙСТВЕННЫЙ СИМПЛЕКС-МЕТОД")
+        print("=" * 65)
+        print(f"  Задача: {'максимизация' if self.is_max else 'минимизация'} F")
+        print(f"  Переменных: {self.n}, ограничений: {self.m}")
         iteration = 0
         self._print_table(iteration)
-
         while True:
-            rhs = self.table[: self.m, -1]
+            rhs = self.table[:self.m, -1]
             if np.all(rhs >= -1e-9):
-                break
-
+                coefs = self.table[self.m, :self.n_vars]
+                optimal = np.all(coefs >= -1e-9) if self.is_max else np.all(coefs <= 1e-9)
+                if optimal:
+                    print("\n  Решение оптимально. Метод завершён.")
+                    return self._extract_solution()
+                else:
+                    print("\n  Двойственная фаза завершена — решение допустимо.")
+                    print("  Переход к прямому симплекс-методу для достижения оптимума.\n")
+                    return self._primal_simplex(iteration)
             row = int(np.argmin(rhs))
             iteration += 1
-            if self.verbose:
-                print(
-                    f"\n Dual iteration {iteration}: leaving {self._var_name(self.basis[row])} (b = {rhs[row]:.3f})"
-                )
-            row_coefs = self.table[row, : self.n_vars]
+            print(f"\n  Шаг {iteration}: выводим {self._var_name(self.basis[row])} "
+                  f"(b = {rhs[row]:.3f}) — наиболее отрицательное b")
+            row_coefs = self.table[row, :self.n_vars]
             if np.all(row_coefs >= -1e-9):
-                if self.verbose:
-                    print("\n Infeasible problem: no solution.")
+                print("\n  Задача не имеет решений: система ограничений несовместна.")
                 return None
-            target = self.table[self.m, : self.n_vars]
+            target = self.table[self.m, :self.n_vars]
             ratios = []
             for j in range(self.n_vars):
                 if row_coefs[j] < -1e-9:
                     ratios.append((abs(target[j] / row_coefs[j]), j))
             _, col = min(ratios, key=lambda x: x[0])
-            if self.verbose:
-                print(
-                    f" Entering {self._var_name(col)} (ratio = {abs(target[col]/row_coefs[col]):.4f})"
-                )
+            print(f"  Вводим {self._var_name(col)} "
+                  f"(a = {row_coefs[col]:.3f}, Δ = {target[col]:.3f}, "
+                  f"отношение = {abs(target[col] / row_coefs[col]):.4f})")
             self._pivot(row, col)
             self.basis[row] = col
             self._print_table(iteration)
 
+    def _primal_simplex(self, start_iteration):
+        iteration = start_iteration
         while True:
-            coefs = self.table[self.m, : self.n_vars]
+            coefs = self.table[self.m, :self.n_vars]
             if self.is_max:
                 if np.all(coefs >= -1e-9):
-                    if self.verbose:
-                        print("\n Optimal solution reached.")
-                    return self._extract_solution_info()
+                    print("\n  Оптимум достигнут.")
+                    return self._extract_solution()
                 col = int(np.argmin(coefs))
             else:
                 if np.all(coefs <= 1e-9):
-                    return self._extract_solution_info()
+                    return self._extract_solution()
                 col = int(np.argmax(coefs))
-
-            if self._check_unbounded(col):
-                if self.verbose:
-                    print(
-                        "\n Unbounded problem: objective can be increased indefinitely."
-                    )
+            col_vals = self.table[:self.m, col]
+            if np.all(col_vals <= 1e-9):
+                print("\n  Целевая функция не ограничена — задача не имеет конечного оптимума.")
                 return None
-
             ratios = []
             for i in range(self.m):
-                if self.table[i, col] > 1e-9:
-                    ratios.append((self.table[i, -1] / self.table[i, col], i))
+                if col_vals[i] > 1e-9:
+                    ratios.append((self.table[i, -1] / col_vals[i], i))
             _, row = min(ratios, key=lambda x: x[0])
             iteration += 1
-            if self.verbose:
-                print(
-                    f" Primal iteration {iteration}: entering {self._var_name(col)}, leaving {self._var_name(self.basis[row])}"
-                )
+            print(f"  Шаг {iteration} (прямой): вводим {self._var_name(col)}, "
+                  f"выводим {self._var_name(self.basis[row])}")
             self._pivot(row, col)
             self.basis[row] = col
             self._print_table(iteration)
 
 
+
+
+# ==================== МЕТОД ВЕТВЕЙ И ГРАНИЦ ====================
 class BranchAndBound:
-    def __init__(
-        self,
-        c,
-        A,
-        b,
-        is_max=True,
-        integer_vars=None,
-        branching_strategy="first",
-        search_strategy="DFS",
-        verbose=True,
-    ):
+    def __init__(self, c, A, b, integer_vars=None):
         self.c = np.array(c, dtype=float)
         self.A = np.array(A, dtype=float).copy()
         self.b = np.array(b, dtype=float).copy()
-        self.is_max = is_max
-        self.integer_vars = (
-            integer_vars if integer_vars is not None else list(range(len(c)))
-        )
-        self.branching_strategy = branching_strategy
-        self.search_strategy = search_strategy
-        self.verbose = verbose
+        self.integer_vars = integer_vars if integer_vars is not None else list(range(len(c)))
 
-        self.best_value = -np.inf if is_max else np.inf
+        self.best_value = -np.inf
         self.best_solution = None
-        self.best_is_alternative = False
-        self.nodes = []
-        self.node_counter = 0
-        self.iteration_counter = 0
+        self.lp_count = 0
+        self.node_count = 0
 
-    class Node:
-        def __init__(self, parent_id, constraints, depth):
-            self.id = None
-            self.parent_id = parent_id
-            self.constraints = constraints
-            self.depth = depth
-            self.lp_value = None
-            self.lp_solution = None
-            self.is_integer = False
-            self.is_infeasible = False
-            self.is_pruned = False
-            self.children = []
-
-    def _build_LP(self, constraints):
-        A_new = self.A.copy()
-        b_new = self.b.copy()
-        for var_idx, bound_type, bound_val in constraints:
-            row = np.zeros(self.A.shape[1])
+    def _add_constraints(self, A, b, constraints):
+        A_new = A.copy()
+        b_new = b.copy()
+        for var_idx, op, val in constraints:
+            row = np.zeros(A.shape[1])
             row[var_idx] = 1.0
-            if bound_type == "le":
-
+            if op == '<=':
                 A_new = np.vstack([A_new, row])
-                b_new = np.append(b_new, bound_val)
-            elif bound_type == "ge":
-
+                b_new = np.append(b_new, val)
+            elif op == '>=':
                 A_new = np.vstack([A_new, -row])
-                b_new = np.append(b_new, -bound_val)
+                b_new = np.append(b_new, -val)
         return A_new, b_new
 
-    def _solve_LP(self, constraints):
-        A_new, b_new = self._build_LP(constraints)
-        solver = DualSimplex(self.c, A_new, b_new, is_max=self.is_max, verbose=False)
+    def _solve_lp(self, A, b):
+        self.lp_count += 1
+        solver = DualSimplex(self.c, A, b, is_max=True)
+        # Подавляем вывод
+        import sys
+        import io
+        old = sys.stdout
+        sys.stdout = io.StringIO()
         result = solver.solve()
-        if result is None:
+        sys.stdout = old
+        return result
 
-            return None, "infeasible"
-        return result, "ok"
-
-    def _pick_branching_variable(self, sol):
-        fracs = []
-        for j in self.integer_vars:
-            val = sol[j]
-            if abs(val - round(val)) > 1e-7:
-                frac = val - np.floor(val)
-                fracs.append((j, frac))
-        if not fracs:
-            return None
-        if self.branching_strategy == "first":
-            return fracs[0][0]
-        elif self.branching_strategy == "most_fractional":
-
-            return max(fracs, key=lambda x: min(x[1], 1 - x[1]))[0]
-        else:
-            return fracs[0][0]
-
-    def _is_integer_solution(self, sol):
-        for j in self.integer_vars:
-            if abs(sol[j] - round(sol[j])) > 1e-6:
+    def _is_integer(self, solution):
+        for i in self.integer_vars:
+            if abs(solution[i] - round(solution[i])) > 1e-6:
                 return False
         return True
 
-    def _update_best(self, sol, value):
-        if self.is_max:
-            if value > self.best_value + 1e-9:
-                self.best_value = value
-                self.best_solution = sol.copy()
-                self.best_is_alternative = False
-            elif abs(value - self.best_value) < 1e-8:
+    def _find_fractional_var(self, solution):
+        for i in self.integer_vars:
+            val = solution[i]
+            if abs(val - round(val)) > 1e-6:
+                return i, val
+        return None, None
 
-                self.best_is_alternative = True
+    def _print_tree(self, node, prefix="", is_last=True):
+        if node['infeasible']:
+            label = f"Узел {node['id']} [НЕТ РЕШЕНИЙ]"
+        elif node['pruned']:
+            label = f"Узел {node['id']} [ОТСЕЧЕН, F={node['lp_value']:.2f}]"
+        elif node['integer']:
+            label = f"Узел {node['id']} [ЦЕЛОЕ, F={node['lp_value']:.2f}] ★"
         else:
-            if value < self.best_value - 1e-9:
-                self.best_value = value
-                self.best_solution = sol.copy()
-                self.best_is_alternative = False
-            elif abs(value - self.best_value) < 1e-8:
-                self.best_is_alternative = True
+            label = f"Узел {node['id']} [LP={node['lp_value']:.2f}]"
 
-    def _prune_by_bound(self, node_lp_value):
-        if self.is_max:
-            return node_lp_value <= self.best_value + 1e-9
-        else:
-            return node_lp_value >= self.best_value - 1e-9
-
-    def solve(self):
-        if self.verbose:
-            print(f"  Problem: {'maximization' if self.is_max else 'minimization'}")
-            print(f"  Integer variables: {[f'x{i+1}' for i in self.integer_vars]}")
-            print(f"  Branching strategy: {self.branching_strategy}")
-            print(f"  Search strategy: {self.search_strategy}")
-            print("-" * 70)
-
-        root = self.Node(parent_id=None, constraints=[], depth=0)
-        root.id = self.node_counter
-        self.node_counter += 1
-
-        if self.search_strategy == "best":
-
-            heap = []
-            heapq.heappush(heap, (0, root))
-        else:
-            queue = [root]
-
-        nodes_explored = 0
-
-        while True:
-            if self.search_strategy == "best":
-                if not heap:
-                    break
-
-                pass
-
-            if self.search_strategy == "DFS":
-                if not queue:
-                    break
-                current = queue.pop()
-            elif self.search_strategy == "BFS":
-                if not queue:
-                    break
-                current = queue.pop(0)
-            else:
-
-                current = queue.pop() if queue else None
-                if not queue:
-                    break
-
-            nodes_explored += 1
-
-            self.iteration_counter += 1
-            sol_dict, status = self._solve_LP(current.constraints)
-
-            if status == "infeasible":
-                current.is_infeasible = True
-                if self.verbose:
-                    print(f" Node {current.id}: INFEASIBLE")
-                continue
-
-            current.lp_value = sol_dict["value"]
-            current.lp_solution = sol_dict["solution"]
-
-            if self._prune_by_bound(current.lp_value):
-                current.is_pruned = True
-                if self.verbose:
-                    print(
-                        f" Node {current.id}: pruned by bound (LP = {current.lp_value:.4f}, best = {self.best_value:.4f})"
-                    )
-                continue
-
-            if self._is_integer_solution(current.lp_solution):
-                current.is_integer = True
-                self._update_best(current.lp_solution, current.lp_value)
-                if self.verbose:
-                    print(
-                        f" Node {current.id}: INTEGER feasible solution: value = {current.lp_value:.4f}"
-                    )
-                    print(
-                        f"            x = {[round(current.lp_solution[i],4) for i in self.integer_vars]}"
-                    )
-                continue
-
-            branch_var = self._pick_branching_variable(current.lp_solution)
-            if branch_var is None:
-                continue
-
-            frac_val = current.lp_solution[branch_var]
-            floor_val = np.floor(frac_val)
-            ceil_val = np.ceil(frac_val)
-
-            if self.verbose:
-                print(
-                    f" Node {current.id}: branching on x{branch_var+1} = {frac_val:.4f}"
-                )
-
-            left_const = current.constraints + [(branch_var, "le", floor_val)]
-            left_child = self.Node(
-                parent_id=current.id, constraints=left_const, depth=current.depth + 1
-            )
-            left_child.id = self.node_counter
-            self.node_counter += 1
-
-            right_const = current.constraints + [(branch_var, "ge", ceil_val)]
-            right_child = self.Node(
-                parent_id=current.id, constraints=right_const, depth=current.depth + 1
-            )
-            right_child.id = self.node_counter
-            self.node_counter += 1
-
-            current.children = [left_child, right_child]
-
-            if self.search_strategy == "DFS":
-                queue.extend([right_child, left_child])
-            elif self.search_strategy == "BFS":
-                queue.extend([left_child, right_child])
-            else:
-                queue.extend([left_child, right_child])
-
-        self._print_tree(root)
-        self._print_final_result()
-
-        return self.best_solution, self.best_value, self.best_is_alternative
-
-    def _print_tree(self, root, prefix="", is_last=True):
-        """Recursive tree printing."""
-        if root is None:
-            return
-
-        node_label = f"Node {root.id}"
-        if root.is_infeasible:
-            node_label += " [INFEAS]"
-        elif root.is_pruned:
-            node_label += f" [PRUNED, LP={root.lp_value:.2f}]"
-        elif root.is_integer:
-            node_label += f" [INT, value={root.lp_value:.4f}]"
-        else:
-            node_label += f" [LP={root.lp_value:.4f}]"
-        if self.verbose:
-            print(prefix + ("└── " if is_last else "├── ") + node_label)
-
+        print(prefix + ("└── " if is_last else "├── ") + label)
         new_prefix = prefix + ("    " if is_last else "│   ")
-        for i, child in enumerate(root.children):
-            self._print_tree(child, new_prefix, i == len(root.children) - 1)
+        for i, child in enumerate(node['children']):
+            self._print_tree(child, new_prefix, i == len(node['children']) - 1)
 
-    def _print_final_result(self):
-        if self.best_solution is None:
-            print("\n" + "=" * 70)
-            print("  RESULT: No integer feasible solution found.")
-            print("=" * 70)
-        else:
-            print("\n" + "=" * 70)
-            print("  OPTIMAL INTEGER SOLUTION")
-            print("=" * 70)
-            for i in self.integer_vars:
-                print(f"  x{i+1} = {self.best_solution[i]:.4f}")
-            print(f"\n  Objective F = {self.best_value:.4f}")
-            if self.best_is_alternative:
-                print("  (Alternative optimal solutions exist)")
-            print(f"  Total LP subproblems solved: {self.iteration_counter}")
-            print("=" * 70)
+    def solve(self, verbose=True):
+        if verbose:
+            print(f"  Целочисленные переменные: {[f'x{i+1}' for i in self.integer_vars]}")
+            print("-" * 25)
+
+        root = {
+            'id': 0, 'constraints': [], 'children': [],
+            'lp_value': None, 'lp_solution': None,
+            'integer': False, 'infeasible': False, 'pruned': False
+        }
+
+        queue = [root]
+
+        while queue:
+            node = queue.pop(0)
+            self.node_count += 1
+
+            if verbose:
+                print(f"\n--- УЗЕЛ {node['id']} ---")
+                if node['constraints']:
+                    print("Дополнительные ограничения:")
+                    for var, op, val in node['constraints']:
+                        print(f"   x{var+1} {op} {val:.0f}")
+
+            A_node, b_node = self._add_constraints(self.A, self.b, node['constraints'])
+            result = self._solve_lp(A_node, b_node)
+
+            if result is None:
+                node['infeasible'] = True
+                if verbose:
+                    print("❌ НЕТ ДОПУСТИМЫХ РЕШЕНИЙ")
+                continue
+
+            node['lp_value'] = result['value']
+            node['lp_solution'] = result['solution']
+
+            if verbose:
+                print(f"📊 LP-решение: F = {node['lp_value']:.4f}")
+                vars_str = ", ".join([f"x{i+1}={node['lp_solution'][i]:.4f}" for i in range(len(self.c))])
+                print(f"   {vars_str}")
+
+            # Отсечение
+            if node['lp_value'] <= self.best_value + 1e-9:
+                node['pruned'] = True
+                if verbose:
+                    print(f"✂️ ОТСЕЧЕНО (лучшее = {self.best_value:.2f})")
+                continue
+
+            # Целочисленное решение
+            if self._is_integer(node['lp_solution']):
+                node['integer'] = True
+                if node['lp_value'] > self.best_value + 1e-9:
+                    self.best_value = node['lp_value']
+                    self.best_solution = node['lp_solution'].copy()
+                    if verbose:
+                        print(f"✅ НОВОЕ ЛУЧШЕЕ РЕШЕНИЕ! F = {self.best_value:.4f}")
+                continue
+
+            # Ветвление
+            var_idx, var_val = self._find_fractional_var(node['lp_solution'])
+            if var_idx is None:
+                continue
+
+            floor_val = np.floor(var_val)
+            ceil_val = np.ceil(var_val)
+
+            if verbose:
+                print(f"🌿 ВЕТВЛЕНИЕ по x{var_idx+1} = {var_val:.4f}")
+                print(f"   Левая ветвь: x{var_idx+1} ≤ {floor_val:.0f}")
+                print(f"   Правая ветвь: x{var_idx+1} ≥ {ceil_val:.0f}")
+
+            left = {
+                'id': self.node_count, 'constraints': node['constraints'] + [(var_idx, '<=', floor_val)],
+                'children': [], 'lp_value': None, 'lp_solution': None,
+                'integer': False, 'infeasible': False, 'pruned': False
+            }
+            self.node_count += 1
+
+            right = {
+                'id': self.node_count, 'constraints': node['constraints'] + [(var_idx, '>=', ceil_val)],
+                'children': [], 'lp_value': None, 'lp_solution': None,
+                'integer': False, 'infeasible': False, 'pruned': False
+            }
+            self.node_count += 1
+
+            node['children'] = [left, right]
+            queue.extend([left, right])
+
+        if verbose:
+            print("\n" + "-" * 25)
+            print("  ДЕРЕВО РЕШЕНИЙ")
+            print("-" * 25)
+            self._print_tree(root)
+
+            print("\n" + "-" * 25)
+            print("  РЕЗУЛЬТАТ")
+            print("-" * 25)
+
+            if self.best_solution is None:
+                print("\n❌ ОПТИМАЛЬНОЕ РЕШЕНИЕ НЕ НАЙДЕНО")
+            else:
+                print("\n✅ ОПТИМАЛЬНОЕ ЦЕЛОЧИСЛЕННОЕ РЕШЕНИЕ:\n")
+                for i in range(len(self.c)):
+                    print(f"   x{i+1} = {self.best_solution[i]:.0f}")
+                print(f"\n   Максимум F = {self.best_value:.4f}")
+
+            print(f"\nРешено LP-задач: {self.lp_count}")
+            print("-" * 25)
+
+        return self.best_solution, self.best_value
 
 
-def example():
-    """
-    Универсальная функция для быстрого тестирования.
-    Просто меняйте значения ниже под задачу преподавателя.
-    """
+# ==================== ПРИМЕРЫ ====================
 
-    # ==================== ВВЕДИТЕ ДАННЫЕ ЗДЕСЬ ====================
+def example_1_simple():
+    print(" Пример 1: сразу целое решение")
 
-    # Коэффициенты целевой функции (F = 3x₁ + 5x₂)
+
+    # F = 3x₁ + 5x₂ → max
+    # x₁ ≤ 4, x₂ ≤ 6, 3x₁ + 2x₂ ≤ 18
+
     c = [3, 5]
+    A = [[1, 0], [0, 1], [3, 2]]
+    b = [4, 6, 18]
 
-    # Матрица ограничений (каждая строка = одно ограничение)
-    A = [
-        [1, 2],   # 1x₁ + 2x₂ ≤ 10
-        [2, 1]    # 2x₁ + 1x₂ ≤ 12
-    ]
+    print("\nУСЛОВИЕ:")
+    print("Максимизировать: F = 3x₁ + 5x₂")
+    print("x₁ ≤ 4, x₂ ≤ 6, 3x₁ + 2x₂ ≤ 18, x₁,x₂ ≥ 0, целые")
 
-    # Правые части ограничений (соответствуют строкам A)
-    b = [10, 12]
-
-    # Тип задачи: True = максимизация, False = минимизация
-    is_max = True
-
-    # Какие переменные должны быть целыми (0 = x₁, 1 = x₂, 2 = x₃ и т.д.)
-    # None = все переменные целые
-    integer_vars = [0, 1]
-
-    # Стратегия ветвления: 'first' или 'most_fractional'
-    branching_strategy = 'most_fractional'
-
-    # Стратегия обхода: 'DFS' или 'BFS'
-    search_strategy = 'DFS'
-
-    # Показывать подробности: True или False
-    verbose = True
-
-    # ==================== КОД ЗАПУСКА (НЕ ТРОГАТЬ) ====================
-
-    print("\n" + "="*70)
-    print("  РЕШЕНИЕ ЗАДАЧИ ЦЕЛОЧИСЛЕННОГО ПРОГРАММИРОВАНИЯ")
-    print("="*70)
-    print("\n📊 Исходные данные:")
-    print(f"   Целевая функция: {'max' if is_max else 'min'} F = ", end="")
-    for i, coeff in enumerate(c):
-        print(f"{coeff:+}x{i+1} ", end="")
-    print()
-    print(f"\n   Ограничения:")
-    for i, row in enumerate(A):
-        print(f"      ", end="")
-        for j, coeff in enumerate(row):
-            print(f"{coeff:+}x{j+1} ", end="")
-        print(f"≤ {b[i]}")
-    print(f"\n   Целочисленные переменные: x{', x'.join([str(v+1) for v in (integer_vars if integer_vars else range(len(c)))])}")
-    print(f"   Стратегия ветвления: {branching_strategy}")
-    print(f"   Стратегия обхода: {search_strategy}")
-    print("-"*70)
-
-    # Запуск метода ветвей и границ
-    bb = BranchAndBound(
-        c=c,
-        A=A,
-        b=b,
-        is_max=is_max,
-        integer_vars=integer_vars,
-        branching_strategy=branching_strategy,
-        search_strategy=search_strategy,
-        verbose=verbose
-    )
-
-    result = bb.solve()
-
-    if result:
-        solution, value, has_alternative = result
-        print("\n✅ ГОТОВО! Можно показывать преподавателю.")
-
-    return bb
+    bb = BranchAndBound(c, A, b, integer_vars=[0, 1])
+    bb.solve()
 
 
-# Вызов функции - меняйте данные только внутри example()
+def example_2_infeasible():
+    print(" Пример 2: нет допустимых решений")
+
+
+    # x₁ ≤ 3, x₂ ≤ 3, x₁ + x₂ ≥ 10 → противоречие
+
+    c = [1, 1]
+    A = [[1, 0], [0, 1], [-1, -1]]
+    b = [3, 3, -10]
+
+    print("\nУСЛОВИЕ:")
+    print("Максимизировать: F = x₁ + x₂")
+    print("x₁ ≤ 3, x₂ ≤ 3, x₁ + x₂ ≥ 10, x₁,x₂ ≥ 0, целые")
+    print("\n→ Противоречие: максимум 6, требуется ≥10")
+
+    bb = BranchAndBound(c, A, b, integer_vars=[0, 1])
+    bb.solve()
+
+
+def example_3_branching():
+    print(" Пример 3: требует ветвления")
+
+
+    # F = 5x₁ + 8x₂ → max
+    # x₁ + x₂ ≤ 6, 5x₁ + 9x₂ ≤ 45
+
+    c = [5, 8]
+    A = [[1, 1], [5, 9]]
+    b = [6, 45]
+
+    print("\nУСЛОВИЕ:")
+    print("Максимизировать: F = 5x₁ + 8x₂")
+    print("x₁ + x₂ ≤ 6, 5x₁ + 9x₂ ≤ 45, x₁,x₂ ≥ 0, целые")
+    print("\nLP-решение: x₁=2.25, x₂=3.75 (дробное) → нужно ветвление")
+
+    bb = BranchAndBound(c, A, b, integer_vars=[0, 1])
+    bb.solve()
+
+
+def example_4_knapsack():
+    print(" Пример 4: задача о рюкзаке")
+
+
+    # 4 предмета, вес не более 10
+    # Ценность: 10, 15, 12, 8
+    # Вес: 3, 4, 3, 2
+
+    c = [10, 15, 12, 8]  # ценность
+    A = [[3, 4, 3, 2]]    # вес
+    b = [10]               # ограничение по весу
+
+    print("\nУСЛОВИЕ:")
+    print("Максимизировать ценность: F = 10x₁ + 15x₂ + 12x₃ + 8x₄")
+    print("Ограничение по весу: 3x₁ + 4x₂ + 3x₃ + 2x₄ ≤ 10")
+    print("xᵢ ∈ {0,1}")
+
+    bb = BranchAndBound(c, A, b, integer_vars=[0, 1, 2, 3])
+    bb.solve()
+
+
+def example_5_multiple():
+    print(" пример 5: несколько решений")
+
+
+    # F = x₁ + x₂ → max при x₁ + x₂ ≤ 3
+
+    c = [1, 1]
+    A = [[1, 1]]
+    b = [3]
+
+    print("\nУСЛОВИЕ:")
+    print("Максимизировать: F = x₁ + x₂")
+    print("x₁ + x₂ ≤ 3, x₁,x₂ ≥ 0, целые")
+    print("\nОптимальные решения: (0,3), (1,2), (2,1), (3,0) → все F=3")
+
+    bb = BranchAndBound(c, A, b, integer_vars=[0, 1])
+    bb.solve()
+
+
+# ==================== ЗАПУСК ====================
 if __name__ == "__main__":
-    example()
+
+    example_1_simple()
+
+    # example_2_infeasible()
+
+    # example_3_branching()
+
+    # example_4_knapsack()
+
+    # example_5_multiple()
+
+    print("\n" + "-" * 25)
+    print(" ДЕМОНСТРАЦИЯ ЗАВЕРШЕНА")
+    print("-" * 25)
