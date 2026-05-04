@@ -1,0 +1,245 @@
+\documentclass[oneside,a4paper,14pt]{extarticle}
+\usepackage[T1,T2A]{fontenc}
+\usepackage[a4paper,letterpaper,top=20mm,bottom=20mm,left=30mm,right=10mm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{textcomp}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{mwe}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{tocloft}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage[all]{xy}
+\usepackage[breaklinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyvrb}
+\usepackage{paracol}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{gostyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    language=Go
+}
+
+\lstset{style=gostyle}
+
+\titleformat{\section}{\normalsize\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+\renewcommand\baselinestretch{1.33}\normalsize
+\setlength{\parindent}{1.25cm}
+
+\begin{document}
+
+\newpage\thispagestyle{empty}
+\begin{center}
+    МИНИСТЕРСТВО НАУКИ И ВЫСШЕГО ОБРАЗОВАНИЯ\\
+    РОССИЙСКОЙ ФЕДЕРАЦИИ\\
+    ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ\\
+    ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ ВЫСШЕГО ОБРАЗОВАНИЯ\\
+    ВЯТСКИЙ ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ\\
+    Институт математики и информационных систем\\
+    Факультет автоматики и вычислительной техники\\
+    Кафедра электронных вычислительных машин
+\end{center}
+
+\vspace{20mm}
+\begin{center}
+
+    Отчёт по лабораторной работе №4\\
+    по дисциплине\\
+    Объектно-ориентированное программирование\\
+\end{center}
+\vfill
+
+Выполнил студент гр. ИВТб-2301-05-00 \hfill
+\makebox[8cm]{\hrulefill /Ковальский И.И./}
+
+Проверил преподаватель\hfill
+\makebox[8cm]{\hrulefill /Шмакова Н.А./}
+
+\vfill
+\begin{center}
+    Киров\\
+    2026
+\end{center}
+
+\newpage
+
+\section*{Цель работы}
+\addcontentsline{toc}{section}{Цель работы}
+Разработка распределённого веб-приложения на языках Go и Python с использованием микросервисной архитектуры для реализации бизнес-логики и CRUD-операций над объектами согласованной предметной области. Доступ к существующей реляционной базе данных PostgreSQL осуществляется с использованием ORM SQLAlchemy.
+
+\section*{Задание}
+\addcontentsline{toc}{section}{Задание}
+
+На основании согласованной в первой лабораторной работе предметной области («Организации») разработать распределённое веб-приложение, удовлетворяющее следующим требованиям:
+\begin{enumerate}
+    \item Использовать базу данных PostgreSQL, созданную в лабораторной работе №3. Структура БД, таблицы, связи и типы данных остаются без изменений.
+    \item Реализовать сервер доступа к данным на языке Python (FastAPI + SQLAlchemy) с использованием паттерна Репозиторий. Модели должны точно соответствовать таблицам из ЛР №3 (включая \_\_tablename\_\_ и внешние ключи).
+    \item Реализовать сервер бизнес-логики и отдачи веб-интерфейса на языке Go.
+    \item На стороне Go реализовать: фильтрацию объектов, агрегацию (подсчёт суммы/количества), кэширование часто запрашиваемых данных (TTL 5 минут) и проверку бизнес-правил перед отправкой данных на Python-сервер.
+    \item Реализовать веб-интерфейс (HTML/CSS/JS) с поддержкой всех CRUD-операций, валидацией, выпадающими списками для внешних ключей и отображением связанных сущностей.
+\end{enumerate}
+
+\newpage
+
+\section*{Выполнение лабораторной работы}
+\addcontentsline{toc}{section}{Выполнение лабораторной работы}
+
+\subsection*{Архитектура распределённой системы}
+\addcontentsline{toc}{subsection}{Архитектура распределённой системы}
+
+Приложение построено по микросервисной архитектуре и разделено на две части: сервер пользовательского интерфейса и бизнес-логики на Go и сервер доступа к данным на Python. Go часть принимает запросы от клиента, выполняя валидацию, агрегацию данных, после передаёт вызовы к python по REST API. Часть на python  инкапсулирует работу с базой данных PostgreSQL.
+
+\subsection*{Слой доступа к данным}
+\addcontentsline{toc}{subsection}{Слой доступа к данным}
+
+Сервер на Python отвечает за непосредственное взаимодействие с базой данных PostgreSQL. Для описания структуры данных используется SQLAlchemy.
+
+\subsubsection*{Модели данных }
+
+\textbf{Базовый класс Organization:}
+Отображается на таблицу organizations. Содержит поля id, name, inn, employees\_count. Связь один-ко-многим с сотрудниками реализована через relationship "Employee", back\_populates="organization".
+
+\textbf{Классы-наследники ComOrg и NonComOrg:}
+Отображаются на таблицы comorganizations и noncomorganizations соответственно. Связь с родительской таблицей организована через внешний ключ organizations.id. Содержат специфичные поля: прибыль, тип бизнеса, цель, источник.
+
+\textbf{Класс Employee:}
+Отображается на таблицу employees. Содержит внешний ключ org\_id, ссылающийся на organizations.id с правилом ondelete="SET NULL".
+
+\newpage
+
+\subsubsection*{Репозиторий}
+\begin{itemize}
+    \item get\_all() и get\_by\_id() — методы для чтения данных.
+    \item create(), update(), delete() — методы для модификации данных.
+\end{itemize}
+\textbf{Особенность реализации бизнес-правил в БД:} При добавлении, обновлении организации или удалении сотрудника, репозиторий автоматически находит связанную организацию и обновляет поле employees\_count.
+
+\newpage
+
+\subsection*{Слой бизнес-логики и представления}
+\addcontentsline{toc}{subsection}{Слой бизнес-логики и представления }
+
+Сервер на Go запрашивает данные у Python-сервера, обрабатывает их и отдаёт готовый HTML код.
+
+\subsubsection*{Бизнес-логика и Агрегация}
+
+Методы реализованы напрямую у структур Go:
+\begin{itemize}
+    \item Taxes() для ComOrg: высчитывает 20\% от прибыли. Преобразует строковое значение прибыли в число, валидирует отрицательные значения.
+    \item calculateNonComTax(): рассчитывает налог для некоммерческих организаций.
+    \item countEmployees(): агрегирующая функция, подсчитывающая точное количество сотрудников для конкретной организации на основе полного списка.
+    \item filterOrgs(): осуществляет фильтрацию списка организаций по названию и по минимальному/максимальному количеству сотрудников.
+\end{itemize}
+
+\subsubsection*{Обработчики HTTP }
+
+\begin{itemize}
+    \item indexHandler: Главный контроллер. Забирает данные, формирует map для быстрого поиска, выполняет агрегацию, применяет фильтры из параметров запроса.
+    \item editHandler, addComOrgHandler, addEmpHandler: Собирают данные из HTML-форм, валидируют их и отправляют POST/PUT запросы в Python в виде JSON.
+    \item actionHandler: Реализует уникальные методы бизнес-логики. Например, expandBusiness (увеличивает прибыль на 20\%) или attractFunding (конкатенирует новые источники финансирования).
+\end{itemize}
+
+\subsection*{Веб-интерфейс}
+\addcontentsline{toc}{subsection}{Веб-интерфейс}
+
+Пользовательский интерфейс реализован с использованием стандартного пакета Go html/template.
+Ключевые особенности:
+\begin{itemize}
+    \item На главной странице расположены панели для фильтрации данных (поиск по имени, ограничение штата).
+    \item Реализованы модальные окна или отдельные формы для создания и редактирования сущностей.
+    \item При добавлении/редактировании сотрудника выбор организации осуществляется через выпадающий список (<select>), который динамически заполняется сервером (массив AllOrgs).
+    \item В таблицах отображаются рассчитанные "на лету" данные: актуальное количество сотрудников и налоги, что демонстрирует работу слоя бизнес-логики.
+\end{itemize}
+
+\newpage
+\subsection*{Экранные формы}
+\addcontentsline{toc}{subsection}{Экранные формы}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{главная.png}
+  \caption{Главная страница}
+  \label{fig:index_page}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{добавление коморг.png}
+  \caption{форма добавления коммерческой организации}
+  \label{fig:add_page}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{добавление некоморг.png}
+  \caption{форма добавления некоммерческой организации}
+  \label{fig:add_page}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{редактирование комморг.png}
+  \caption{форма добавления коммерческой организации}
+  \label{fig:add_page}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{редактирование некомморг.png}
+  \caption{форма редактирования некоммерческой организации}
+  \label{fig:add_page}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{редактирование сотрудника.png}
+  \caption{форма редактирования сотрудника}
+  \label{fig:add_page}
+\end{figure}
+
+
+\newpage
+
+\section*{Вывод}
+\addcontentsline{toc}{section}{Вывод}
+
+В ходе выполнения четвёртой лабораторной работы было успешно разработано веб-приложение с использованием Go и Python.\\
+Приложение демонстрирует современные подходы к проектированию распределенных систем, четкое разделение ответственности между слоями и эффективное применение объектно-ориентированного программирования.
+
+\end{document}

@@ -268,7 +268,7 @@
                         <input type="text" name="position" id="editEmpPosition" class="form-control">
                     </div>
                     <div class="col-12">
-                        <label class="form-label">Организация (Найм / Увольнение)</label>
+                        <label class="form-label">Организация</label>
                         <select name="orgId" id="editEmpOrg" class="form-select">
                             <option value="0">Без организации (Уволен)</option>
                             {{ range .AllOrgs }}
@@ -441,39 +441,41 @@
             });
     }
     // Открытие модального окна редактирования
-    function openEditModal(id, orgType) {
-        if (orgType === 'comorgs') {
-            document.getElementById('comFields').style.display = 'flex';
-            document.getElementById('nonComFields').style.display = 'none';
-        } else {
-            document.getElementById('comFields').style.display = 'none';
-            document.getElementById('nonComFields').style.display = 'flex';
-        }
-
-        fetch(`/getOrg?id=${id}&type=${orgType}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('editId').value = data.id;
-                document.getElementById('editType').value = orgType;
-                document.getElementById('editName').value = data.name || '';
-                document.getElementById('editInn').value = data.inn || '';
-                document.getElementById('editEmployeesCount').value = data.employees_count || 0;
-
-                if (orgType === 'comorgs') {
-                    document.getElementById('editProfit').value = data.profit || '0';
-                    document.getElementById('editBusinessType').value = data.business_type || '';
-                } else {
-                    document.getElementById('editPurpose').value = data.purpose || '';
-                    document.getElementById('editSource').value = data.source || '';
-                }
-
-                new bootstrap.Modal(document.getElementById('editModal')).show();
-            })
-            .catch(error => {
-                console.error('Ошибка загрузки данных:', error);
-                alert('Не удалось загрузить данные организации');
-            });
+    // Открытие модального окна редактирования
+function openEditModal(id, orgType) {
+    if (orgType === 'comorgs') {
+        document.getElementById('comFields').style.display = 'flex';
+        document.getElementById('nonComFields').style.display = 'none';
+    } else {
+        document.getElementById('comFields').style.display = 'none';
+        document.getElementById('nonComFields').style.display = 'flex';
     }
+
+    fetch(`/getOrg?id=${id}&type=${orgType}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('editId').value = data.id;
+            document.getElementById('editType').value = orgType;
+            document.getElementById('editName').value = data.name || '';
+            document.getElementById('editInn').value = data.inn || '';
+
+            // УДАЛЕНА СТРОКА: document.getElementById('editEmployeesCount').value = ...;
+
+            if (orgType === 'comorgs') {
+                document.getElementById('editProfit').value = data.profit || '0';
+                document.getElementById('editBusinessType').value = data.business_type || '';
+            } else {
+                document.getElementById('editPurpose').value = data.purpose || '';
+                document.getElementById('editSource').value = data.source || '';
+            }
+
+            new bootstrap.Modal(document.getElementById('editModal')).show();
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки данных:', error);
+            alert('Не удалось загрузить данные организации');
+        });
+}
 </script>
 </body>
 </html>
