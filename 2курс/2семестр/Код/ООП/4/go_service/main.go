@@ -50,7 +50,7 @@ type Employee struct {
 	Name     string `json:"name"`
 	Position string `json:"position"`
 	OrgID    int    `json:"org_id"`
-	OrgName  string `json:"org_name"` // Добавлено поле для названия организации
+	OrgName  string `json:"org_name"`
 }
 
 type OrgOption struct {
@@ -58,7 +58,6 @@ type OrgOption struct {
 	Name string
 }
 
-// Расширенная структура для отображения организации с количеством сотрудников
 type ComOrgDisplay struct {
 	ComOrg
 	EmployeesCount int
@@ -116,16 +115,22 @@ func invalidateCache() {
 	cacheMutex.Unlock()
 }
 
-func requestJSON(method string, url string, data interface{}) {
-	jsonData, _ := json.Marshal(data)
-	req, _ := http.NewRequest(method, url, bytes.NewBuffer(jsonData))
+func requestJSON(method string, url string, data interface{}) error {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
 	req.Header.Set("Content-Type", "application/json")
-	http.DefaultClient.Do(req)
+	_, err = http.DefaultClient.Do(req)
+	return err
 }
 
-const pythonAPI = "http://localhost:8000/api"
+const pythonAPI = "http://localhost:8000"
 
-// Подсчет сотрудников для организации
 func countEmployees(employees []Employee, orgID int) int {
 	count := 0
 	for _, emp := range employees {
@@ -136,7 +141,6 @@ func countEmployees(employees []Employee, orgID int) int {
 	return count
 }
 
-// Вычисление налога для некоммерческой организации
 func calculateNonComTax(employeesCount int) int {
 	tax := employeesCount * 10
 	if tax < 0 {
@@ -183,9 +187,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	minEmp, _ := strconv.Atoi(r.URL.Query().Get("minEmployees"))
 	maxEmp, _ := strconv.Atoi(r.URL.Query().Get("maxEmployees"))
 
-	cd, _ := getFromCacheOrFetch(pythonAPI + "/comorgs")
-	nd, _ := getFromCacheOrFetch(pythonAPI + "/noncomorgs")
-	ed, _ := getFromCacheOrFetch(pythonAPI + "/employees")
+	cd, _ := getFromCacheOrFetch(pythonAPI + "/api/comorgs")
+	nd, _ := getFromCacheOrFetch(pythonAPI + "/api/noncomorgs")
+	ed, _ := getFromCacheOrFetch(pythonAPI + "/api/employees")
 
 	var comOrgs []ComOrg
 	var nonComOrgs []NonComOrg
@@ -194,7 +198,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(nd, &nonComOrgs)
 	json.Unmarshal(ed, &employees)
 
-	// Создаем карту для быстрого поиска названия организации
 	orgNameMap := make(map[int]string)
 	for _, org := range comOrgs {
 		orgNameMap[org.ID] = org.Name + " (Ком)"
@@ -203,7 +206,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		orgNameMap[org.ID] = org.Name + " (Неком)"
 	}
 
-	// Заполняем OrgName для каждого сотрудника
 	for i := range employees {
 		if name, ok := orgNameMap[employees[i].OrgID]; ok {
 			employees[i].OrgName = name
@@ -212,7 +214,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Преобразуем в отображаемые структуры с подсчетом сотрудников
 	var comOrgsDisplay []ComOrgDisplay
 	for _, org := range comOrgs {
 		empCount := countEmployees(employees, org.ID)
@@ -233,10 +234,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	// Применяем фильтрацию
 	filteredCom, filteredNon := filterOrgs(comOrgsDisplay, nonComOrgsDisplay, nameFilter, minEmp, maxEmp)
 
-	// Формируем список всех организаций для выпадающего списка
 	var allOrgs []OrgOption
 	for _, o := range comOrgs {
 		allOrgs = append(allOrgs, OrgOption{ID: o.ID, Name: o.Name + " (Ком)"})
@@ -262,7 +261,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 func getOrgHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	orgType := r.URL.Query().Get("type")
-	url := fmt.Sprintf("%s/%s/%s", pythonAPI, orgType, id)
+	url := fmt.Sprintf("%s/api/%s/%s", pythonAPI, orgType, id)
 	resp, err := http.Get(url)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -278,7 +277,7 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	id := r.FormValue("id")
 	orgType := r.FormValue("type")
-	url := fmt.Sprintf("%s/%s/%s", pythonAPI, orgType, id)
+	url := fmt.Sprintf("%s/api/%s/%s", pythonAPI, orgType, id)
 
 	if orgType == "comorgs" {
 		profit := r.FormValue("profit")
@@ -306,15 +305,20 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-// Бизнес-методы
 func actionHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	action := r.FormValue("action")
 	id := r.FormValue("id")
 	orgType := r.FormValue("type")
-	url := fmt.Sprintf("%s/%s/%s", pythonAPI, orgType, id)
+	url := fmt.Sprintf("%s/api/%s/%s", pythonAPI, orgType, id)
 
-	resp, _ := http.Get(url)
+	resp, err := http.Get(url)
+	if err != nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	defer resp.Body.Close()
+
 	body, _ := io.ReadAll(resp.Body)
 
 	if orgType == "comorgs" {
@@ -348,6 +352,67 @@ func actionHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
+type OrgEmployeesResponse struct {
+	Success   bool   `json:"success"`
+	OrgName   string `json:"orgName"`
+	Employees []struct {
+		ID       int    `json:"id"`
+		Name     string `json:"name"`
+		Position string `json:"position"`
+	} `json:"employees"`
+}
+
+func getOrgEmployeesHandler(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	orgType := r.URL.Query().Get("type")
+
+	if id == "" || orgType == "" {
+		http.Error(w, "Не указаны ID или тип организации", http.StatusBadRequest)
+		return
+	}
+
+	orgID, err := strconv.Atoi(id)
+	if err != nil {
+		http.Error(w, "ID должен быть числом", http.StatusBadRequest)
+		return
+	}
+
+	url := fmt.Sprintf("%s/api/getOrgEmployees", pythonAPI)
+
+	requestBody := map[string]interface{}{
+		"id":   orgID,
+		"type": orgType,
+	}
+	jsonData, err := json.Marshal(requestBody)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(body)
+}
+
 func addComOrgHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
@@ -356,7 +421,7 @@ func addComOrgHandler(w http.ResponseWriter, r *http.Request) {
 		profit = "0"
 	}
 
-	requestJSON(http.MethodPost, pythonAPI+"/comorgs", ComOrg{
+	requestJSON(http.MethodPost, pythonAPI+"/api/comorgs", ComOrg{
 		Name:         r.FormValue("name"),
 		Inn:          r.FormValue("inn"),
 		Profit:       profit,
@@ -369,7 +434,7 @@ func addComOrgHandler(w http.ResponseWriter, r *http.Request) {
 func addNonComOrgHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
-	requestJSON(http.MethodPost, pythonAPI+"/noncomorgs", NonComOrg{
+	requestJSON(http.MethodPost, pythonAPI+"/api/noncomorgs", NonComOrg{
 		Name:    r.FormValue("name"),
 		Inn:     r.FormValue("inn"),
 		Purpose: r.FormValue("purpose"),
@@ -381,7 +446,7 @@ func addNonComOrgHandler(w http.ResponseWriter, r *http.Request) {
 
 func getEmployeeHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
-	url := fmt.Sprintf("%s/employees/%s", pythonAPI, id)
+	url := fmt.Sprintf("%s/api/employees/%s", pythonAPI, id)
 	resp, err := http.Get(url)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -398,7 +463,7 @@ func editEmployeeHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("id")
 	orgID, _ := strconv.Atoi(r.FormValue("orgId"))
 
-	url := fmt.Sprintf("%s/employees/%s", pythonAPI, id)
+	url := fmt.Sprintf("%s/api/employees/%s", pythonAPI, id)
 	requestJSON(http.MethodPut, url, Employee{
 		Name:     r.FormValue("name"),
 		Position: r.FormValue("position"),
@@ -408,10 +473,11 @@ func editEmployeeHandler(w http.ResponseWriter, r *http.Request) {
 	invalidateCache()
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
+
 func addEmpHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	orgID, _ := strconv.Atoi(r.FormValue("orgId"))
-	requestJSON(http.MethodPost, pythonAPI+"/employees", Employee{
+	requestJSON(http.MethodPost, pythonAPI+"/api/employees", Employee{
 		Name:     r.FormValue("name"),
 		Position: r.FormValue("position"),
 		OrgID:    orgID,
@@ -422,7 +488,7 @@ func addEmpHandler(w http.ResponseWriter, r *http.Request) {
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	req, _ := http.NewRequest(http.MethodDelete, pythonAPI+"/"+r.FormValue("type")+"/"+r.FormValue("id"), nil)
+	req, _ := http.NewRequest(http.MethodDelete, pythonAPI+"/api/"+r.FormValue("type")+"/"+r.FormValue("id"), nil)
 	http.DefaultClient.Do(req)
 	invalidateCache()
 	http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -431,7 +497,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 func deleteEmployeeHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	id := r.FormValue("id")
-	req, _ := http.NewRequest(http.MethodDelete, pythonAPI+"/employees/"+id, nil)
+	req, _ := http.NewRequest(http.MethodDelete, pythonAPI+"/api/employees/"+id, nil)
 	http.DefaultClient.Do(req)
 	invalidateCache()
 	http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -448,10 +514,9 @@ func main() {
 	http.HandleFunc("/delete", deleteHandler)
 	http.HandleFunc("/deleteEmployee", deleteEmployeeHandler)
 	http.HandleFunc("/getEmployee", getEmployeeHandler)
+	http.HandleFunc("/getOrgEmployees", getOrgEmployeesHandler)
 	http.HandleFunc("/editEmployee", editEmployeeHandler)
 
-	fmt.Println("Go Server is running on http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
 	fmt.Println("Go Server is running on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
 }

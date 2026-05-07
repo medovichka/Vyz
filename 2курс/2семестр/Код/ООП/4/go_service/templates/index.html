@@ -3,478 +3,354 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панель управления (ЛР №4)</title>
-    <!-- Bootstrap 5 & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>Управление организациями</title>
     <style>
-        body { background-color: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-        .card-custom { border: none; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
-        .card-header-custom { background-color: #fff; border-bottom: 1px solid #e9ecef; border-radius: 1rem 1rem 0 0 !important; font-weight: 600; }
-        .badge-tax { background-color: #198754; }
-        .btn-delete { background-color: #f8f9fa; color: #dc3545; border: 1px solid #dc3545; }
-        .btn-delete:hover { background-color: #dc3545; color: white; }
-        .btn-edit { background-color: #f8f9fa; color: #ffc107; border: 1px solid #ffc107; }
-        .btn-edit:hover { background-color: #ffc107; color: white; }
-        .filter-card { background-color: #f8f9fa; border-radius: 1rem; padding: 1rem; margin-bottom: 1.5rem; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 20px; text-align: center; }
+        h2 { color: #555; margin: 20px 0 10px 0; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+
+        .filter-form { background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end; }
+        .filter-group { display: flex; flex-direction: column; gap: 5px; }
+        .filter-group label { font-size: 12px; color: #666; }
+        .filter-group input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 150px; }
+        button { padding: 8px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+
+        .orgs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .org-card { background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .org-card h3 { color: #007bff; margin-bottom: 10px; }
+        .org-info { margin: 10px 0; font-size: 14px; }
+        .org-info p { margin: 5px 0; }
+        .actions { margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .actions button, .actions form { margin: 0; }
+
+        .employees-list { margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; }
+        .employees-list h4 { color: #666; margin-bottom: 8px; font-size: 14px; }
+        .employee-item { background: #f9f9f9; padding: 8px; margin: 5px 0; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+        .employee-name { font-weight: bold; }
+        .employee-position { color: #666; font-size: 12px; }
+        .view-employees-btn { background: #28a745; margin-top: 10px; width: 100%; }
+        .view-employees-btn:hover { background: #1e7e34; }
+
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: white; margin: 5% auto; padding: 20px; border-radius: 8px; width: 500px; max-width: 90%; }
+        .modal-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .close { cursor: pointer; font-size: 24px; }
+        .employees-modal-list { max-height: 400px; overflow-y: auto; }
+
+        .add-form { background: white; padding: 15px; border-radius: 8px; margin-top: 20px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 14px; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #007bff; color: white; }
+        tr:hover { background: #f5f5f5; }
+
+        .delete-btn { background: #dc3545; }
+        .delete-btn:hover { background: #c82333; }
+        .edit-btn { background: #ffc107; color: #333; }
+        .edit-btn:hover { background: #e0a800; }
+
+        .success { color: green; }
+        .error { color: red; }
     </style>
 </head>
 <body>
+<div class="container">
+    <h1>Управление организациями и сотрудниками</h1>
 
-<div class="container py-4">
+    <!-- Форма фильтрации -->
+    <form method="GET" class="filter-form">
+        <div class="filter-group">
+            <label>Название:</label>
+            <input type="text" name="nameFilter" value="{{.NameFilter}}" placeholder="Поиск...">
+        </div>
+        <div class="filter-group">
+            <label>Мин. сотрудников:</label>
+            <input type="number" name="minEmployees" value="{{.MinEmployees}}" min="0">
+        </div>
+        <div class="filter-group">
+            <label>Макс. сотрудников:</label>
+            <input type="number" name="maxEmployees" value="{{.MaxEmployees}}" min="0">
+        </div>
+        <button type="submit">Применить</button>
+        <button type="button" onclick="window.location.href='/'">Сбросить</button>
+    </form>
 
-    <!-- ========== ПАНЕЛЬ УПРАВЛЕНИЯ ========== -->
-    <div class="card card-custom mb-4">
-        <div class="card-body d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Все организации</h5>
-            <button class="btn btn-primary fw-semibold" data-bs-toggle="modal" data-bs-target="#addEntityModal">
-                <i class="fas fa-plus me-2"></i>Добавить запись
-            </button>
+    <!-- Коммерческие организации -->
+    <h2>🏢 Коммерческие организации</h2>
+    <div class="orgs-grid">
+        {{range .ComOrgs}}
+        <div class="org-card">
+            <h3>{{.Name}}</h3>
+            <div class="org-info">
+                <p><strong>ИНН:</strong> {{.Inn}}</p>
+                <p><strong>Прибыль:</strong> {{.Profit}} ₽</p>
+                <p><strong>Тип бизнеса:</strong> {{.BusinessType}}</p>
+                <p><strong>Сотрудников:</strong> {{.EmployeesCount}}</p>
+                <p><strong>Налог:</strong> {{.Taxes}} ₽</p>
+            </div>
+            <div class="actions">
+                <button class="edit-btn" onclick="editOrg('comorgs', {{.ID}}, '{{.Name}}', '{{.Inn}}', '{{.Profit}}', '{{.BusinessType}}')">✏️ Редактировать</button>
+                <form method="POST" action="/delete" style="display:inline">
+                    <input type="hidden" name="type" value="comorgs">
+                    <input type="hidden" name="id" value="{{.ID}}">
+                    <button type="submit" class="delete-btn" onclick="return confirm('Удалить организацию?')">🗑️ Удалить</button>
+                </form>
+                <form method="POST" action="/action" style="display:inline">
+                    <input type="hidden" name="action" value="expandBusiness">
+                    <input type="hidden" name="type" value="comorgs">
+                    <input type="hidden" name="id" value="{{.ID}}">
+                    <button type="submit">📈 Расширить бизнес (+20%)</button>
+                </form>
+            </div>
+            <button class="view-employees-btn" onclick="viewEmployees({{.ID}}, 'comorgs')">👥 Список сотрудников</button>
+        </div>
+        {{end}}
+    </div>
+
+    <!-- Некоммерческие организации -->
+    <h2>❤️ Некоммерческие организации</h2>
+    <div class="orgs-grid">
+        {{range .NonComOrgs}}
+        <div class="org-card">
+            <h3>{{.Name}}</h3>
+            <div class="org-info">
+                <p><strong>ИНН:</strong> {{.Inn}}</p>
+                <p><strong>Цель:</strong> {{.Purpose}}</p>
+                <p><strong>Источник финансирования:</strong> {{.Source}}</p>
+                <p><strong>Сотрудников:</strong> {{.EmployeesCount}}</p>
+                <p><strong>Налог:</strong> {{.Taxes}} ₽</p>
+            </div>
+            <div class="actions">
+                <button class="edit-btn" onclick="editNonComOrg('noncomorgs', {{.ID}}, '{{.Name}}', '{{.Inn}}', '{{.Purpose}}', '{{.Source}}')">✏️ Редактировать</button>
+                <form method="POST" action="/delete" style="display:inline">
+                    <input type="hidden" name="type" value="noncomorgs">
+                    <input type="hidden" name="id" value="{{.ID}}">
+                    <button type="submit" class="delete-btn" onclick="return confirm('Удалить организацию?')">🗑️ Удалить</button>
+                </form>
+                <form method="POST" action="/action" style="display:inline">
+                    <input type="hidden" name="action" value="attractFunding">
+                    <input type="hidden" name="type" value="noncomorgs">
+                    <input type="hidden" name="id" value="{{.ID}}">
+                    <input type="text" name="param" placeholder="Новый источник" style="width:100px">
+                    <button type="submit">💰 Привлечь финансирование</button>
+                </form>
+            </div>
+            <button class="view-employees-btn" onclick="viewEmployees({{.ID}}, 'noncomorgs')">👥 Список сотрудников</button>
+        </div>
+        {{end}}
+    </div>
+
+    <!-- Список сотрудников -->
+    <h2>👔 Сотрудники</h2>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>ФИО</th><th>Должность</th><th>Организация</th><th>Действия</th></tr>
+        </thead>
+        <tbody>
+            {{range .Employees}}
+            <tr>
+                <td>{{.ID}}</td>
+                <td>{{.Name}}</td>
+                <td>{{.Position}}</td>
+                <td>{{.OrgName}}</td>
+                <td>
+                    <button class="edit-btn" onclick="editEmployee({{.ID}}, '{{.Name}}', '{{.Position}}', {{.OrgID}})">✏️</button>
+                    <form method="POST" action="/deleteEmployee" style="display:inline">
+                        <input type="hidden" name="id" value="{{.ID}}">
+                        <button type="submit" class="delete-btn" onclick="return confirm('Удалить сотрудника?')">🗑️</button>
+                    </form>
+                </td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+
+    <!-- Формы добавления -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px;">
+        <div class="add-form">
+            <h3>➕ Добавить коммерческую организацию</h3>
+            <form method="POST" action="/addComOrg">
+                <div class="form-group"><input type="text" name="name" placeholder="Название" required></div>
+                <div class="form-group"><input type="text" name="inn" placeholder="ИНН" required></div>
+                <div class="form-group"><input type="number" name="profit" placeholder="Прибыль" required></div>
+                <div class="form-group"><input type="text" name="businessType" placeholder="Тип бизнеса" required></div>
+                <button type="submit">Добавить</button>
+            </form>
+        </div>
+        <div class="add-form">
+            <h3>➕ Добавить некоммерческую организацию</h3>
+            <form method="POST" action="/addNonComOrg">
+                <div class="form-group"><input type="text" name="name" placeholder="Название" required></div>
+                <div class="form-group"><input type="text" name="inn" placeholder="ИНН" required></div>
+                <div class="form-group"><input type="text" name="purpose" placeholder="Цель" required></div>
+                <div class="form-group"><input type="text" name="source" placeholder="Источник финансирования" required></div>
+                <button type="submit">Добавить</button>
+            </form>
         </div>
     </div>
 
-    <!-- ========== ФИЛЬТРАЦИЯ ========== -->
-    <div class="filter-card">
-        <form method="get" action="/" class="row g-3 align-items-end">
-            <div class="col-md-4">
-                <label class="form-label">Название организации</label>
-                <input type="text" name="nameFilter" class="form-control" placeholder="Введите название..." value="{{ .NameFilter }}">
+    <div class="add-form" style="margin-top: 20px;">
+        <h3>➕ Добавить сотрудника</h3>
+        <form method="POST" action="/addEmp">
+            <div class="form-row">
+                <div class="form-group"><input type="text" name="name" placeholder="ФИО" required></div>
+                <div class="form-group"><input type="text" name="position" placeholder="Должность" required></div>
             </div>
-            <div class="col-md-3">
-                <label class="form-label">Мин. сотрудников</label>
-                <input type="number" name="minEmployees" class="form-control" min="0" value="{{ .MinEmployees }}">
+            <div class="form-group">
+                <select name="orgId" required>
+                    <option value="">Выберите организацию</option>
+                    {{range .AllOrgs}}<option value="{{.ID}}">{{.Name}}</option>{{end}}
+                </select>
             </div>
-            <div class="col-md-3">
-                <label class="form-label">Макс. сотрудников</label>
-                <input type="number" name="maxEmployees" class="form-control" min="0" value="{{ .MaxEmployees }}">
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter me-2"></i>Фильтровать</button>
-            </div>
+            <button type="submit">Добавить</button>
         </form>
     </div>
-
-    <!-- ========== ТАБЛИЦА: КОММЕРЧЕСКИЕ ОРГАНИЗАЦИИ ========== -->
-    <div class="card card-custom mb-4">
-        <div class="card-header-custom"><i class="fas fa-chart-line text-primary me-2"></i>Коммерческие организации</div>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr><th>ID</th><th>Название</th><th>Сотр.</th><th>Прибыль</th><th>Налог</th><th>Действия</th></tr>
-                </thead>
-                <tbody>
-                    {{ range .ComOrgs }}
-                    <tr>
-                        <td>{{ .ID }}</td>
-                        <td><strong>{{ .Name }}</strong><br><small class="text-muted">ИНН: {{.Inn}}</small></td>
-                        <td>{{ .EmployeesCount }}</td>
-                        <td>{{ .Profit }} ₽</td>
-                        <td><span class="badge rounded-pill badge-tax">{{ .Taxes }} ₽</span></td>
-                        <td>
-                           <div class="dropdown d-inline-block">
-    <button class="btn btn-sm btn-outline-secondary dropdown-toggle btn-action" type="button" data-bs-toggle="dropdown">Методы</button>
-    <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" onclick="submitActionForm({{.ID}}, 'comorgs', 'expandBusiness')">Расширить бизнес</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="#" onclick="alert('Реклама: {{.Name}} оч крутая!')">Запустить рекламу</a></li>
-        <li><a class="dropdown-item" href="#" onclick="alert('Распределено: ' + ({{.Profit}} * 0.25) + ' ₽')">Распределить прибыль</a></li>
-    </ul>
 </div>
-                            <button class="btn btn-sm btn-edit ms-1" onclick="openEditModal({{.ID}}, 'comorgs')" title="Редактировать"><i class="fas fa-edit"></i></button>
-                            <form method="post" action="/delete" onsubmit="return confirm('Удалить организацию {{.Name}}?')" class="d-inline ms-1">
-                                <input type="hidden" name="id" value="{{.ID}}"><input type="hidden" name="type" value="comorgs">
-                                <button type="submit" class="btn btn-sm btn-delete" title="Удалить"><i class="fas fa-trash"></i></button>
-                            </form>
-                        </td>
-                    </tr>
-                    {{ else }}
-                    <tr><td colspan="6" class="text-center text-muted">Нет коммерческих организаций</td></tr>
-                    {{ end }}
-                </tbody>
-            </table>
-        </div>
-    </div>
 
-    <!-- ========== ТАБЛИЦА: НЕКОММЕРЧЕСКИЕ ОРГАНИЗАЦИИ ========== -->
-    <div class="card card-custom mb-4">
-        <div class="card-header-custom"><i class="fas fa-hand-holding-heart text-success me-2"></i>Некоммерческие организации</div>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr><th>ID</th><th>Название</th><th>Сотр.</th><th>Источник</th><th>Налог</th><th>Действия</th></tr>
-                </thead>
-                <tbody>
-                    {{ range .NonComOrgs }}
-                    <tr>
-                        <td>{{ .ID }}</td>
-                        <td><strong>{{ .Name }}</strong><br><small class="text-muted">ИНН: {{.Inn}}</small></td>
-                        <td>{{ .EmployeesCount }}</td>
-                        <td>{{ .Source }}</td>
-                        <td><span class="badge rounded-pill badge-tax">{{ .Taxes }} ₽</span></td>
-                        <td>
-                            <div class="dropdown d-inline-block">
-    <button class="btn btn-sm btn-outline-secondary dropdown-toggle btn-action" type="button" data-bs-toggle="dropdown">Методы</button>
-    <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" onclick="openParamModal({{.ID}}, 'noncomorgs', 'attractFunding', 'Источник финансирования')">Привлечь средства</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="#" onclick="alert('Реклама: {{.Name}} оч крутая!')">Запустить рекламу</a></li>
-        <li><a class="dropdown-item" href="#" onclick="alert('Программа запущена!')">Провести программу</a></li>
-    </ul>
-</div>
-                            <button class="btn btn-sm btn-edit ms-1" onclick="openEditModal({{.ID}}, 'noncomorgs')" title="Редактировать"><i class="fas fa-edit"></i></button>
-                            <form method="post" action="/delete" onsubmit="return confirm('Удалить организацию {{.Name}}?')" class="d-inline ms-1">
-                                <input type="hidden" name="id" value="{{.ID}}"><input type="hidden" name="type" value="noncomorgs">
-                                <button type="submit" class="btn btn-sm btn-delete" title="Удалить"><i class="fas fa-trash"></i></button>
-                            </form>
-                        </td>
-                    </tr>
-                    {{ else }}
-                    <tr><td colspan="6" class="text-center text-muted">Нет некоммерческих организаций</td></tr>
-                    {{ end }}
-                </tbody>
-            </table>
+<!-- Модальное окно для списка сотрудников -->
+<div id="employeesModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalOrgName">Сотрудники организации</h3>
+            <span class="close" onclick="closeModal()">&times;</span>
         </div>
-    </div>
-
-    <!-- ========== ТАБЛИЦА: СОТРУДНИКИ ========== -->
-    <div class="card card-custom mb-4">
-        <div class="card-header-custom"><i class="fas fa-users text-info me-2"></i>Сотрудники</div>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr><th>ID</th><th>ФИО</th><th>Должность</th><th>Организация</th><th>Действия</th></tr>
-                </thead>
-                <tbody>
-                    {{ range .Employees }}
-                    <tr>
-                        <td>{{ .ID }}</td>
-                        <td>{{ .Name }}</td>
-                        <td>{{ .Position }}</td>
-                        <td>{{ if .OrgName }}{{ .OrgName }}{{ else }}<span class="text-muted">Без организации</span>{{ end }}</td>
-
-                        <td>
-                            <button class="btn btn-sm btn-edit" onclick="openEditEmployeeModal({{.ID}})" title="Редактировать / Нанять"><i class="fas fa-edit"></i></button>
-                            <form method="post" action="/deleteEmployee" onsubmit="return confirm('Удалить сотрудника {{.Name}}?')" class="d-inline">
-                                <input type="hidden" name="id" value="{{.ID}}">
-                                <button type="submit" class="btn btn-sm btn-delete" title="Удалить"><i class="fas fa-trash"></i></button>
-                            </form>
-                        </td>
-                    </tr>
-                    {{ else }}
-                    <tr><td colspan="5" class="text-center text-muted">Нет сотрудников</td></tr>
-                    {{ end }}
-                </tbody>
-            </table>
-        </div>
+        <div id="modalEmployeesList" class="employees-modal-list"></div>
     </div>
 </div>
 
-<!-- ========== МОДАЛЬНОЕ ОКНО ДЛЯ ДОБАВЛЕНИЯ ========== -->
-<div class="modal fade" id="addEntityModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Добавить новую запись</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <ul class="nav nav-tabs" id="addEntityTab" role="tablist">
-                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#com-tab">Коммерческая</button></li>
-                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#noncom-tab">Некоммерческая</button></li>
-                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#emp-tab">Сотрудник</button></li>
-                </ul>
-                <div class="tab-content pt-3">
-                    <!-- Форма добавления коммерческой организации (без поля "Сотрудники") -->
-<div class="tab-pane fade show active" id="com-tab">
-    <form method="post" action="/addComOrg" class="row g-3">
-        <div class="col-md-6">
-            <label class="form-label">Название *</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">ИНН</label>
-            <input type="text" name="inn" class="form-control">
-        </div>
-        <div class="col-md-4">
-            <label class="form-label">Прибыль</label>
-            <input type="number" name="profit" class="form-control" value="0" min="0">
-        </div>
-        <div class="col-md-4">
-            <label class="form-label">Тип бизнеса</label>
-            <input type="text" name="businessType" class="form-control">
-        </div>
-        <div class="col-12 text-end">
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-        </div>
-    </form>
-</div>
+<script>
+// Модальное окно для списка сотрудников
+async function viewEmployees(orgId, orgType) {
+    const modal = document.getElementById('employeesModal');
+    const modalOrgName = document.getElementById('modalOrgName');
+    const modalEmployeesList = document.getElementById('modalEmployeesList');
 
-<!-- Форма добавления некоммерческой организации (без поля "Сотрудники") -->
-<div class="tab-pane fade" id="noncom-tab">
-    <form method="post" action="/addNonComOrg" class="row g-3">
-        <div class="col-md-6">
-            <label class="form-label">Название *</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">ИНН</label>
-            <input type="text" name="inn" class="form-control">
-        </div>
-        <div class="col-md-4">
-            <label class="form-label">Цель</label>
-            <input type="text" name="purpose" class="form-control">
-        </div>
-        <div class="col-md-4">
-            <label class="form-label">Источник</label>
-            <input type="text" name="source" class="form-control">
-        </div>
-        <div class="col-12 text-end">
-            <button type="submit" class="btn btn-success">Сохранить</button>
-        </div>
-    </form>
-</div>
+    modal.style.display = 'block';
+    modalEmployeesList.innerHTML = '<p>Загрузка...</p>';
 
-                    <div class="tab-pane fade" id="emp-tab">
-                        <form method="post" action="/addEmp" class="row g-3">
-                            <div class="col-md-6"><label class="form-label">ФИО *</label><input type="text" name="name" class="form-control" required></div>
-                            <div class="col-md-6"><label class="form-label">Должность</label><input type="text" name="position" class="form-control"></div>
-                            <div class="col-12"><label class="form-label">Организация</label><select name="orgId" class="form-select"><option value="0">Без организации</option>{{ range .AllOrgs }}<option value="{{.ID}}">{{.Name}}</option>{{end}}</select></div>
-                            <div class="col-12 text-end"><button type="submit" class="btn btn-info text-white">Сохранить</button></div>
-                        </form>
-                    </div>
+    try {
+        const response = await fetch(`/getOrgEmployees?id=${orgId}&type=${orgType}`);
+        const data = await response.json();
+
+        if (data.success) {
+            modalOrgName.textContent = `Сотрудники: ${data.orgName}`;
+            if (data.employees && data.employees.length > 0) {
+                let html = '';
+                data.employees.forEach(emp => {
+                    html += `
+                        <div class="employee-item">
+                            <div>
+                                <span class="employee-name">${emp.name}</span><br>
+                                <span class="employee-position">${emp.position}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                modalEmployeesList.innerHTML = html;
+            } else {
+                modalEmployeesList.innerHTML = '<p>Нет сотрудников</p>';
+            }
+        } else {
+            modalEmployeesList.innerHTML = '<p class="error">Ошибка загрузки данных</p>';
+        }
+    } catch (error) {
+        modalEmployeesList.innerHTML = '<p class="error">Ошибка: ' + error.message + '</p>';
+    }
+}
+
+function closeModal() {
+    document.getElementById('employeesModal').style.display = 'none';
+}
+
+// Закрытие по клику вне окна
+window.onclick = function(event) {
+    const modal = document.getElementById('employeesModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Редактирование коммерческой организации
+function editOrg(type, id, name, inn, profit, businessType) {
+    const formHtml = `
+        <div id="editModal" class="modal" style="display:block">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Редактировать организацию</h3>
+                    <span class="close" onclick="document.getElementById('editModal').remove()">&times;</span>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ========== МОДАЛЬНОЕ ОКНО ДЛЯ РЕДАКТИРОВАНИЯ ========== -->
- <div class="modal fade" id="editEmployeeModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Редактировать сотрудника</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editEmployeeForm" method="post" action="/editEmployee" class="row g-3">
-                    <input type="hidden" name="id" id="editEmpId">
-                    <div class="col-12">
-                        <label class="form-label">ФИО *</label>
-                        <input type="text" name="name" id="editEmpName" class="form-control" required>
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label">Должность</label>
-                        <input type="text" name="position" id="editEmpPosition" class="form-control">
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label">Организация</label>
-                        <select name="orgId" id="editEmpOrg" class="form-select">
-                            <option value="0">Без организации (Уволен)</option>
-                            {{ range .AllOrgs }}
-                            <option value="{{.ID}}">{{.Name}}</option>
-                            {{end}}
-                        </select>
-                    </div>
-                    <div class="col-12 text-end">
-                        <button type="submit" class="btn btn-primary">Сохранить</button>
-                    </div>
+                <form method="POST" action="/edit">
+                    <input type="hidden" name="type" value="${type}">
+                    <input type="hidden" name="id" value="${id}">
+                    <div class="form-group"><label>Название:</label><input type="text" name="name" value="${name}" required></div>
+                    <div class="form-group"><label>ИНН:</label><input type="text" name="inn" value="${inn}" required></div>
+                    <div class="form-group"><label>Прибыль:</label><input type="number" name="profit" value="${profit}" required></div>
+                    <div class="form-group"><label>Тип бизнеса:</label><input type="text" name="businessType" value="${businessType}" required></div>
+                    <button type="submit">Сохранить</button>
                 </form>
             </div>
         </div>
-    </div>
-</div>
-<div class="modal fade" id="editModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Редактировать организацию</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editForm" method="post" action="/edit" class="row g-3">
-    <input type="hidden" name="id" id="editId">
-    <input type="hidden" name="type" id="editType">
-    <div class="col-md-6">
-        <label class="form-label">Название *</label>
-        <input type="text" name="name" id="editName" class="form-control" required>
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">ИНН</label>
-        <input type="text" name="inn" id="editInn" class="form-control">
-    </div>
-    <div id="comFields" style="display: none;">
-        <div class="col-md-4">
-            <label class="form-label">Прибыль</label>
-            <input type="number" name="profit" id="editProfit" class="form-control" min="0">
-        </div>
-        <div class="col-md-4">
-            <label class="form-label">Тип бизнеса</label>
-            <input type="text" name="businessType" id="editBusinessType" class="form-control">
-        </div>
-    </div>
-    <div id="nonComFields" style="display: none;">
-        <div class="col-md-4">
-            <label class="form-label">Цель</label>
-            <input type="text" name="purpose" id="editPurpose" class="form-control">
-        </div>
-        <div class="col-md-4">
-            <label class="form-label">Источник</label>
-            <input type="text" name="source" id="editSource" class="form-control">
-        </div>
-    </div>
-    <div class="col-12 text-end">
-        <button type="submit" class="btn btn-primary">Обновить</button>
-    </div>
-</form>
+    `;
+    document.body.insertAdjacentHTML('beforeend', formHtml);
+}
+
+// Редактирование некоммерческой организации
+function editNonComOrg(type, id, name, inn, purpose, source) {
+    const formHtml = `
+        <div id="editModal" class="modal" style="display:block">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Редактировать организацию</h3>
+                    <span class="close" onclick="document.getElementById('editModal').remove()">&times;</span>
+                </div>
+                <form method="POST" action="/edit">
+                    <input type="hidden" name="type" value="${type}">
+                    <input type="hidden" name="id" value="${id}">
+                    <div class="form-group"><label>Название:</label><input type="text" name="name" value="${name}" required></div>
+                    <div class="form-group"><label>ИНН:</label><input type="text" name="inn" value="${inn}" required></div>
+                    <div class="form-group"><label>Цель:</label><input type="text" name="purpose" value="${purpose}" required></div>
+                    <div class="form-group"><label>Источник:</label><input type="text" name="source" value="${source}" required></div>
+                    <button type="submit">Сохранить</button>
+                </form>
             </div>
         </div>
-    </div>
-</div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', formHtml);
+}
 
-<!-- ========== МОДАЛЬНОЕ ОКНО ДЛЯ ВВОДА ПАРАМЕТРА ========== -->
-<div class="modal fade" id="paramModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header"><h5 class="modal-title" id="paramModalLabel"></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body">
-                <input type="text" id="paramInput" class="form-control">
-                <input type="hidden" id="paramId"><input type="hidden" id="paramType"><input type="hidden" id="paramAction">
+// Редактирование сотрудника
+function editEmployee(id, name, position, orgId) {
+    const orgs = {{.AllOrgs}};
+    let orgOptions = '';
+    for (const org of orgs) {
+        orgOptions += `<option value="${org.ID}" ${org.ID === orgId ? 'selected' : ''}>${org.Name}</option>`;
+    }
+
+    const formHtml = `
+        <div id="editModal" class="modal" style="display:block">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Редактировать сотрудника</h3>
+                    <span class="close" onclick="document.getElementById('editModal').remove()">&times;</span>
+                </div>
+                <form method="POST" action="/editEmployee">
+                    <input type="hidden" name="id" value="${id}">
+                    <div class="form-group"><label>ФИО:</label><input type="text" name="name" value="${name}" required></div>
+                    <div class="form-group"><label>Должность:</label><input type="text" name="position" value="${position}" required></div>
+                    <div class="form-group"><label>Организация:</label><select name="orgId">${orgOptions}</select></div>
+                    <button type="submit">Сохранить</button>
+                </form>
             </div>
-            <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="submitParamForm()">Сохранить</button></div>
         </div>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // Валидация форм
-    function validateForm(form) {
-        let employeesField = form.querySelector('[name="employeesCount"]');
-        if (employeesField) {
-            let employeesCount = parseInt(employeesField.value);
-            if (isNaN(employeesCount) || employeesCount < 0) {
-                alert("Количество сотрудников не может быть отрицательным!");
-                employeesField.focus();
-                return false;
-            }
-        }
-
-        let profitField = form.querySelector('[name="profit"]');
-        if (profitField) {
-            let profit = parseFloat(profitField.value);
-            if (isNaN(profit) || profit < 0) {
-                alert("Прибыль не может быть отрицательной!");
-                profitField.focus();
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    // Привязываем валидацию ко всем формам
-    document.addEventListener('DOMContentLoaded', function() {
-        const forms = document.querySelectorAll('form[method="post"]');
-        forms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                if (!validateForm(this)) {
-                    e.preventDefault();
-                }
-            });
-        });
-    });
-
-    // Отправка действий (бизнес-методы)
-    function submitActionForm(id, type, action, param = '') {
-        const form = document.createElement('form');
-        form.method = 'post';
-        form.action = '/action';
-        const fields = { id: id, type: type, action: action, param: param };
-        for (const key in fields) {
-            const hiddenField = document.createElement('input');
-            hiddenField.type = 'hidden';
-            hiddenField.name = key;
-            hiddenField.value = fields[key];
-            form.appendChild(hiddenField);
-        }
-        document.body.appendChild(form);
-        form.submit();
-    }
-
-    // Открытие модального окна для параметра
-    function openParamModal(id, type, action, label) {
-        document.getElementById('paramModalLabel').textContent = label;
-        document.getElementById('paramId').value = id;
-        document.getElementById('paramType').value = type;
-        document.getElementById('paramAction').value = action;
-        document.getElementById('paramInput').value = '';
-        new bootstrap.Modal(document.getElementById('paramModal')).show();
-    }
-
-    // Отправка параметра
-    function submitParamForm() {
-        const id = document.getElementById('paramId').value;
-        const type = document.getElementById('paramType').value;
-        const action = document.getElementById('paramAction').value;
-        const param = document.getElementById('paramInput').value;
-        if (param.trim() !== "") {
-            submitActionForm(id, type, action, param);
-        }
-    }
-    function openEditEmployeeModal(id) {
-        fetch(`/getEmployee?id=${id}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('editEmpId').value = data.id;
-                document.getElementById('editEmpName').value = data.name || '';
-                document.getElementById('editEmpPosition').value = data.position || '';
-
-                // Устанавливаем организацию. Если null, то ставим 0
-                document.getElementById('editEmpOrg').value = data.org_id || 0;
-
-                new bootstrap.Modal(document.getElementById('editEmployeeModal')).show();
-            })
-            .catch(error => {
-                console.error('Ошибка загрузки данных сотрудника:', error);
-                alert('Не удалось загрузить данные сотрудника');
-            });
-    }
-    // Открытие модального окна редактирования
-    // Открытие модального окна редактирования
-function openEditModal(id, orgType) {
-    if (orgType === 'comorgs') {
-        document.getElementById('comFields').style.display = 'flex';
-        document.getElementById('nonComFields').style.display = 'none';
-    } else {
-        document.getElementById('comFields').style.display = 'none';
-        document.getElementById('nonComFields').style.display = 'flex';
-    }
-
-    fetch(`/getOrg?id=${id}&type=${orgType}`)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('editId').value = data.id;
-            document.getElementById('editType').value = orgType;
-            document.getElementById('editName').value = data.name || '';
-            document.getElementById('editInn').value = data.inn || '';
-
-            // УДАЛЕНА СТРОКА: document.getElementById('editEmployeesCount').value = ...;
-
-            if (orgType === 'comorgs') {
-                document.getElementById('editProfit').value = data.profit || '0';
-                document.getElementById('editBusinessType').value = data.business_type || '';
-            } else {
-                document.getElementById('editPurpose').value = data.purpose || '';
-                document.getElementById('editSource').value = data.source || '';
-            }
-
-            new bootstrap.Modal(document.getElementById('editModal')).show();
-        })
-        .catch(error => {
-            console.error('Ошибка загрузки данных:', error);
-            alert('Не удалось загрузить данные организации');
-        });
+    `;
+    document.body.insertAdjacentHTML('beforeend', formHtml);
 }
 </script>
 </body>
