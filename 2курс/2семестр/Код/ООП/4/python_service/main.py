@@ -35,6 +35,12 @@ class NonComOrgSchema(BaseModel):
     purpose: str
     source: str
 
+class HireEmployeeRequest(BaseModel):
+    employee_id: int
+
+class FireEmployeeRequest(BaseModel):
+    employee_id: int
+
 
 class EmployeeSchema(BaseModel):
     name: str
@@ -58,7 +64,78 @@ def get_db():
     finally:
         db.close()
 
+# Добавьте эти эндпоинты после существующих
+@app.post("/api/comorgs/{id}/hire")
+def hire_employee_for_comorg(id: int, request: HireEmployeeRequest, db: Session = Depends(get_db)):
+    org = db.query(ComOrg).filter(ComOrg.id == id).first()
+    if not org:
+        raise HTTPException(status_code=404, detail="Организация не найдена")
 
+    employee = db.query(Employee).filter(Employee.id == request.employee_id).first()
+    if not employee:
+        raise HTTPException(status_code=404, detail="Сотрудник не найден")
+
+    employee.org_id = id
+    db.commit()
+    db.refresh(employee)
+
+    return {"success": True, "message": f"Сотрудник {employee.name} нанят в {org.name}"}
+
+@app.post("/api/noncomorgs/{id}/hire")
+def hire_employee_for_noncomorg(id: int, request: HireEmployeeRequest, db: Session = Depends(get_db)):
+    org = db.query(NonComOrg).filter(NonComOrg.id == id).first()
+    if not org:
+        raise HTTPException(status_code=404, detail="Организация не найдена")
+
+    employee = db.query(Employee).filter(Employee.id == request.employee_id).first()
+    if not employee:
+        raise HTTPException(status_code=404, detail="Сотрудник не найден")
+
+    employee.org_id = id
+    db.commit()
+    db.refresh(employee)
+
+    return {"success": True, "message": f"Сотрудник {employee.name} нанят в {org.name}"}
+
+@app.post("/api/comorgs/{id}/fire")
+def fire_employee_from_comorg(id: int, request: FireEmployeeRequest, db: Session = Depends(get_db)):
+    org = db.query(ComOrg).filter(ComOrg.id == id).first()
+    if not org:
+        raise HTTPException(status_code=404, detail="Организация не найдена")
+
+    employee = db.query(Employee).filter(Employee.id == request.employee_id, Employee.org_id == id).first()
+    if not employee:
+        raise HTTPException(status_code=404, detail="Сотрудник не найден в этой организации")
+
+    employee.org_id = None
+    db.commit()
+    db.refresh(employee)
+
+    return {"success": True, "message": f"Сотрудник {employee.name} уволен из {org.name}"}
+
+@app.post("/api/noncomorgs/{id}/fire")
+def fire_employee_from_noncomorg(id: int, request: FireEmployeeRequest, db: Session = Depends(get_db)):
+    org = db.query(NonComOrg).filter(NonComOrg.id == id).first()
+    if not org:
+        raise HTTPException(status_code=404, detail="Организация не найдена")
+
+    employee = db.query(Employee).filter(Employee.id == request.employee_id, Employee.org_id == id).first()
+    if not employee:
+        raise HTTPException(status_code=404, detail="Сотрудник не найден в этой организации")
+
+    employee.org_id = None
+    db.commit()
+    db.refresh(employee)
+
+    return {"success": True, "message": f"Сотрудник {employee.name} уволен из {org.name}"}
+
+@app.get("/api/available-employees")
+def get_available_employees(db: Session = Depends(get_db)):
+    employees = db.query(Employee).filter(Employee.org_id == None).all()
+    return [
+        {"id": emp.id, "name": emp.name, "position": emp.position}
+        for emp in employees
+    ]
 @app.post("/api/getOrgEmployees")
 def get_org_employees(request: OrgRequest, db: Session = Depends(get_db)):
     if request.type == 'comorgs':
@@ -82,6 +159,38 @@ def get_org_employees(request: OrgRequest, db: Session = Depends(get_db)):
             for emp in employees
         ]
     }
+
+
+@app.get("/api/comorgs/{id}/report")
+def comorg_report(id: int, db: Session = Depends(get_db)):
+    org = db.query(ComOrg).filter(ComOrg.id == id).first()
+    if not org:
+        raise HTTPException(status_code=404, detail="Организация не найдена")
+    return {"report": org.report()}
+
+
+@app.get("/api/comorgs/{id}/reklama")
+def comorg_reklama(id: int, db: Session = Depends(get_db)):
+    org = db.query(ComOrg).filter(ComOrg.id == id).first()
+    if not org:
+        raise HTTPException(status_code=404, detail="Организация не найдена")
+    return {"reklama": org.reklama()}
+
+
+@app.get("/api/noncomorgs/{id}/report")
+def noncomorg_report(id: int, db: Session = Depends(get_db)):
+    org = db.query(NonComOrg).filter(NonComOrg.id == id).first()
+    if not org:
+        raise HTTPException(status_code=404, detail="Организация не найдена")
+    return {"report": org.report()}
+
+
+@app.get("/api/noncomorgs/{id}/reklama")
+def noncomorg_reklama(id: int, db: Session = Depends(get_db)):
+    org = db.query(NonComOrg).filter(NonComOrg.id == id).first()
+    if not org:
+        raise HTTPException(status_code=404, detail="Организация не найдена")
+    return {"reklama": org.reklama()}
 
 
 def create_crud_router(

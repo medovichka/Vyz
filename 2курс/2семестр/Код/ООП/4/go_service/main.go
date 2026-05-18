@@ -340,6 +340,10 @@ func actionHandler(w http.ResponseWriter, r *http.Request) {
 		switch action {
 		case "attractFunding":
 			newSource := r.FormValue("param")
+			if newSource == "" {
+				// ничего не делаем, просто редиректим
+				break
+			}
 			if org.Source == "" {
 				org.Source = newSource
 			} else {
@@ -433,12 +437,15 @@ func addComOrgHandler(w http.ResponseWriter, r *http.Request) {
 
 func addNonComOrgHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-
+	source := r.FormValue("source")
+	if source == "" {
+		source = "Не указан"
+	}
 	requestJSON(http.MethodPost, pythonAPI+"/api/noncomorgs", NonComOrg{
 		Name:    r.FormValue("name"),
 		Inn:     r.FormValue("inn"),
 		Purpose: r.FormValue("purpose"),
-		Source:  r.FormValue("source"),
+		Source:  source,
 	})
 	invalidateCache()
 	http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -502,6 +509,149 @@ func deleteEmployeeHandler(w http.ResponseWriter, r *http.Request) {
 	invalidateCache()
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
+func hireHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	orgID := r.FormValue("id")
+	orgType := r.FormValue("type")
+	employeeID := r.FormValue("employeeId")
+
+	if orgID == "" || orgType == "" || employeeID == "" {
+		http.Error(w, "Недостаточно данных", http.StatusBadRequest)
+		return
+	}
+
+	url := fmt.Sprintf("%s/api/%s/%s/hire", pythonAPI, orgType, orgID)
+
+	requestBody := map[string]interface{}{
+		"employee_id": employeeID,
+	}
+	jsonData, err := json.Marshal(requestBody)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+
+	invalidateCache()
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(body)
+}
+
+func fireHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	orgID := r.FormValue("id")
+	orgType := r.FormValue("type")
+	employeeID := r.FormValue("employeeId")
+
+	if orgID == "" || orgType == "" || employeeID == "" {
+		http.Error(w, "Недостаточно данных", http.StatusBadRequest)
+		return
+	}
+
+	url := fmt.Sprintf("%s/api/%s/%s/fire", pythonAPI, orgType, orgID)
+
+	requestBody := map[string]interface{}{
+		"employee_id": employeeID,
+	}
+	jsonData, err := json.Marshal(requestBody)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+
+	invalidateCache()
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(body)
+}
+
+func getAvailableEmployeesHandler(w http.ResponseWriter, r *http.Request) {
+	url := fmt.Sprintf("%s/api/available-employees", pythonAPI)
+	resp, err := http.Get(url)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(body)
+}
+func reportHandler(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	orgType := r.URL.Query().Get("type")
+	if orgType == "comorgs" {
+		orgType = "comorgs"
+	} else if orgType == "noncomorgs" {
+		orgType = "noncomorgs"
+	} else {
+		http.Error(w, "Неизвестный тип организации", http.StatusBadRequest)
+		return
+	}
+	url := fmt.Sprintf("%s/api/%s/%s/report", pythonAPI, orgType, id)
+	resp, err := http.Get(url)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(body)
+}
+
+func reklamaHandler(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	orgType := r.URL.Query().Get("type")
+	if orgType == "comorgs" {
+		orgType = "comorgs"
+	} else if orgType == "noncomorgs" {
+		orgType = "noncomorgs"
+	} else {
+		http.Error(w, "Неизвестный тип организации", http.StatusBadRequest)
+		return
+	}
+	url := fmt.Sprintf("%s/api/%s/%s/reklama", pythonAPI, orgType, id)
+	resp, err := http.Get(url)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(body)
+}
 
 func main() {
 	http.HandleFunc("/", indexHandler)
@@ -512,10 +662,15 @@ func main() {
 	http.HandleFunc("/addNonComOrg", addNonComOrgHandler)
 	http.HandleFunc("/addEmp", addEmpHandler)
 	http.HandleFunc("/delete", deleteHandler)
+	http.HandleFunc("/hire", hireHandler)
+	http.HandleFunc("/fire", fireHandler)
+	http.HandleFunc("/getAvailableEmployees", getAvailableEmployeesHandler)
 	http.HandleFunc("/deleteEmployee", deleteEmployeeHandler)
 	http.HandleFunc("/getEmployee", getEmployeeHandler)
 	http.HandleFunc("/getOrgEmployees", getOrgEmployeesHandler)
 	http.HandleFunc("/editEmployee", editEmployeeHandler)
+	http.HandleFunc("/report", reportHandler)
+	http.HandleFunc("/reklama", reklamaHandler)
 
 	fmt.Println("Go Server is running on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)

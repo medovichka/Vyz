@@ -20,7 +20,7 @@ class CRUDRepository:
         try:
             if self.model == Employee:
                 org_id = data.get("org_id")
-                if org_id == 0:
+                if org_id == 0 or org_id is None:
                     data["org_id"] = None
                     org_id = None
 
