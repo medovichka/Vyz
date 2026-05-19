@@ -138,6 +138,13 @@
   \label{fig:class_diagram_lab3}
 \end{figure}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{ERD.png}
+  \caption{Диаграмма отношений сущностей}
+  \label{fig:class_diagram_lab3}
+\end{figure}
+
 \subsection*{Описание классов предметной области (сущностей)}
 \addcontentsline{toc}{subsection}{Описание классов предметной области}
 
@@ -274,7 +281,7 @@ extends Organization.
 \subsection*{Репозитории}
 \addcontentsline{toc}{subsection}{Репозитории}
 
-Для взаимодействия с базой данных используется Spring Data JPA. Созданы интерфейсы-репозитории, которые наследуются от `JpaRepository`. Это позволяет Spring автоматически предоставлять реализацию стандартных CRUD-операций без написания SQL-кода вручную. Все репозитории находятся в пакете `ru.university.lab3.repository`.
+Для взаимодействия с базой данных используется Spring Data JPA. Созданы интерфейсы-репозитории, которые наследуются от `JpaRepository`. Это позволяет Spring автоматически предоставлять реализацию стандартных CRUD-операций (Create, Read, Update, Delete) без написания SQL-кода вручную. Все репозитории находятся в пакете `ru.university.lab3.repository`.
 
 \subsubsection*{Интерфейс OrganizationRep}
 \begin{lstlisting}[language=Java, caption={Содержимое файла OrganizationRep.java}]
@@ -334,7 +341,15 @@ public interface EmployeesRep extends JpaRepository<Employees, Integer> {
 \subsection*{Веб контроллер}
 \addcontentsline{toc}{subsection}{Веб контроллер}
 
-Класс ru.university.lab3.controller WebController имеет аннотацию @Controller. В нём с помощью @Autowired внедряются все репозитории.
+Класс `ru.university.lab3.controller.WebController` обрабатывает HTTP-запросы от пользователя. Он использует аннотации Spring Framework для определения своей роли и для привязки методов к конкретным URL-адресам.
+
+\textbf{Ключевые аннотации Spring в контроллере:}
+\begin{itemize}
+    \item \textbf{@Controller}: Помечает класс как контроллер в архитектуре Spring MVC, который отвечает за обработку входящих веб-запросов и возврат представлений (HTML-страниц).
+    \item \textbf{@Autowired}: Используется для автоматического внедрения зависимостей. В данном проекте эта аннотация внедряет экземпляры репозиториев (`OrganizationRep`, `EmployeesRep` и др.) в контроллер, что позволяет ему взаимодействовать с базой данных.
+    \item \textbf{@GetMapping} и \textbf{@PostMapping}: Привязывают HTTP-методы GET и POST к методам контроллера. Например, `@GetMapping("/")` означает, что метод будет вызван при GET-запросе на главную страницу сайта. `@PostMapping("/addComOrg")` означает, что метод обработает данные, отправленные из формы добавления коммерческой организации.
+    \item \textbf{@RequestParam}: Извлекает параметры из HTTP-запроса (например, данные из полей формы) и передает их в качестве аргументов метода контроллера.
+\end{itemize}
 
 \textbf{Методы-обработчики запросов:}
 \begin{itemize}
@@ -356,15 +371,32 @@ public interface EmployeesRep extends JpaRepository<Employees, Integer> {
 Связь между Java-объектами и таблицами базы данных настраивается с помощью аннотаций:
 
 \begin{itemize}
-    \item \textbf{@Entity (JPA)}: Указывает, что класс является сущностью и его объекты должны сохраняться в базе данных. Каждый экземпляр этого класса соответствует строке в таблице.
-    \item \textbf{@Table(name = "...") (JPA)}: Явно задаёт имя таблицы в БД, с которой связан данный класс.
-    \item \textbf{@Id (JPA)}: Помечает поле как первичный ключ таблицы.
-    \item \textbf{@GeneratedValue (JPA)}: Определяет стратегию генерации значения для первичного ключа. В данном проекте используется стратегия по умолчанию, которая для PostgreSQL означает использование последовательностей (sequences).
-    \item \textbf{@Inheritance(strategy = InheritanceType.JOINED) (JPA)}: Настраивает стратегию наследования. Стратегия `JOINED` означает, что для каждого класса в иерархии (базового и дочерних) создаётся своя таблица. Таблицы дочерних классов связаны с таблицей базового класса по внешнему ключу, которым является первичный ключ.
-    \item \textbf{@OneToMany и @ManyToOne (JPA)}: Определяют реляционную связь "один ко многим" между сущностями. В классе `Organization` аннотация `@OneToMany` указывает на список сотрудников. В классе `Employees` аннотация `@ManyToOne` указывает на организацию, к которой принадлежит сотрудник.
-    \item \textbf{@JoinColumn(name = "...") (JPA)}: Указывает имя столбца в таблице, который является внешним ключом для связи.
-    \item \textbf{@Repository (Spring)}: Аннотация, которая помечает интерфейс репозитория. Spring Data JPA сканирует такие интерфейсы и автоматически создает их реализации во время выполнения.
-    \item \textbf{@Autowired (Spring)}: Используется в контроллере для автоматического внедрения зависимостей, в данном случае — экземпляров репозиториев, что позволяет вызывать методы для работы с БД.
+    \item \textbf{@Entity }: Указывает, что класс является сущностью и его объекты должны сохраняться в базе данных. Каждый экземпляр этого класса соответствует строке в таблице.
+    \item \textbf{@Table(name = "...") }: Явно задаёт имя таблицы в БД, с которой связан данный класс.
+    \item \textbf{@Id }: Помечает поле как первичный ключ таблицы.
+    \item \textbf{@GeneratedValue }: Определяет стратегию генерации значения для первичного ключа. В данном проекте используется стратегия по умолчанию, которая для PostgreSQL означает использование последовательностей (sequences).
+    \item \textbf{@Inheritance(strategy = InheritanceType.JOINED) }: Настраивает стратегию наследования. Стратегия `JOINED` означает, что для каждого класса в иерархии (базового и дочерних) создаётся своя таблица. Таблицы дочерних классов связаны с таблицей базового класса по внешнему ключу, которым является первичный ключ.
+    \item \textbf{@OneToMany и @ManyToOne }: Определяют связь "один ко многим". Реализована между сущностями Organization и Employees: одна организация может иметь много сотрудников, но каждый сотрудник принадлежит только одной организации.
+
+    В классе Organization связь описывается аннотацией @OneToMany. Атрибут `mappedBy = "organization"` указывает, что управление этой связью находится на стороне Employees в поле organization.
+
+    \begin{lstlisting}
+        @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
+        private List<Employees> employeesList = new ArrayList<>();
+    \end{lstlisting}
+
+    В классе \texttt{Employees} используется аннотация \texttt{@ManyToOne}.
+    Аннотация \texttt{@JoinColumn(name = "org\_id")} указывает, что в таблице
+    \texttt{employees} будет создан столбец \texttt{org\_id}, который будет
+    внешним ключом, ссылающимся на первичный ключ таблицы \texttt{organizations}.
+    \begin{lstlisting}
+        @ManyToOne
+        @JoinColumn(name = "org_id")
+        private Organization organization;
+    \end{lstlisting}
+
+    \item \textbf{@Repository }: Аннотация, которая помечает интерфейс репозитория. Spring Data JPA сканирует такие интерфейсы и автоматически создает их реализации во время выполнения.
+    \item \textbf{@Autowired }: Используется в контроллере для автоматического внедрения зависимостей, в данном случае — экземпляров репозиториев, что позволяет вызывать методы для работы с БД.
 \end{itemize}
 
 Таким образом, вместо написания SQL-запросов, разработчик оперирует объектами и вызывает методы репозитория, такие как `save()`, `findById()`, `findAll()`, а Hibernate генерирует и выполняет соответствующие SQL-запросы к базе данных.
