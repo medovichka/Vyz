@@ -145,8 +145,6 @@
 
 \subsubsection*{Абстрактный базовый класс Organization: Organization.java}
 
-Модификаторы доступа: поля - private, методы - public.
-
 \textbf{Аннотации JPA:}
 \begin{itemize}
     \item @Entity - сущность.
@@ -155,108 +153,100 @@
     \item @Id, @GeneratedValue - первичный ключ.
 \end{itemize}
 
-\textbf{Поля private:}
+\textbf{Поля:}
 \begin{itemize}
-    \item id: int - уникальный идентификатор организации.
-    \item name: String - название организации.
-    \item inn: String - ИНН.
-    \item employeesCount: int - количество сотрудников.
-    \item employeesList: List<Employees> - список сотрудников, реализует связь один ко многим.
+    \item private int id - уникальный идентификатор организации.
+    \item private String name - название организации.
+    \item private String inn - ИНН.
+    \item private int employeesCount - количество сотрудников.
+    \item private java.util.List<Employees> employeesList - список сотрудников, реализует связь один ко многим (@OneToMany(mappedBy =\\ "organization", cascade = CascadeType.ALL,\\ orphanRemoval = true)).
 \end{itemize}
 
-\newpage
-
-\textbf{Аннотации для связи:}
+\textbf{Конструкторы:}
 \begin{itemize}
-    \item @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true) - связь с сущностью Employees.
-    \item @ToString.Exclude, @EqualsAndHashCode.Exclude - исключение списка из методов toString и hashCode.
+    \item public Organization() - пустой конструктор.
+    \item public Organization(int id, String name, String inn, int employeesCount) - конструктор со всеми полями.
 \end{itemize}
 
-\textbf{Конструкторы генерируются Lombok @NoArgsConstructor, @AllArgsConstructor:}
+\textbf{Абстрактные методы:}
 \begin{itemize}
-    \item Organization() - пустой конструктор.
-    \item Organization(id, name, inn, employeesCount) - конструктор со всеми полями.
+    \item public abstract String report() - Формирует отчёт об организации.
+    \item public abstract int taxes() - Расчёт налога.
 \end{itemize}
 
-\textbf{Абстрактные методы public:}
+\textbf{Конкретные методы:}
 \begin{itemize}
-    \item report() - возвращает String. Формирует отчёт об организации.
-    \item taxes() - возвращает int. Расчёт налога.
-\end{itemize}
-
-\textbf{Конкретные методы public:}
-\begin{itemize}
-    \item reklama() - возвращает String. Возвращает рекламную строку (name + " оч крутая!").
-    \item addEmployee(Employees employee) - void. Добавляет сотрудника в список и устанавливает связь с этой организацией.
-    \item removeEmployee(Employees employee) - void. Удаляет сотрудника и обнуляет связь.
+    \item public String reklama() - Возвращает рекламную строку (name + " оч крутая!").
+    \item public void addEmployee(Employees employee) - Добавляет сотрудника в список и устанавливает связь с этой организацией.
+    \item public void removeEmployee(Employees employee) - Удаляет сотрудника и обнуляет связь.
 \end{itemize}
 
 \newpage
 
 \subsubsection*{Класс ComOrg: ComOrg.java}
 
-Наследование: extends Organization.
+extends Organization.
 
 \textbf{Аннотации:} @Entity, @Table(name = "comorganizations"),\\ @Data, @EqualsAndHashCode(callSuper=true),\\ @NoArgsConstructor, @AllArgsConstructor.
 
-\textbf{Поля private:}
+\textbf{Поля:}
 \begin{itemize}
-    \item profit: String - прибыль.
-    \item businessType: String - тип бизнеса.
+    \item private String profit - прибыль.
+    \item private String businessType - тип бизнеса.
 \end{itemize}
 
 Наследуемые поля: id, name, inn, employeesCount, employeesList.
 
 \textbf{Конструкторы:}
 \begin{itemize}
-    \item ComOrg() - создан Lombok.
-    \item ComOrg(String name, String inn, int employeesCount, String profit, String businessType) - без идентификатора. Вызывает сеттеры унаследованных полей.
-    \item ComOrg(int id, String name, String inn, int employeesCount, String profit, String businessType) - полный конструктор.
+    \item public ComOrg() - создан Lombok.
+    \item public ComOrg(String name, String inn, int employeesCount, String profit, String businessType) - без идентификатора. Вызывает сеттеры унаследованных полей.
+    \item public ComOrg(int id, String name, String inn, int employeesCount, String profit, String businessType) - полный конструктор.
 \end{itemize}
 
 \textbf{Переопределённые методы:}
 \begin{itemize}
-    \item report() - возвращает String. Формирует строку: "Коммерческая организация: " + имя + " | ИНН ... | Тип ... | Сотрудники ... | Прибыль ...".
-    \item taxes() - возвращает int. Преобразует profit в int, вычисляет 20\%, в случае ошибки возвращает 0.
+    \item public String report() - Формирует строку: "Коммерческая организация: " + имя + " | ИНН ... | Тип ... | Сотрудники ... | Прибыль ...".
+    \item public int taxes() - Преобразует profit в int, вычисляет 20\%, в случае ошибки возвращает 0.
 \end{itemize}
 
 \newpage
 
 \textbf{Собственные методы:}
 \begin{itemize}
-    \item expandBusiness() - возвращает String. Увеличивает прибыль на 20\% и возвращает новое значение.
-    \item distribute() - возвращает String. Вычисляет 3/22 от прибыли.
+    \item public String expandBusiness() - Увеличивает прибыль на 20\% и возвращает новое значение.
+    \item public String distribute() - Вычисляет 3/22 от прибыли.
 \end{itemize}
 
 \subsubsection*{Класс NonComOrg: NonComOrg.java}
 
-Наследование: extends Organization.
+extends Organization.
 
 \textbf{Аннотации:} @Entity, @Table(name = "noncomorganizations"),\\ @Data, @EqualsAndHashCode(callSuper=true),\\ @NoArgsConstructor, @AllArgsConstructor.
 
-\textbf{Поля private:}
+\textbf{Поля:}
 \begin{itemize}
-    \item purpose: String - цель организации.
-    \item source: String - источник финансирования.
+    \item private String purpose - цель организации.
+    \item private String source - источник финансирования.
 \end{itemize}
 
 \textbf{Конструкторы:}
 \begin{itemize}
-    \item NonComOrg() - создан Lombok.
-    \item NonComOrg(String name, String inn, int employeesCount, String purpose, String source) - без идентификатора. Вызывает сеттеры унаследованных полей.
-    \item NonComOrg(int id, String name, String inn, int employeesCount, String purpose, String source) -  полный конструктор.
+    \item public NonComOrg() - создан Lombok.
+    \item public NonComOrg(String name, String inn, int employeesCount, String purpose, String source) - без идентификатора. Вызывает сеттеры унаследованных полей.
+    \item public NonComOrg(int id, String name, String inn, int employeesCount, String purpose, String source) -  полный конструктор.
 \end{itemize}
 
 \textbf{Переопределённые методы:}
 \begin{itemize}
-    \item report() - возвращает String: "Некоммерческая организация: ... | Цель: ... | Источники: ...".
-    \item taxes() - возвращает employeesCount * 10.
+    \item public String report() - возвращает String: "Некоммерческая организация: ... | Цель: ... | Источники: ...".
+    \item public int taxes() - возвращает employeesCount * 10.
 \end{itemize}
 
 \textbf{Собственные методы:}
 \begin{itemize}
-    \item program(String programName) - возвращает String. Выводит в консоль сообщение и возвращает название программы.
-    \item attractFunding(String newSource) - возвращает String. Добавляет новый источник к существующему и возвращает обновлённую строку.
+    \item public String program(String programName) - Выводит в консоль сообщение и возвращает название программы.
+    \item public String attractFunding(String newSource) - Добавляет новый источник к существующему и возвращает обновлённую строку.
 \end{itemize}
 
 \subsubsection*{Класс Employees: Employees.java}
@@ -265,41 +255,79 @@
 
 \textbf{Аннотации:} @Entity, @Table(name = "employees"), @Data, @NoArgsConstructor.
 
-\textbf{Поля private:}
+\textbf{Поля:}
 \begin{itemize}
-    \item id: int - первичный ключ.
-    \item name: String - имя сотрудника.
-    \item position: String - должность.
-    \item organization: Organization - ссылка на организацию-работодателя.
+    \item private int id - первичный ключ.
+    \item private String name - имя сотрудника.
+    \item private String position - должность.
+    \item private Organization organization - ссылка на организацию-работодателя. Аннотации связи: @ManyToOne, @JoinColumn(name = "org\_id").
 \end{itemize}
 
-\textbf{Аннотации для связи:}
+\textbf{Конструкторы:}
 \begin{itemize}
-    \item @ManyToOne - отношение многие к одному.
-    \item @JoinColumn(name = "org\_id") - внешний ключ на таблицу organizations.
-    \item @ToString.Exclude, @EqualsAndHashCode.Exclude - исключение поля organization из методов toString и hashCode.
+    \item public Employees() - пустой.
+    \item public Employees(String name, String position) - без id и организации.
 \end{itemize}
 
 \newpage
 
-\textbf{Конструкторы:}
-\begin{itemize}
-    \item Employees() - пустой.
-    \item Employees(String name, String position) - без id и организации.
-\end{itemize}
-
 \subsection*{Репозитории}
 \addcontentsline{toc}{subsection}{Репозитории}
 
-Все репозитории находятся в пакете ru.university.lab3.repository и наследуют интерфейс CrudRepository, что даёт готовые методы save, findById, findAll, deleteById и т.д.
+Для взаимодействия с базой данных используется Spring Data JPA. Созданы интерфейсы-репозитории, которые наследуются от `JpaRepository`. Это позволяет Spring автоматически предоставлять реализацию стандартных CRUD-операций без написания SQL-кода вручную. Все репозитории находятся в пакете `ru.university.lab3.repository`.
 
-\textbf{Интерфейсы:}
-\begin{itemize}
-    \item OrganizationRep extends JpaRepository<Organization, Integer> - для работы с сущностью Organization.
-    \item ComOrgRep extends JpaRepository<ComOrg, Integer> - для ComOrg.
-    \item NonComOrgRep extends JpaRepository<NonComOrg, Integer> - для NonComOrg.
-    \item EmployeesRep extends JpaRepository<Employees, Integer> - для Employees.
-\end{itemize}
+\subsubsection*{Интерфейс OrganizationRep}
+\begin{lstlisting}[language=Java, caption={Содержимое файла OrganizationRep.java}]
+package ru.university.lab3.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ru.university.lab3.entity.Organization;
+
+@Repository
+public interface OrganizationRep extends JpaRepository<Organization, Integer> {
+}
+\end{lstlisting}
+
+\subsubsection*{Интерфейс ComOrgRep}
+\begin{lstlisting}[language=Java, caption={Содержимое файла ComOrgRep.java}]
+package ru.university.lab3.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ru.university.lab3.entity.ComOrg;
+
+@Repository
+public interface ComOrgRep extends JpaRepository<ComOrg, Integer> {
+
+}
+\end{lstlisting}
+
+\subsubsection*{Интерфейс NonComOrgRep}
+\begin{lstlisting}[language=Java, caption={Содержимое файла NonComOrgRep.java}]
+package ru.university.lab3.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ru.university.lab3.entity.NonComOrg;
+
+@Repository
+public interface NonComOrgRep extends JpaRepository<NonComOrg, Integer> {
+}
+\end{lstlisting}
+
+\subsubsection*{Интерфейс EmployeesRep}
+\begin{lstlisting}[language=Java, caption={Содержимое файла EmployeesRep.java}]
+package ru.university.lab3.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ru.university.lab3.entity.Employees;
+
+@Repository
+public interface EmployeesRep extends JpaRepository<Employees, Integer> {
+}
+\end{lstlisting}
 
 \newpage
 
@@ -308,22 +336,38 @@
 
 Класс ru.university.lab3.controller WebController имеет аннотацию @Controller. В нём с помощью @Autowired внедряются все репозитории.
 
-\textbf{Методы отображения главной страницы:}
+\textbf{Методы-обработчики запросов:}
 \begin{itemize}
-    \item index(Model model) - обрабатывает GET-запрос "/". Добавляет в модель список всех организаций и всех сотрудников, возвращает имя представления "index".
-    \item showOrgEmployees(@RequestParam int id, Model model) - обрабатывает \\"/showOrgEmployees". Загружает организацию по id и её список сотрудников, возвращает представление "employeesList".
-\end{itemize}
-
-\textbf{CRUD-операции POST-запросы:}
-\begin{itemize}
-    \item addComOrg, addNonComOrg - добавление коммерческой или некоммерческой организации. Параметры передаются через @RequestParam. Вызывается соответствующий репозиторий .save().
-    \item addEmp - добавление сотрудника с возможностью привязки к организации по orgId.
-    \item updateComOrg, updateNonComOrg - редактирование существующих организаций. Функции находят организацию по id, обновляют поля, сохраняют.
-    \item updateEmp - редактирование сотрудника.
-    \item deleteOrg, deleteEmp - удаление по id через репозиторий .deleteById().
+    \item public String index(Model model) - обрабатывает GET-запрос на "/". Добавляет в модель списки организаций и сотрудников, возвращает "index".
+    \item public String showOrgEmployees(@RequestParam int id, Model model) - обрабатывает GET-запрос на "/showOrgEmployees". Загружает организацию и её сотрудников, возвращает "employeesList".
+    \item public String addComOrg(...) / addNonComOrg(...) - обрабатывают POST-запросы на добавление коммерческой или некоммерческой организации.
+    \item public String addEmp(...) - обрабатывает POST-запрос на добавление сотрудника с привязкой к организации.
+    \item public String updateComOrg(...) / updateNonComOrg(...) - обрабатывают POST-запросы на обновление данных организаций.
+    \item public String updateEmp(...) - обрабатывает POST-запрос на обновление данных сотрудника.
+    \item public String deleteOrg(...) / deleteEmp(...) - обрабатывают POST-запросы на удаление по id.
 \end{itemize}
 
 После выполнения всех операций происходит перенаправление на главную страницу.
+
+\subsection*{Взаимодействие с базой данных через Spring Data JPA и Hibernate}
+\addcontentsline{toc}{subsection}{Взаимодействие с базой данных через Spring Data JPA и Hibernate}
+Взаимодействие с базой данных PostgreSQL реализовано с помощью технологии ORM (Object-Relational Mapping), которую предоставляет Hibernate в качестве реализации стандарта JPA (Java Persistence API). Spring Data JPA дополнительно упрощает работу, избавляя от необходимости писать реализацию слоя доступа к данным.
+
+Связь между Java-объектами и таблицами базы данных настраивается с помощью аннотаций:
+
+\begin{itemize}
+    \item \textbf{@Entity (JPA)}: Указывает, что класс является сущностью и его объекты должны сохраняться в базе данных. Каждый экземпляр этого класса соответствует строке в таблице.
+    \item \textbf{@Table(name = "...") (JPA)}: Явно задаёт имя таблицы в БД, с которой связан данный класс.
+    \item \textbf{@Id (JPA)}: Помечает поле как первичный ключ таблицы.
+    \item \textbf{@GeneratedValue (JPA)}: Определяет стратегию генерации значения для первичного ключа. В данном проекте используется стратегия по умолчанию, которая для PostgreSQL означает использование последовательностей (sequences).
+    \item \textbf{@Inheritance(strategy = InheritanceType.JOINED) (JPA)}: Настраивает стратегию наследования. Стратегия `JOINED` означает, что для каждого класса в иерархии (базового и дочерних) создаётся своя таблица. Таблицы дочерних классов связаны с таблицей базового класса по внешнему ключу, которым является первичный ключ.
+    \item \textbf{@OneToMany и @ManyToOne (JPA)}: Определяют реляционную связь "один ко многим" между сущностями. В классе `Organization` аннотация `@OneToMany` указывает на список сотрудников. В классе `Employees` аннотация `@ManyToOne` указывает на организацию, к которой принадлежит сотрудник.
+    \item \textbf{@JoinColumn(name = "...") (JPA)}: Указывает имя столбца в таблице, который является внешним ключом для связи.
+    \item \textbf{@Repository (Spring)}: Аннотация, которая помечает интерфейс репозитория. Spring Data JPA сканирует такие интерфейсы и автоматически создает их реализации во время выполнения.
+    \item \textbf{@Autowired (Spring)}: Используется в контроллере для автоматического внедрения зависимостей, в данном случае — экземпляров репозиториев, что позволяет вызывать методы для работы с БД.
+\end{itemize}
+
+Таким образом, вместо написания SQL-запросов, разработчик оперирует объектами и вызывает методы репозитория, такие как `save()`, `findById()`, `findAll()`, а Hibernate генерирует и выполняет соответствующие SQL-запросы к базе данных.
 
 \subsection*{Структура базы данных}
 \addcontentsline{toc}{subsection}{Структура базы данных}
@@ -340,14 +384,14 @@
 
 \textbf{Таблица comorganizations:}
 \begin{itemize}
-    \item id (INTEGER PRIMARY KEY, FOREIGN KEY REFERENCES organizations(id) ON DELETE CASCADE)
+    \item id (INTEGER PRIMARY KEY, FOREIGN KEY \\REFERENCES organizations(id) ON DELETE CASCADE)
     \item profit (VARCHAR)
     \item business\_type (VARCHAR)
 \end{itemize}
 
 \textbf{Таблица noncomorganizations:}
 \begin{itemize}
-    \item id (INTEGER PRIMARY KEY, FOREIGN KEY REFERENCES organizations(id) ON DELETE CASCADE)
+    \item id (INTEGER PRIMARY KEY, FOREIGN KEY \\REFERENCES organizations(id) ON DELETE CASCADE)
     \item purpose (TEXT)
     \item source (VARCHAR)
 \end{itemize}
@@ -396,7 +440,7 @@
     \item Конфигурация подключения к PostgreSQL задаётся в application.properties
     \item Главный класс приложения App помечен @SpringBootApplication
     \item Используется Lombok для сокращения однотипного кода
-    \item Все CRUD-операции реализованы через методы, унаследованные от CrudRepository, без написания SQL-запросов
+    \item Все CRUD-операции реализованы через методы, унаследованные\\от CrudRepository, без написания SQL-запросов
     \item Веб-интерфейс
 \end{itemize}
 
@@ -409,35 +453,35 @@
   \centering
   \includegraphics[width=0.8\textwidth]{организации.png}
   \caption{Экранная форма списка организаций}
-  \label{fig:class_diagram_lab3}
+  \label{fig:org_list}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{сотрудники.png}
   \caption{Экранная форма списка сотрудников}
-  \label{fig:class_diagram_lab3}
+  \label{fig:emp_list}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{добавление_комм.png}
   \caption{Экранная форма добавления коммерческих организаций}
-  \label{fig:class_diagram_lab3}
+  \label{fig:add_com}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{добавление_некомм.png}
   \caption{Экранная форма добавления некоммерческих организаций}
-  \label{fig:class_diagram_lab3}
+  \label{fig:add_noncom}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{добавление_сотрудник.png}
   \caption{Экранная форма добавления сотрудников}
-  \label{fig:class_diagram_lab3}
+  \label{fig:add_emp}
 \end{figure}
 
 \newpage

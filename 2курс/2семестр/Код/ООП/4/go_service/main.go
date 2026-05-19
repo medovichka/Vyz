@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"io"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -78,6 +79,7 @@ type TemplateData struct {
 	NameFilter   string
 	MinEmployees int
 	MaxEmployees int
+	SortEnabled  bool
 }
 
 var cache = make(map[string][]byte)
@@ -149,6 +151,38 @@ func calculateNonComTax(employeesCount int) int {
 	return tax
 }
 
+func sortByName(sortEnabled bool, comOrgs []ComOrgDisplay, nonComOrgs []NonComOrgDisplay, employees []Employee, allOrgs []OrgOption) ([]ComOrgDisplay, []NonComOrgDisplay, []Employee, []OrgOption) {
+	if !sortEnabled {
+		return comOrgs, nonComOrgs, employees, allOrgs
+	}
+
+	sortedCom := make([]ComOrgDisplay, len(comOrgs))
+	copy(sortedCom, comOrgs)
+	sort.Slice(sortedCom, func(i, j int) bool {
+		return strings.ToLower(sortedCom[i].Name) < strings.ToLower(sortedCom[j].Name)
+	})
+
+	sortedNon := make([]NonComOrgDisplay, len(nonComOrgs))
+	copy(sortedNon, nonComOrgs)
+	sort.Slice(sortedNon, func(i, j int) bool {
+		return strings.ToLower(sortedNon[i].Name) < strings.ToLower(sortedNon[j].Name)
+	})
+
+	sortedEmployees := make([]Employee, len(employees))
+	copy(sortedEmployees, employees)
+	sort.Slice(sortedEmployees, func(i, j int) bool {
+		return strings.ToLower(sortedEmployees[i].Name) < strings.ToLower(sortedEmployees[j].Name)
+	})
+
+	sortedAllOrgs := make([]OrgOption, len(allOrgs))
+	copy(sortedAllOrgs, allOrgs)
+	sort.Slice(sortedAllOrgs, func(i, j int) bool {
+		return strings.ToLower(sortedAllOrgs[i].Name) < strings.ToLower(sortedAllOrgs[j].Name)
+	})
+
+	return sortedCom, sortedNon, sortedEmployees, sortedAllOrgs
+}
+
 func filterOrgs(comOrgs []ComOrgDisplay, nonComOrgs []NonComOrgDisplay, nameFilter string, minEmp, maxEmp int) ([]ComOrgDisplay, []NonComOrgDisplay) {
 	filteredCom := []ComOrgDisplay{}
 	filteredNon := []NonComOrgDisplay{}
@@ -186,6 +220,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	nameFilter := r.URL.Query().Get("nameFilter")
 	minEmp, _ := strconv.Atoi(r.URL.Query().Get("minEmployees"))
 	maxEmp, _ := strconv.Atoi(r.URL.Query().Get("maxEmployees"))
+	sortEnabled := r.URL.Query().Get("sort") == "true"
 
 	cd, _ := getFromCacheOrFetch(pythonAPI + "/api/comorgs")
 	nd, _ := getFromCacheOrFetch(pythonAPI + "/api/noncomorgs")
@@ -233,7 +268,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			Taxes:          calculateNonComTax(empCount),
 		})
 	}
-
 	filteredCom, filteredNon := filterOrgs(comOrgsDisplay, nonComOrgsDisplay, nameFilter, minEmp, maxEmp)
 
 	var allOrgs []OrgOption
@@ -243,15 +277,17 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	for _, o := range nonComOrgs {
 		allOrgs = append(allOrgs, OrgOption{ID: o.ID, Name: o.Name + " (Неком)"})
 	}
+	sortedCom, sortedNon, sortedEmployees, sortedAllOrgs := sortByName(sortEnabled, filteredCom, filteredNon, employees, allOrgs)
 
 	data := TemplateData{
-		ComOrgs:      filteredCom,
-		NonComOrgs:   filteredNon,
-		Employees:    employees,
-		AllOrgs:      allOrgs,
+		ComOrgs:      sortedCom,
+		NonComOrgs:   sortedNon,
+		Employees:    sortedEmployees,
+		AllOrgs:      sortedAllOrgs,
 		NameFilter:   nameFilter,
 		MinEmployees: minEmp,
 		MaxEmployees: maxEmp,
+		SortEnabled:  sortEnabled,
 	}
 
 	tmpl := template.Must(template.ParseFiles("templates/index.html"))
@@ -341,7 +377,7 @@ func actionHandler(w http.ResponseWriter, r *http.Request) {
 		case "attractFunding":
 			newSource := r.FormValue("param")
 			if newSource == "" {
-				// ничего не делаем, просто редиректим
+				// ИЗМЕНЕНИЕ: Исправлено, чтобы не добавлять пустую строку
 				break
 			}
 			if org.Source == "" {
@@ -509,6 +545,7 @@ func deleteEmployeeHandler(w http.ResponseWriter, r *http.Request) {
 	invalidateCache()
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
+
 func hireHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	orgID := r.FormValue("id")
@@ -607,6 +644,7 @@ func getAvailableEmployeesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(body)
 }
+
 func reportHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	orgType := r.URL.Query().Get("type")

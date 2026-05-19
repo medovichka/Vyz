@@ -23,13 +23,13 @@ namespace Lab2
                             Employees INTEGER NOT NULL,
                             OrgType VARCHAR(50) NOT NULL
                         );
-                        
+
                         CREATE TABLE IF NOT EXISTS ComOrgs (
                             Id INTEGER PRIMARY KEY REFERENCES Organizations(Id) ON DELETE CASCADE,
                             Profit VARCHAR(60),
                             BusinessType VARCHAR(255)
                         );
-                        
+
                         CREATE TABLE IF NOT EXISTS NonComOrgs (
                             Id INTEGER PRIMARY KEY REFERENCES Organizations(Id) ON DELETE CASCADE,
                             Purpose TEXT,
@@ -54,8 +54,8 @@ namespace Lab2
                         // 1. Добавляем в базовую таблицу и получаем сгенерированный ID через RETURNING
                         string orgType = org is ComOrg ? "ComOrg" : "NonComOrg";
                         command.CommandText = @"
-                            INSERT INTO Organizations (Name, Inn, Employees, OrgType) 
-                            VALUES (@name, @inn, @employees, @type) 
+                            INSERT INTO Organizations (Name, Inn, Employees, OrgType)
+                            VALUES (@name, @inn, @employees, @type)
                             RETURNING Id;";
 
                         command.Parameters.AddWithValue("name", org.Name);
@@ -101,7 +101,6 @@ namespace Lab2
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    // Объединяем таблицы через LEFT JOIN
                     command.CommandText = @"
                         SELECT o.Id, o.Name, o.Inn, o.Employees, o.OrgType,
                                c.Profit, c.BusinessType,

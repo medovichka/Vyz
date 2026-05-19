@@ -85,6 +85,9 @@
         </div>
         <button type="submit">Применить</button>
         <button type="button" onclick="window.location.href='/'">Сбросить</button>
+
+        <button type="button" onclick="toggleSort()" style="background: #6c757d;">Сортировка по алфавиту</button>
+        <input type="hidden" name="sort" id="sortParam" value="">
     </form>
 
     <!-- Панели добавления (наверху) -->
@@ -483,12 +486,30 @@ async function fireEmployee(event, orgId, orgType) {
         const data = await response.json();
         alert(data.message || 'Сотрудник уволен');
         document.getElementById('fireModal').remove();
-        location.reload(); // Обновляем страницу для отображения изменений
+        location.reload();
     } catch (error) {
         alert('Ошибка при увольнении: ' + error.message);
     }
 }
-// Редактирование сотрудника
+
+let sortEnabled = false;
+
+function toggleSort() {
+    sortEnabled = !sortEnabled;
+    const button = event.target;
+
+    if (sortEnabled) {
+        button.style.background = "#28a745";
+        button.textContent = "Сортировка включена";
+    } else {
+        button.style.background = "#6c757d";
+        button.textContent = "Сортировка по алфавиту";
+    }
+
+    document.getElementById('sortParam').value = sortEnabled ? 'true' : '';
+    document.getElementById('filterForm').submit();
+}
+
 function editEmployee(id, name, position, orgId) {
     const orgs = {{.AllOrgs}};
     let orgOptions = '<option value="0">Без организации</option>';

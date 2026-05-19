@@ -25,12 +25,13 @@
 \usepackage{paracol}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{listings}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-
+\break
 \lstdefinestyle{csharpstyle}{
     backgroundcolor=\color{backcolour},
     commentstyle=\color{codegreen},
@@ -159,89 +160,87 @@
 
 \subsubsection*{Абстрактный базовый класс Organization: organization.cs}
 
-Модификаторы доступа: поля private, public геттеры сеттеры, public методы .
-
-\textbf{private поля:}
+\textbf{поля:}
 \begin{itemize}
-    \item \_id: int - уникальный идентификатор организации.
-    \item \_name: string - название организации.
-    \item \_inn: string - ИНН организации.
-    \item \_employees: int - количество сотрудников.
+    \item private int \_id - уникальный идентификатор организации.
+    \item private string \_name - название организации.
+    \item private string \_inn - ИНН организации.
+    \item private int \_employees - количество сотрудников.
 \end{itemize}
 
-\textbf{public геттеры сеттеры:}
+\textbf{геттеры сеттеры:}
 \begin{itemize}
-    \item Id - int, getter public, setter protected. Получение индентифекатора.
-    \item Name - string, get и set. Получение и изменение имени.
-    \item Inn - string, get и set. Получение и изменение ИНН.
-    \item Employees - int, get и set. Получение и изменение числа сотрудников.
+    \item public int Id - getter public, setter protected. Получение индентифекатора.
+    \item public string Name - get и set. Получение и изменение имени.
+    \item public string Inn - get и set. Получение и изменение ИНН.
+    \item public int Employees - get и set. Получение и изменение числа сотрудников.
 \end{itemize}
 
-\textbf{protected конструкторы:}
+\textbf{конструкторы:}
 \begin{itemize}
-    \item Organization() - конструктор по умолчанию.
+    \item protected Organization() - конструктор по умолчанию.
     \\ Устанавливает \_id=0, \_name="Organization", \_inn="1234567890", \_employees=0.
-    \item Organization(string name, string inn, int employees)\\конструктор с параметрами без идентификатора. \_id=0.
-    \item Organization(int id, string name, string inn, int employees)
+    \item protected Organization(string name, string inn, int employees)\\конструктор с параметрами без идентификатора. \_id=0.
+    \item protected Organization(int id, string name, string inn, int employees)
     \\конструктор с идентификатором для загрузки из базы данных.
 \end{itemize}
 
 \newpage
 
-\textbf{Абстрактные public методы:}
+\textbf{Абстрактные методы:}
 \begin{itemize}
-    \item Taxes() - возвращает int. Расчёт налога для конкретной организации.
-    \item Report() - возвращает string. Формирует отчёт об организации.
+    \item public abstract int Taxes() - Расчёт налога для конкретной организации.
+    \item public abstract string Report() - Формирует отчёт об организации.
 \end{itemize}
 
-\textbf{Общие public методы:}
+\textbf{Общие методы:}
 \begin{itemize}
-    \item Hire() - void. Увеличивает \_employees на 1 и выводит сообщение в консоль.
-    \item Reklama() - возвращает string. Возвращает строку с рекламой вида "\_name оч крутая!".
+    \item public void Hire() - Увеличивает \_employees на 1 и выводит сообщение в консоль.
+    \item public string Reklama() - Возвращает строку с рекламой вида "\_name оч крутая!".
 \end{itemize}
 
 \subsubsection*{Класс ComOrg: comorg.cs}
 
 Наследование: public Organization.
 
-\textbf{private поля :}
+\textbf{поля:}
 \begin{itemize}
-    \item \_profit: string - прибыль организации.
-    \item \_businessType: string - тип бизнеса.
+    \item private string \_profit - прибыль организации.
+    \item private string \_businessType - тип бизнеса.
 \end{itemize}
 
 Наследуемые поля: \_id, \_name, \_inn, \_employees (доступ через базовый класс).
 
-\textbf{public геттеры сеттеры:}
+\textbf{геттеры сеттеры:}
 \begin{itemize}
-    \item Profit - string, get и set. Получение и изменение прибыли.
-    \item BusinessType - string, get и set. Получение и изменение типа бизнеса.
+    \item public string Profit - get и set. Получение и изменение прибыли.
+    \item public string BusinessType - get и set. Получение и изменение типа бизнеса.
 \end{itemize}
 
 \newpage
 
-\textbf{public конструкторы:}
+\textbf{конструкторы:}
 \begin{itemize}
-    \item ComOrg() - конструктор по умолчанию.\\
-    Вызывает конструктор базового класса с параметрами: name="ООО Дылды", inn="458358238", employees=5. Устанавливает \_profit="100", \_businessType="Розничная торговля".
+    \item public ComOrg() - конструктор по умолчанию.\\
+    Вызывает конструктор базового класса с параметрами: name="ООО Дылды", inn="458358238", employees=5. Устанавливает \_profit="100",\\ \_businessType="Розничная торговля".
 
-    \item ComOrg(string name, string inn, int employees, string profit, string businessType)\\
+    \item public ComOrg(string name, string inn, int employees, string profit,\\ string businessType)\\
     Конструктор без идентификатора с собственными и родительскими параметрами.
 
-    \item ComOrg(int id, string name, string inn, int employees, string profit, string businessType)\\
+    \item public ComOrg(int id, string name, string inn, int employees, string profit, string businessType)\\
     Конструктор с идентификатором для загрузки из базы данных.
 \end{itemize}
 
 \textbf{Переопределённые методы:}
 \begin{itemize}
-    \item Taxes() - возвращает int. Пытается преобразовать \_profit в число, затем вычисляет 20\% от прибыли. Если преобразование не удалось, возвращает 0.
-    \item Report() - возвращает string. Формирует многострочный отчёт: название, ИНН, количество сотрудников, прибыль, тип бизнеса.
+    \item public override int Taxes() - Пытается преобразовать \_profit в число, затем вычисляет 20\% от прибыли. Если преобразование не удалось, возвращает 0.
+    \item public override string Report() - Формирует многострочный отчёт: название, ИНН, количество сотрудников, прибыль, тип бизнеса.
 \end{itemize}
 
-\textbf{Собственные public методы:}
+\textbf{Собственные методы:}
 \begin{itemize}
-    \item ExpandBusiness() - возвращает string. Увеличивает прибыль на 20\% (прибыль = прибыль + прибыль*20).
-    \item Distribute() - возвращает string. Вычисляет 3/22 от прибыли (прибыль / 22 * 3).
+    \item public string ExpandBusiness() - Увеличивает прибыль на 20\% (прибыль = прибыль + прибыль*20).
+    \item public string Distribute() - Вычисляет 3/22 от прибыли (прибыль / 22 * 3).
 \end{itemize}
 
 \newpage
@@ -250,40 +249,40 @@
 
 Наследование: public Organization.
 
-\textbf{private поля :}
+\textbf{поля:}
 \begin{itemize}
-    \item \_purpose: string - цель деятельности организации.
-    \item \_foundingSource: string - источник финансирования (гранты, пожертвования и т.п.).
+    \item private string \_purpose - цель деятельности организации.
+    \item private string \_foundingSource - источник финансирования (гранты, пожертвования и т.п.).
 \end{itemize}
 
-\textbf{public геттеры сеттеры:}
+\textbf{геттеры сеттеры:}
 \begin{itemize}
-    \item Purpose - string, get и set.
-    \item FoundingSource - string, get и set.
+    \item public string Purpose - get и set.
+    \item public string FoundingSource - get и set.
 \end{itemize}
 
-\textbf{public конструкторы :}
+\textbf{конструкторы:}
 \begin{itemize}
-    \item NonComOrg() - конструктор по умолчанию.\\
+    \item public NonComOrg() - конструктор по умолчанию.\\
     Вызывает конструктор базового класса с параметрами: name="Фонд Помощи", inn="0987654321", employees=10. Устанавливает \_purpose="Помощь нуждающимся", \_foundingSource="Гранты".
 
-    \item NonComOrg(string name, string inn, int employees, string purpose, string foundingSource)\\
+    \item public NonComOrg(string name, string inn, int employees, string purpose, string foundingSource)\\
     Конструктор без идентификатора.
 
-    \item NonComOrg(int id, string name, string inn, int employees, string purpose, string foundingSource)
+    \item public NonComOrg(int id, string name, string inn, int employees, string purpose, string foundingSource)
     \\Конструктор с идентификатором.
 \end{itemize}
 
 \textbf{Переопределённые методы:}
 \begin{itemize}
-    \item Taxes() - возвращает int. Вычисляет налог как employees * 10.
-    \item Report() - возвращает string. Формирует многострочный отчёт: название, цель, источник финансирования.
+    \item public override int Taxes() - Вычисляет налог как employees * 10.
+    \item public override string Report() - Формирует многострочный отчёт: название, цель, источник финансирования.
 \end{itemize}
 
-\textbf{Собственные public методы:}
+\textbf{Собственные методы:}
 \begin{itemize}
-    \item Program(string program) - возвращает string. Просто возвращает переданную строку (имитация проведения программы).
-    \item AttractFunding(string source) - возвращает string. Возвращает переданный источник (имитация привлечения финансирования).
+    \item public string Program(string program) - Просто возвращает переданную строку (имитация проведения программы).
+    \item public string AttractFunding(string source) - Возвращает переданный источник (имитация привлечения финансирования).
 \end{itemize}
 
 \newpage
@@ -293,32 +292,74 @@
 
 Класс отвечает за подключение к PostgreSQL и выполнение CRUD-операций. Используется библиотека Npgsql.
 
-\textbf{private поля :}
+\textbf{поля:}
 \begin{itemize}
-    \item connectionString: string - строка подключения к БД (хост, порт, имя БД, логин, пароль).
+    \item private string connectionString - строка подключения к БД (хост, порт, имя БД, логин, пароль).
 \end{itemize}
 
-\textbf{public методы:}
+\textbf{методы:}
 \begin{itemize}
-    \item InitializeDatabase() - void. Создаёт три таблицы, если они не существуют:
-        \begin{itemize}
-            \item Organizations (Id SERIAL PRIMARY KEY, Name, Inn, Employees, OrgType) - общие поля.
-            \item ComOrgs (Id REFERENCES Organizations ON DELETE CASCADE, Profit, BusinessType) - для коммерческих.
-            \item NonComOrgs (Id REFERENCES Organizations ON DELETE CASCADE, Purpose, FoundingSource) - для некоммерческих.
-        \end{itemize}
-    \item AddOrganization(Organization org) - void. Добавляет организацию в БД. Использует транзакцию: сначала вставка в Organizations с RETURNING Id, затем вставка в соответствующую дочернюю таблицу.
-    \item GetAllOrganizations() - возвращает List<Organization>. Выполняет LEFT JOIN между Organizations, ComOrgs и NonComOrgs, читает результат и по полю OrgType создаёт объекты ComOrg или NonComOrg.
-    \item DeleteOrganization(int id) - void. Удаляет запись из Organizations, дочерние удаляются каскадно.
-    \item UpdateOrganization(Organization org) - void. Обновляет данные в базовой и дочерней таблицах внутри транзакции.
-\end{itemize}
+    \item public void InitializeDatabase() - Инициализирует датабазу.\\
+    \textbf{SQL запрос:}
+    \begin{lstlisting}
+        CREATE TABLE IF NOT EXISTS Organizations (
+                            Id SERIAL PRIMARY KEY,
+                            Name VARCHAR(255) NOT NULL,
+                            Inn VARCHAR(50) NOT NULL,
+                            Employees INTEGER NOT NULL,
+                            OrgType VARCHAR(50) NOT NULL
+                        );
 
-\newpage
+                        CREATE TABLE IF NOT EXISTS ComOrgs (
+                            Id INTEGER PRIMARY KEY REFERENCES Organizations(Id) ON DELETE CASCADE,
+                            Profit VARCHAR(60),
+                            BusinessType VARCHAR(255)
+                        );
 
-\textbf{Особенности реализации:}
-\begin{itemize}
-    \item SQL запросы параметризованы.
-    \item При добавлении и обновлении используются транзакции для сохранения целостности данных.
-    \item Тип организации OrgType хранится в базовой таблице.
+                        CREATE TABLE IF NOT EXISTS NonComOrgs (
+                            Id INTEGER PRIMARY KEY REFERENCES Organizations(Id) ON DELETE CASCADE,
+                            Purpose TEXT,
+                            FoundingSource VARCHAR(255)
+                        );
+    \end{lstlisting}
+    \item public void AddOrganization(Organization org) - Добавляет организацию в БД. Использует транзакцию: сначала вставка в Organizations с RETURNING Id, затем вставка в соответствующую дочернюю таблицу.\\
+    \textbf{SQL запрос:}
+    \begin{lstlisting}
+        INSERT INTO Organizations (Name, Inn, Employees, OrgType)
+                            VALUES (@name, @inn, @employees, @type)
+                            RETURNING Id;
+
+    INSERT INTO ComOrgs (Id, Profit, BusinessType) VALUES (@id, @profit, @busType)
+
+
+    INSERT INTO NonComOrgs (Id, Purpose, FoundingSource) VALUES (@id, @purpose, @source)
+    \end{lstlisting}
+    \item public System.Collections.Generic.List<Organization> GetAllOrganizations() - Выполняет LEFT JOIN между Organizations, ComOrgs и NonComOrgs, читает результат и по полю OrgType создаёт объекты ComOrg или NonComOrg.\\
+    \textbf{SQL запрос:}
+    \begin{lstlisting}
+        SELECT o.Id, o.Name, o.Inn, o.Employees, o.OrgType,
+                               c.Profit, c.BusinessType,
+                               n.Purpose, n.FoundingSource
+                        FROM Organizations o
+                        LEFT JOIN ComOrgs c ON o.Id = c.Id
+                        LEFT JOIN NonComOrgs n ON o.Id = n.Id
+                        ORDER BY o.Id;
+    \end{lstlisting}
+    \item public void DeleteOrganization(int id) - Удаляет запись из Organizations, дочерние удаляются каскадно.
+    \\
+    \textbf{SQL запрос:}
+    \begin{lstlisting}
+        DELETE FROM Organizations WHERE Id = @id;
+    \end{lstlisting}
+    \item public void UpdateOrganization(Organization org) - Обновляет данные в базовой и дочерней таблицах внутри транзакции.\\
+    \textbf{SQL запрос:}
+    \begin{lstlisting}
+        UPDATE Organizations SET Name = @name, Inn = @inn, Employees = @emp WHERE Id = @id
+
+        UPDATE ComOrgs SET Profit = @profit, BusinessType = @busType WHERE Id = @id
+
+        UPDATE NonComOrgs SET Purpose = @purpose, FoundingSource = @source WHERE Id = @id
+    \end{lstlisting}
 \end{itemize}
 
 \newpage
@@ -330,10 +371,10 @@
 
 Главное окно приложения.
 
-\textbf{private поля :}
+\textbf{поля:}
 \begin{itemize}
-    \item dbHelper (DatabaseHelper) - объект для работы с БД.
-    \item currentOrgs (List<Organization>) - текущий список организаций, загруженных из БД.
+    \item private DatabaseHelper dbHelper - объект для работы с БД.
+    \item private System.Collections.Generic.List<Organization> currentOrgs - текущий список организаций, загруженных из БД.
 \end{itemize}
 
 \textbf{Компоненты интерфейса (инициализируются в Designer):}
@@ -347,17 +388,17 @@
 
 \textbf{Основные методы:}
 \begin{itemize}
-    \item UpdateList() - обновляет listBoxOrgs, загружая данные из БД, используя dbHelper.GetAllOrganizations().
-    \item ToggleFields() - скрывает или показывает поля ввода в зависимости от выбранного типа организации.
-    \item UpdateListBoxSelection(object sender, EventArgs e) - обработчик выбора элемента в списке. Заполняет текстовые поля info1...info5 данными выбранной организации, настраивает видимость и доступность полей в зависимости от типа.
-    \item btnAdd\_Click - считывает данные из полей ввода, создаёт объект ComOrg или NonComOrg, добавляет в БД, вызывая dbHelper.AddOrganization, обновляет список.
-    \item btnDelete\_Click - удаляет выбранную организацию, используя dbHelper.DeleteOrganization.
-    \item btnUpdate\_Click - обновляет список.
-    \item btnReport\_Click - вызывает метод Report() у выбранной организации и показывает результат в MessageBox.
-    \item btnTaxes\_Click - вызывает Taxes() и показывает результат.
-    \item btnUnique1\_Click - для коммерческой организации вызывает ExpandBusiness() и обновляет прибыль в БД; для некоммерческой вызывает Program().
-    \item btnUnique2\_Click - для коммерческой вызывает Distribute(); для некоммерческой сбрасывает Purpose на "Ничего".
-    \item button4\_Click - сохраняет изменения, внесённые пользователем в поля info1...info5, в выбранную организацию и обновляет БД через dbHelper.UpdateOrganization.
+    \item private void UpdateList() - обновляет listBoxOrgs, загружая данные из БД, используя dbHelper.GetAllOrganizations().
+    \item private void ToggleFields() - скрывает или показывает поля ввода в зависимости от выбранного типа организации.
+    \item private void UpdateListBoxSelection(object sender, System.EventArgs e) - обработчик выбора элемента в списке. Заполняет текстовые поля info1...info5 данными выбранной организации, настраивает видимость и доступность полей в зависимости от типа.
+    \item private void btnAdd\_Click(object sender, System.EventArgs e) - считывает данные из полей ввода, создаёт объект ComOrg или NonComOrg, добавляет в БД, вызывая dbHelper.AddOrganization, обновляет список.
+    \item private void btnDelete\_Click(object sender, System.EventArgs e) - удаляет выбранную организацию, используя dbHelper.DeleteOrganization.
+    \item private void btnUpdate\_Click(object sender, System.EventArgs e) - обновляет список.
+    \item private void btnReport\_Click(object sender, System.EventArgs e) - вызывает метод Report() у выбранной организации и показывает результат в MessageBox.
+    \item private void btnTaxes\_Click(object sender, System.EventArgs e) - вызывает Taxes() и показывает результат.
+    \item private void btnUnique1\_Click(object sender, System.EventArgs e) - для коммерческой организации вызывает ExpandBusiness() и обновляет прибыль в БД; для некоммерческой вызывает Program().
+    \item private void btnUnique2\_Click(object sender, System.EventArgs e) - для коммерческой вызывает Distribute(); для некоммерческой сбрасывает Purpose на "Ничего".
+    \item private void button4\_Click(object sender, System.EventArgs e) - сохраняет изменения, внесённые пользователем в поля info1...info5, в выбранную организацию и обновляет БД через dbHelper.UpdateOrganization.
 \end{itemize}
 
 \subsubsection*{Класс Program: Program.cs}
@@ -383,8 +424,17 @@
 При добавлении или обновлении организации используются транзакции, для гарантии сохранности данных в обеих таблицах, либо отмене изменений при ошибке.
 
 \textbf{Загрузка данных:}
-При вызове GetAllOrganizations() выполняется LEFT JOIN между тремя таблицами. По полю OrgType создаётся объект соответствующего класса. При этом используется конструктор с идентификатором.
-
+При вызове GetAllOrganizations() выполняется LEFT JOIN между тремя таблицами. По полю OrgType создаётся объект соответствующего класса. При этом используется конструктор с идентификатором.\\
+\textbf{SQL запрос:}
+\begin{lstlisting}
+SELECT o.Id, o.Name, o.Inn, o.Employees, o.OrgType,
+                               c.Profit, c.BusinessType,
+                               n.Purpose, n.FoundingSource
+                        FROM Organizations o
+                        LEFT JOIN ComOrgs c ON o.Id = c.Id
+                        LEFT JOIN NonComOrgs n ON o.Id = n.Id
+                        ORDER BY o.Id;
+\end{lstlisting}
 \newpage
 
 \subsection*{Демонстрация принципов ООП}
@@ -394,7 +444,7 @@
 Все поля классов объявлены как private. Доступ к ним осуществляется через публичные геттеры и сеттеры или методы.
 
 \textbf{Наследование:}
-Классы ComOrg и NonComOrg наследуют от абстрактного класса Organization, получая все его поля и методы (Id, Name, Inn, Employees, Hire(), Reklama()). При этом они переопределяют абстрактные методы Taxes() и Report().
+Классы ComOrg и NonComOrg наследуют от абстрактного класса Organization, получая все его поля и методы (Id,  Name, Inn, Employees, Hire(), Reklama()). При этом они переопределяют абстрактные методы Taxes() и Report().
 
 \textbf{Полиморфизм:}
 В Form1 все объекты хранятся в списке List<Organization>. При вызове методов Report() или Taxes() через переменную базового типа автоматически выполняется соответствующая реализация из дочернего класса. Также при добавлении в БД метод AddOrganization принимает параметр типа Organization, но внутри определяет реальный тип через оператор is.
