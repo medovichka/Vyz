@@ -1,0 +1,163 @@
+\documentclass[oneside,a4paper,14pt]{extarticle}
+\usepackage[a4paper,top=20mm,bottom=20mm,left=30mm,right=10mm]{geometry}
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{textcomp}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{tocloft}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\usepackage[breaklinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+\usepackage{minted}
+
+\titleformat{\section}{\normalsize\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+\renewcommand\baselinestretch{1.33}\normalsize
+\setlength{\parindent}{1.25cm}
+
+\begin{document}
+\newpage\thispagestyle{empty}
+\begin{center}
+	МИНИСТЕРСТВО НАУКИ И ВЫСШЕГО ОБРАЗОВАНИЯ\\
+	РОССИЙСКОЙ ФЕДЕРАЦИИ\\
+	ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ\\
+	ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ ВЫСШЕГО ОБРАЗОВАНИЯ\\
+	«ВЯТСКИЙ ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ»\\
+	Институт математики и информационных систем\\
+	Факультет автоматики и вычислительной техники\\
+	Кафедра электронных вычислительных машин
+\end{center}
+\vspace{20mm}
+\begin{center}
+	Отчёт по лабораторной работе №4\\
+	по дисциплине\\
+	«Методы оптимизации»\\
+\end{center}
+\vfill
+Выполнил студент гр. ИВТб-2301-05-00 \hfill
+\makebox[8cm]{\hrulefill /Ковальский И.И./}
+Проверил преподаватель\hfill
+\makebox[8cm]{\hrulefill /Коржавина А.С./}
+\vfill
+\begin{center}
+	Киров\\
+	2026
+\end{center}
+\newpage
+\setcounter{page}{1}
+\tableofcontents
+\newpage
+
+\section*{Задание}
+\addcontentsline{toc}{section}{Задание}
+Реализовать один из методов решения задачи линейного программирования в соответствии с вариантом.\\
+
+\textbf{Вариант:} Двойственный симплекс-метод (Dual Simplex) и метод ветвей и границ (Branch and Bound).\\
+
+\textbf{Задание:}
+\begin{enumerate}
+	\item Изучить и реализовать заданный метод. Язык программирования выбрать самостоятельно.
+	\item Продемонстрировать работу приложения на примерах. При демонстрации работы приложения выводить каждую итерацию метода (симплекс-таблицы) отдельно, также выводить решение (ответ). Предусмотреть все возможные варианты решения задачи, включая отсутствие решений и т.п.
+\end{enumerate}
+
+\newpage
+\section*{Листинг кода}
+\addcontentsline{toc}{section}{Листинг кода}
+
+\begin{minted}[frame=lines,framesep=2mm,baselinestretch=1.2,fontsize=\footnotesize,breaklines]{python}
+
+def knapsack_unbounded(weights, values, capacity):
+
+    n = len(weights)
+    dp = [0] * (capacity + 1)
+    choice = [-1] * (capacity + 1)
+
+    for cap in range(1, capacity + 1):
+        best_val = dp[cap]
+        best_idx = -1
+        for i in range(n):
+            w = weights[i]
+            if w <= cap:
+                cand = dp[cap - w] + values[i]
+                if cand > best_val:
+                    best_val = cand
+                    best_idx = i
+        dp[cap] = best_val
+        choice[cap] = best_idx
+
+    taken = []
+    cap = capacity
+    while cap > 0 and choice[cap] != -1:
+        i = choice[cap]
+        taken.append(i)
+        cap -= weights[i]
+
+    return dp[capacity], taken
+
+
+def print_knapsack_table(weights, values, capacity):
+    """Выводит таблицу DP для наглядности (как в транспортной задаче)."""
+    n = len(weights)
+    dp = [[0] * (capacity + 1) for _ in range(n + 1)]
+    print(" № : вес : стоимость")
+    for i, (w, v) in enumerate(zip(weights, values)):
+        print(f"{i+1:2} :  {w:2}  :   {v:2}")
+    print(f"Вместимость рюкзака: {capacity}\n")
+
+    dp_unbounded = [0] * (capacity + 1)
+    choices = [-1] * (capacity + 1)
+
+    for cap in range(1, capacity + 1):
+        best_val = 0
+        best_i = -1
+        for i in range(n):
+            if weights[i] <= cap:
+                cand = dp_unbounded[cap - weights[i]] + values[i]
+                if cand > best_val:
+                    best_val = cand
+                    best_i = i
+        dp_unbounded[cap] = best_val
+        choices[cap] = best_i
+
+    print(" виестимость | стоимость")
+    for cap in range(capacity + 1):
+        print(f"{cap:4} | {dp_unbounded[cap]:5}")
+
+    taken = []
+    cap = capacity
+    while cap > 0 and choices[cap] != -1:
+        i = choices[cap]
+        taken.append(i)
+        cap -= weights[i]
+
+    print("\nВзятые предметы:", [i + 1 for i in taken])
+    print("Общая стоимость:", dp_unbounded[capacity])
+    print("Общий вес:", sum(weights[i] for i in taken))
+
+
+def main_knapsack():
+    weights = [1, 2, 7, 4]
+    values  = [2, 5, 7, 9]
+    capacity = 4
+
+    print_knapsack_table(weights, values, capacity)
+
+if __name__ == "__main__":
+    main_knapsack()
+
+\end{minted}
+
+\newpage
+\section*{Вывод}
+\addcontentsline{toc}{section}{Вывод}
+
+\end{document}

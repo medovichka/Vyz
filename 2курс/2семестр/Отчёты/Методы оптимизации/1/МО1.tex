@@ -1,3 +1,81 @@
+\documentclass[oneside,a4paper,14pt]{extarticle}
+\usepackage[a4paper,top=20mm,bottom=20mm,left=30mm,right=10mm]{geometry}
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage[T2A]{fontenc}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{textcomp}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{tocloft}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\usepackage[breaklinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+\usepackage{minted}
+
+\titleformat{\section}{\normalsize\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+\renewcommand\baselinestretch{1.33}\normalsize
+\setlength{\parindent}{1.25cm}
+
+\begin{document}
+\newpage\thispagestyle{empty}
+\begin{center}
+	МИНИСТЕРСТВО НАУКИ И ВЫСШЕГО ОБРАЗОВАНИЯ\\
+	РОССИЙСКОЙ ФЕДЕРАЦИИ\\
+	ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ\\
+	ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ ВЫСШЕГО ОБРАЗОВАНИЯ\\
+	«ВЯТСКИЙ ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ»\\
+	Институт математики и информационных систем\\
+	Факультет автоматики и вычислительной техники\\
+	Кафедра электронных вычислительных машин
+\end{center}
+\vspace{20mm}
+\begin{center}
+	Отчёт по лабораторной работе №1\\
+	по дисциплине\\
+	«Методы оптимизации»\\
+\end{center}
+\vfill
+Выполнил студент гр. ИВТб-2301-05-00 \hfill
+\makebox[8cm]{\hrulefill /Ковальский И.И./}
+Проверил преподаватель\hfill
+\makebox[8cm]{\hrulefill /Коржавина А.С./}
+\vfill
+\begin{center}
+	Киров\\
+	2026
+\end{center}
+\newpage
+\setcounter{page}{1}
+\tableofcontents
+\newpage
+
+\section*{Задание}
+\addcontentsline{toc}{section}{Задание}
+Реализовать один из методов решения задачи линейного программирования в соответствии с вариантом.\\
+
+\textbf{Вариант:} Двойственный симплекс-метод Dual Simplex
+
+\textbf{Задание:}
+\begin{enumerate}
+	\item Изучить и реализовать заданный метод. Язык программирования выбрать самостоятельно.
+	\item Продемонстрировать работу приложения на примерах. При демонстрации работы приложения выводить каждую итерацию метода (симплекс-таблицы) отдельно, также выводить решение (ответ). Предусмотреть все возможные варианты решения задачи, включая отсутствие решений и т.п.
+\end{enumerate}
+
+\newpage
+\section*{Листинг кода}
+\addcontentsline{toc}{section}{Листинг кода}
+
+\begin{minted}[frame=lines,framesep=2mm,baselinestretch=1.2,fontsize=\footnotesize,breaklines]{python}
+
 import numpy as np
 
 class DualSimplex:
@@ -183,3 +261,12 @@ b = [6, -1, 2]
 
 solver = DualSimplex(c, A, b, is_max=True)
 result = solver.solve()
+
+\end{minted}
+
+\newpage
+\section*{Вывод}
+\addcontentsline{toc}{section}{Вывод}
+
+
+\end{document}

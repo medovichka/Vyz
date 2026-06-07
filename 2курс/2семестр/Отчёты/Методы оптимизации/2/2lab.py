@@ -1,12 +1,5 @@
-"""
-Лабораторная работа №2
-Метод ветвей и границ для целочисленного линейного программирования
-(Только максимизация, так как DualSimplex хорошо работает с ней)
-"""
-
 import numpy as np
 
-# ==================== ВАШ DUAL SIMPLEX (скопируйте сюда) ====================
 class DualSimplex:
     def __init__(self, c, A, b, is_max=True):
         self.c = np.array(c, dtype=float)
@@ -38,20 +31,20 @@ class DualSimplex:
         for h in col_names:
             print(f"{h:>9}", end="")
         print()
-        print(f"{'─' * 65}")
+        print(f"{'-' * 65}")
         for i in range(self.m + 1):
             label = self._var_name(self.basis[i]) if i < self.m else "F"
             print(f"{label:<8}", end="")
             for j in range(self.n_vars + 1):
                 print(f"{self.table[i, j]:9.3f}", end="")
             print()
-        print(f"{'─' * 65}")
+        print(f"{'-' * 65}")
         rhs = self.table[:self.m, -1]
         coefs = self.table[self.m, :self.n_vars]
         feasible = np.all(rhs >= -1e-9)
         optimal = np.all(coefs >= -1e-9) if self.is_max else np.all(coefs <= 1e-9)
-        print(f"  Допустимость:  {'✓ все b ≥ 0' if feasible else f'✗ отрицательные b: {np.round(rhs[rhs < 0], 3)}'}")
-        print(f"  Оптимальность: {'✓ оптимум достигнут' if optimal else '✗'}")
+        print(f"  Допустимость:  {' все b >= 0' if feasible else f' отрицательные b: {np.round(rhs[rhs < 0], 3)}'}")
+        print(f"  Оптимальность: {' оптимум достигнут' if optimal else ''}")
         solution = np.zeros(self.n)
         for i in range(self.m):
             idx = self.basis[i]
@@ -83,8 +76,8 @@ class DualSimplex:
                         has_alternative = True
                         alternative_vars.append(self._var_name(j))
         if has_alternative:
-            print("\n" + "=" * 65)
-            print("  ⚠️ Оптимальное решение не единственно.")
+            print("\n" + "-" * 65)
+            print("  !! Оптимальное решение не единственно.")
             print(f"  Небазисные переменные с нулевой оценкой: {', '.join(alternative_vars)}")
         return has_alternative
 
@@ -108,9 +101,9 @@ class DualSimplex:
         return {"solution": solution, "value": value}
 
     def solve(self):
-        print("\n" + "=" * 65)
+        print("\n" + "-" * 65)
         print("  ДВОЙСТВЕННЫЙ СИМПЛЕКС-МЕТОД")
-        print("=" * 65)
+        print("-" * 65)
         print(f"  Задача: {'максимизация' if self.is_max else 'минимизация'} F")
         print(f"  Переменных: {self.n}, ограничений: {self.m}")
         iteration = 0
@@ -142,7 +135,7 @@ class DualSimplex:
                     ratios.append((abs(target[j] / row_coefs[j]), j))
             _, col = min(ratios, key=lambda x: x[0])
             print(f"  Вводим {self._var_name(col)} "
-                  f"(a = {row_coefs[col]:.3f}, Δ = {target[col]:.3f}, "
+                  f"(a = {row_coefs[col]:.3f}, d = {target[col]:.3f}, "
                   f"отношение = {abs(target[col] / row_coefs[col]):.4f})")
             self._pivot(row, col)
             self.basis[row] = col
@@ -178,8 +171,6 @@ class DualSimplex:
             self._print_table(iteration)
 
 
-
-
 # ==================== МЕТОД ВЕТВЕЙ И ГРАНИЦ ====================
 class BranchAndBound:
     def __init__(self, c, A, b, integer_vars=None):
@@ -187,7 +178,7 @@ class BranchAndBound:
         self.A = np.array(A, dtype=float).copy()
         self.b = np.array(b, dtype=float).copy()
         self.integer_vars = integer_vars if integer_vars is not None else list(range(len(c)))
-
+        self.all_solutions = []
         self.best_value = -np.inf
         self.best_solution = None
         self.lp_count = 0
@@ -238,19 +229,22 @@ class BranchAndBound:
         elif node['pruned']:
             label = f"Узел {node['id']} [ОТСЕЧЕН, F={node['lp_value']:.2f}]"
         elif node['integer']:
-            label = f"Узел {node['id']} [ЦЕЛОЕ, F={node['lp_value']:.2f}] ★"
+            label = f"Узел {node['id']} [ЦЕЛОЕ, F={node['lp_value']:.2f}] x"
         else:
             label = f"Узел {node['id']} [LP={node['lp_value']:.2f}]"
 
-        print(prefix + ("└── " if is_last else "├── ") + label)
-        new_prefix = prefix + ("    " if is_last else "│   ")
+        print(prefix + ("L-- " if is_last else "|--- ") + label)
+        new_prefix = prefix + ("    " if is_last else "|   ")
         for i, child in enumerate(node['children']):
             self._print_tree(child, new_prefix, i == len(node['children']) - 1)
 
     def solve(self, verbose=True):
         if verbose:
+            print("\n" + "-" * 70)
+            print("  МЕТОД ВЕТВЕЙ И ГРАНИЦ ")
+            print("-" * 70)
             print(f"  Целочисленные переменные: {[f'x{i+1}' for i in self.integer_vars]}")
-            print("-" * 25)
+            print("-" * 70)
 
         root = {
             'id': 0, 'constraints': [], 'children': [],
@@ -277,14 +271,14 @@ class BranchAndBound:
             if result is None:
                 node['infeasible'] = True
                 if verbose:
-                    print("❌ НЕТ ДОПУСТИМЫХ РЕШЕНИЙ")
+                    print("X! НЕТ ДОПУСТИМЫХ РЕШЕНИЙ")
                 continue
 
             node['lp_value'] = result['value']
             node['lp_solution'] = result['solution']
 
             if verbose:
-                print(f"📊 LP-решение: F = {node['lp_value']:.4f}")
+                print(f" LP-решение: F = {node['lp_value']:.4f}")
                 vars_str = ", ".join([f"x{i+1}={node['lp_solution'][i]:.4f}" for i in range(len(self.c))])
                 print(f"   {vars_str}")
 
@@ -292,17 +286,22 @@ class BranchAndBound:
             if node['lp_value'] <= self.best_value + 1e-9:
                 node['pruned'] = True
                 if verbose:
-                    print(f"✂️ ОТСЕЧЕНО (лучшее = {self.best_value:.2f})")
+                    print(f"️ ОТСЕЧЕНО (лучшее = {self.best_value:.2f})")
                 continue
 
             # Целочисленное решение
             if self._is_integer(node['lp_solution']):
                 node['integer'] = True
+                self.all_solutions.append({
+                    'value': node['lp_value'],
+                    'solution': node['lp_solution'].copy(),
+                    'node_id': node['id']
+                })
                 if node['lp_value'] > self.best_value + 1e-9:
                     self.best_value = node['lp_value']
                     self.best_solution = node['lp_solution'].copy()
                     if verbose:
-                        print(f"✅ НОВОЕ ЛУЧШЕЕ РЕШЕНИЕ! F = {self.best_value:.4f}")
+                        print(f" НОВОЕ ЛУЧШЕЕ РЕШЕНИЕ! F = {self.best_value:.4f}")
                 continue
 
             # Ветвление
@@ -314,9 +313,9 @@ class BranchAndBound:
             ceil_val = np.ceil(var_val)
 
             if verbose:
-                print(f"🌿 ВЕТВЛЕНИЕ по x{var_idx+1} = {var_val:.4f}")
-                print(f"   Левая ветвь: x{var_idx+1} ≤ {floor_val:.0f}")
-                print(f"   Правая ветвь: x{var_idx+1} ≥ {ceil_val:.0f}")
+                print(f" ВЕТВЛЕНИЕ по x{var_idx+1} = {var_val:.4f}")
+                print(f"   Левая ветвь: x{var_idx+1} =< {floor_val:.0f}")
+                print(f"   Правая ветвь: x{var_idx+1} >= {ceil_val:.0f}")
 
             left = {
                 'id': self.node_count, 'constraints': node['constraints'] + [(var_idx, '<=', floor_val)],
@@ -336,142 +335,33 @@ class BranchAndBound:
             queue.extend([left, right])
 
         if verbose:
-            print("\n" + "-" * 25)
+            print("\n" + "-" * 70)
             print("  ДЕРЕВО РЕШЕНИЙ")
-            print("-" * 25)
+            print("-" * 70)
             self._print_tree(root)
 
-            print("\n" + "-" * 25)
-            print("  РЕЗУЛЬТАТ")
-            print("-" * 25)
 
             if self.best_solution is None:
-                print("\n❌ ОПТИМАЛЬНОЕ РЕШЕНИЕ НЕ НАЙДЕНО")
+                print("\nX! ОПТИМАЛЬНОЕ РЕШЕНИЕ НЕ НАЙДЕНО")
             else:
-                print("\n✅ ОПТИМАЛЬНОЕ ЦЕЛОЧИСЛЕННОЕ РЕШЕНИЕ:\n")
+                print("\n ОПТИМАЛЬНОЕ ЦЕЛОЧИСЛЕННОЕ РЕШЕНИЕ:\n")
                 for i in range(len(self.c)):
                     print(f"   x{i+1} = {self.best_solution[i]:.0f}")
                 print(f"\n   Максимум F = {self.best_value:.4f}")
 
-            print(f"\nРешено LP-задач: {self.lp_count}")
-            print("-" * 25)
-
         return self.best_solution, self.best_value
 
-
-# ==================== ПРИМЕРЫ ====================
-
-def example_1_simple():
-    print(" Пример 1: сразу целое решение")
-
-
-    # F = 3x₁ + 5x₂ → max
-    # x₁ ≤ 4, x₂ ≤ 6, 3x₁ + 2x₂ ≤ 18
+def example():
 
     c = [3, 5]
     A = [[1, 0], [0, 1], [3, 2]]
     b = [4, 6, 18]
 
-    print("\nУСЛОВИЕ:")
-    print("Максимизировать: F = 3x₁ + 5x₂")
-    print("x₁ ≤ 4, x₂ ≤ 6, 3x₁ + 2x₂ ≤ 18, x₁,x₂ ≥ 0, целые")
+    print("Максимизировать: F = 3x_1 + 5x_2")
+    print("x_1 =< 4, x_2 =< 6, 3x_1 + 2x_2 =< 18, x_1,x_2 >= 0, целые")
 
     bb = BranchAndBound(c, A, b, integer_vars=[0, 1])
     bb.solve()
 
-
-def example_2_infeasible():
-    print(" Пример 2: нет допустимых решений")
-
-
-    # x₁ ≤ 3, x₂ ≤ 3, x₁ + x₂ ≥ 10 → противоречие
-
-    c = [1, 1]
-    A = [[1, 0], [0, 1], [-1, -1]]
-    b = [3, 3, -10]
-
-    print("\nУСЛОВИЕ:")
-    print("Максимизировать: F = x₁ + x₂")
-    print("x₁ ≤ 3, x₂ ≤ 3, x₁ + x₂ ≥ 10, x₁,x₂ ≥ 0, целые")
-    print("\n→ Противоречие: максимум 6, требуется ≥10")
-
-    bb = BranchAndBound(c, A, b, integer_vars=[0, 1])
-    bb.solve()
-
-
-def example_3_branching():
-    print(" Пример 3: требует ветвления")
-
-
-    # F = 5x₁ + 8x₂ → max
-    # x₁ + x₂ ≤ 6, 5x₁ + 9x₂ ≤ 45
-
-    c = [5, 8]
-    A = [[1, 1], [5, 9]]
-    b = [6, 45]
-
-    print("\nУСЛОВИЕ:")
-    print("Максимизировать: F = 5x₁ + 8x₂")
-    print("x₁ + x₂ ≤ 6, 5x₁ + 9x₂ ≤ 45, x₁,x₂ ≥ 0, целые")
-    print("\nLP-решение: x₁=2.25, x₂=3.75 (дробное) → нужно ветвление")
-
-    bb = BranchAndBound(c, A, b, integer_vars=[0, 1])
-    bb.solve()
-
-
-def example_4_knapsack():
-    print(" Пример 4: задача о рюкзаке")
-
-
-    # 4 предмета, вес не более 10
-    # Ценность: 10, 15, 12, 8
-    # Вес: 3, 4, 3, 2
-
-    c = [10, 15, 12, 8]  # ценность
-    A = [[3, 4, 3, 2]]    # вес
-    b = [10]               # ограничение по весу
-
-    print("\nУСЛОВИЕ:")
-    print("Максимизировать ценность: F = 10x₁ + 15x₂ + 12x₃ + 8x₄")
-    print("Ограничение по весу: 3x₁ + 4x₂ + 3x₃ + 2x₄ ≤ 10")
-    print("xᵢ ∈ {0,1}")
-
-    bb = BranchAndBound(c, A, b, integer_vars=[0, 1, 2, 3])
-    bb.solve()
-
-
-def example_5_multiple():
-    print(" пример 5: несколько решений")
-
-
-    # F = x₁ + x₂ → max при x₁ + x₂ ≤ 3
-
-    c = [1, 1]
-    A = [[1, 1]]
-    b = [3]
-
-    print("\nУСЛОВИЕ:")
-    print("Максимизировать: F = x₁ + x₂")
-    print("x₁ + x₂ ≤ 3, x₁,x₂ ≥ 0, целые")
-    print("\nОптимальные решения: (0,3), (1,2), (2,1), (3,0) → все F=3")
-
-    bb = BranchAndBound(c, A, b, integer_vars=[0, 1])
-    bb.solve()
-
-
-# ==================== ЗАПУСК ====================
 if __name__ == "__main__":
-
-    example_1_simple()
-
-    # example_2_infeasible()
-
-    # example_3_branching()
-
-    # example_4_knapsack()
-
-    # example_5_multiple()
-
-    print("\n" + "-" * 25)
-    print(" ДЕМОНСТРАЦИЯ ЗАВЕРШЕНА")
-    print("-" * 25)
+    example()
