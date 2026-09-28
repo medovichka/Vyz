@@ -1,6 +1,6 @@
 from api_caller import *
 from config import *
-from print_md import *
+from to_md import *
 from save import *
 from wpp_parser import *
 
@@ -17,4 +17,5 @@ if __name__ == "__main__":
     print("----")
     save_points(parsed_points)
     print("----")
-    days_to_markdown()
+    points = load_points()
+    points_to_markdown(points=points)

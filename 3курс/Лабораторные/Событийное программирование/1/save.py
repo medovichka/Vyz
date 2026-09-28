@@ -1,9 +1,9 @@
 from datetime import date
 
-from sqlalchemy import Date, String, create_engine
+from sqlalchemy import Date, String, create_engine, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 
-from DTO import WeatherPoint as WeatherPointDTO
+from models import WeatherPoint as WeatherPointModel
 
 
 class Base(DeclarativeBase):
@@ -27,7 +27,7 @@ print("Создание таблиц")
 Base.metadata.create_all(engine)
 
 
-def save_points(points: list[WeatherPointDTO]) -> None:
+def save_points(points: list[WeatherPointModel]) -> None:
     print("сохранение точек")
     with Session(engine) as session:
         session.add_all(
@@ -42,9 +42,12 @@ def save_points(points: list[WeatherPointDTO]) -> None:
             )
             for p in points
         )
-
         session.commit()
+
 
 def load_points() -> list[WeatherPoint]:
     with Session(engine) as session:
-        session.get()
+        query = select(WeatherPoint)
+        print("Получаем точки из базы данных")
+        days: list[WeatherPoint] = list(session.scalars(query).all())
+        return days

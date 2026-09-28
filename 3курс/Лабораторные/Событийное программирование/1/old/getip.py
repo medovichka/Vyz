@@ -1,6 +1,6 @@
 import old.retrieve as retrieve
 from config import MY_IP
-from DTO import geodata
+from models import geodata
 
 def get_geo(ip: str) -> list[str] | None:
 

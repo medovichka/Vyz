@@ -2,7 +2,7 @@ from old.getweather import get_weather_point
 from old.getip import get_geo
 from  config import MY_IP,API_KEY
 from datetime import date,timedelta,datetime
-from DTO import WeatherPoint
+from models import WeatherPoint
 
 
 

@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from DTO import WeatherPoint
+from models import WeatherPoint
 
 
 def parse_weather(list_of_points: tuple[WeatherPoint]) -> tuple[WeatherPoint]:
