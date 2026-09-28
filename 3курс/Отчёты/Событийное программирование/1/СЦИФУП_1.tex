@@ -1,0 +1,57 @@
+\documentclass[oneside,a4paper,14pt]{extarticle}
+\usepackage[a4paper,top=20mm,bottom=20mm,left=30mm,right=10mm]{geometry}
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{textcomp}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{tocloft}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\usepackage[breaklinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+\titleformat{\section}{\normalsize\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+\renewcommand\baselinestretch{1.33}\normalsize
+\setlength{\parindent}{1.25cm}
+z
+\begin{document}
+\newpage\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
+\tableofcontents
+\newpage
+
+\section*{Задание}
+\addcontentsline{toc}{section}{Задание}
+Задание для шестого варианта:\\
+«Сдвигатель» 8-разрядного двоичного числа, содержащего в старшем (седьмом) разряде знак числа, на N $\le$ 7 разрядов в сторону младших разрядов (сдвиг арифметический)
+
+\section*{Анализ задания по разработке функциональной модели}
+\addcontentsline{toc}{section}{Анализ задания по разработке функциональной модели}
+
+Разработать функциональную модель двоичного сдвигателя.\\
+
+На первый вход подаётся 8-разрядный двоичный код\\$X=x_0,x_1,x_2,x_3,x_4,x_5,x_6,x_7$,
+	а на второй вход 3-разрядный двоичный код переноса $E=e_0,e_1,e_2$.\\
+
+	При $e_0,e_1,e_2=0$ на информационный выход $Y=y_0,y_1,y_2,y_3,y_4,y_5,y_6,y_7$ код поступает без изменений.\\
+
+	При $x_0=1,x_1=0,x_2=1,x_3=0,x_4=0,x_5=1,x_6=0,x_7=0$ (10100100) $e_2=1$ на информационном выходе формируется сдвинутый вправо на 1 бит 8-разрядный двоичный код:\\
+$y_0=1,y_1=1,y_2=0,y_3=1,y_4=0,y_5=0,y_6=1,y_7=0$\\
+	(11010010)
+
+	При этом выход $y_7$ всегда будет равен $x_7$ и будет определять бит, которым будут заменяться младшие разряды.
+
+\section*{Вывод}
+\addcontentsline{toc}{section}{Вывод}
+В ходе выполнения лабораторной работы была разработана схема булевых функций, описывающая работу сдвигателя. На основе схемы булевых функций были составлены их представления и составлена экранная форма узла для экспериментального исследования инструментами табличного процессора MS Excel. В ходе экспериментального исследования составлена таблица результатов, которая отражает работу узла без ошибок.
+
+\end{document}
