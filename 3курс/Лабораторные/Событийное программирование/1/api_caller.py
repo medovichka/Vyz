@@ -12,7 +12,9 @@ def get_data(API_URL: str) -> str:
 def get_geo(IP: str) -> tuple[float] | None:
     print(f"получение координат по IP = {IP}")
     info = get_data(f"http://ip-api.com/json/{IP}?fields=16592")
+    print("-----")
     print(f"получили: {info['lat'], info['lon']}")
+    print("-----")
     return info["lat"], info["lon"]
 
 
@@ -21,7 +23,9 @@ def get_weather_points(lat: float, lon: float, API: str) -> WeatherReport | None
     weather_points = get_data(
         API_URL=f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API}&units=metric&lang=ru"
     )
+    print("-----")
     print(f"получили {weather_points['cnt']} точек")
+    print("-----")
     return weather_points
 
 
