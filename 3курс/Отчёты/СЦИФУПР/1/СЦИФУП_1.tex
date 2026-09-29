@@ -28,6 +28,12 @@
 \tableofcontents
 \newpage
 
+
+\section*{Тема}
+\addcontentsline{toc}{section}{Тема}
+«Получение прогноза погоды из OpenWeatherMap, определение местоположения через IP Geolocation API, сохранение в SQLite, выгрузка в Markdown и параметризация подключения к БД через переменные окружения»
+
+
 \section*{Цель работы}
 \addcontentsline{toc}{section}{Цель работы}
 Освоить базовый ETL‑контур на Python:
@@ -43,11 +49,32 @@
 
 \section*{Используемые технологии и API}
 \addcontentsline{toc}{section}{Используемые технологии и API}
-python, requests, SQLAlchemy, python-dotenv, SQLite, OpenWeatherMap, ipinfo.io.
+Для выполнения лабораторной работы были использованы следующие технологии и API:
+\begin{itemize}
+	\item python
+	\item requests
+	\item SQLAlchemy
+	\item python-dotenv
+	\item SQLite
+	\item OpenWeatherMap
+	\item ipinfo.io
+\end{itemize}
 
 \section*{Структура проекта}
 \addcontentsline{toc}{section}{Структура проекта}
-
+Исходя из требований лабораторной работы, структура проекта в gitHub выглядит так:
+Vyz/3курс/СЦИФУПР/1/weather-etl-lab/
+├── .env                ← не в репозитории
+├── .env.example        ← шаблон
+├── README.md
+├── requirements.txt
+├── main.py
+├── api_caller.py
+├── config.py
+├── save.py
+├── to_md.py
+├── wpp_parser.py
+└──
 \section*{Ключевые фрагменты кода}
 \addcontentsline{toc}{section}{Ключевые фрагменты кода}
 

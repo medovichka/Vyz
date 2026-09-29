@@ -1,20 +1,24 @@
+import logging
 from datetime import datetime, timedelta
+from typing import Any
 
 from models import WeatherPoint
 
+logger = logging.getLogger(__name__)
 
-def parse_weather(list_of_points: tuple[WeatherPoint]) -> tuple[WeatherPoint]:
 
-    DAYS = []
-    list_of_points = list_of_points["list"]
+def parse_weather(raw_data: dict[str, Any]) -> list[WeatherPoint]:
+    DAYS: list[WeatherPoint] = []
+    list_of_points: list[dict[str, Any]] = raw_data["list"]
+
     today = datetime.now().date()  # noqa: DTZ005
-    tomorrow = today + timedelta(days=1)
-    zavtrazavtra = tomorrow + timedelta(days=1)
+    end_date = today + timedelta(days=3)
 
     for day in list_of_points:
         point_date = datetime.fromisoformat(day["dt_txt"]).date()
-        if point_date > zavtrazavtra:
+        if point_date < today or point_date > end_date:
             continue
+
         DAYS.append(
             WeatherPoint(
                 date=point_date,
@@ -26,10 +30,8 @@ def parse_weather(list_of_points: tuple[WeatherPoint]) -> tuple[WeatherPoint]:
                 description=day["weather"][0]["description"],
             )
         )
-        print(f"добавляем точку с датой {point_date}")
-    print(f"Все точки:\n{DAYS}")
+        logger.debug("добавляем точку с датой %s", point_date)
+
+    logger.info("Всего точек: %d", len(DAYS))
+    logger.debug("Все точки:\n%s", DAYS)
     return DAYS
-
-
-if __name__ == "__main__":
-    print(parse_weather())

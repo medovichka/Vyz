@@ -11,7 +11,7 @@ class geodata:
 
 @dataclass
 class WeatherPoint:
-    date: date = None
+    date: date | None = None
     temperature: float = 0.0
     temp_min: float = 0.0
     temp_max: float = 0.0
@@ -19,9 +19,10 @@ class WeatherPoint:
     windspeed: float = 0.0
     description: str = ""
 
+
 @dataclass
 class WeatherReport:
     cod: int
     message: str
     cnt: int
-    Points: tuple[WeatherPoint]
+    Points: tuple[WeatherPoint, ...]
