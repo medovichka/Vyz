@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS communities (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(67) UNIQUE NOT NULL,
+    description VARCHAR(607),
+    status VARCHAR(20) CHECK IN ("ban""okay")
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

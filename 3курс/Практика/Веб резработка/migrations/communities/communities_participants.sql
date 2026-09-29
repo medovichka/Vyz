@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS communities_participants (
+    community_id INTEGER REFERENCES communities(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
