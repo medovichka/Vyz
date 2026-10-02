@@ -16,6 +16,8 @@
 \usepackage{titlesec}
 \usepackage{fancyvrb}
 \usepackage{xcolor}
+\usepackage{listings}
+
 \titleformat{\section}{\normalsize\bfseries}{\thesection}{1em}{}
 \titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
 \titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
@@ -28,69 +30,267 @@
 \tableofcontents
 \newpage
 
-
 \section*{Тема}
 \addcontentsline{toc}{section}{Тема}
 «Получение прогноза погоды из OpenWeatherMap, определение местоположения через IP Geolocation API, сохранение в SQLite, выгрузка в Markdown и параметризация подключения к БД через переменные окружения»
 
-
 \section*{Цель работы}
 \addcontentsline{toc}{section}{Цель работы}
-Освоить базовый ETL‑контур на Python:
+Освоить базовый ETL-контур на Python:
 \begin{itemize}
-	\item автоматическое определение местоположения через IP‑геолокацию
-	\item получение прогноза погоды на сегодня и ближайшие 3 дня из\\OpenWeatherMap
-	\item нормализацию и агрегацию данных
-	\item сохранение в локальной СУБД (SQLite)
-	\item выгрузку обработанных данных в файл формата Markdown с красивым оформлением
-	\item управление параметрами подключения к базе данных через переменные окружения
-	\item публикацию проекта на GitHub с правильной организацией репозитория
+	\item автоматическое определение местоположения через IP-геолокацию;
+	\item получение прогноза погоды на сегодня и ближайшие 3 дня из OpenWeatherMap;
+	\item нормализацию и агрегацию данных;
+	\item сохранение в локальной СУБД (SQLite);
+	\item выгрузку обработанных данных в файл формата Markdown с красивым оформлением;
+	\item управление параметрами подключения к базе данных через переменные окружения;
+	\item публикацию проекта на GitHub с правильной организацией репозитория.
 \end{itemize}
 
 \section*{Используемые технологии и API}
 \addcontentsline{toc}{section}{Используемые технологии и API}
 Для выполнения лабораторной работы были использованы следующие технологии и API:
 \begin{itemize}
-	\item python
-	\item requests
-	\item SQLAlchemy
-	\item python-dotenv
-	\item SQLite
-	\item OpenWeatherMap
-	\item ipinfo.io
+	\item Python - основной язык разработки; реализованы сбор данных, парсинг, работа с БД и генерация отчёта.
+	\item requests - HTTP-клиент для обращения к внешним REST-API (OpenWeatherMap и ipinfo.io), поддерживает параметры запроса, таймауты и обработку исключений.
+	\item SQLAlchemy - ORM для описания модели WeatherPoint, создания таблиц и выполнения запросов select/insert без написания SQL вручную.
+	\item python-dotenv - загрузка переменных окружения из файла .env, что позволяет не хранить секреты (API-ключ, строку подключения) в репозитории.
+	\item SQLite - встраиваемая СУБД; файл weather.db создаётся автоматически, не требует отдельного сервера.
+	\item OpenWeatherMap - источник прогноза погоды; используется endpoint /forecast с параметрами lat, lon, units=metric, lang=ru.
+	\item ipinfo.io - сервис IP-геолокации; по запросу https://ipinfo.io/json возвращает координаты и город, которые затем передаются в OpenWeatherMap.
 \end{itemize}
 
 \section*{Структура проекта}
 \addcontentsline{toc}{section}{Структура проекта}
 Исходя из требований лабораторной работы, структура проекта в gitHub выглядит так:
+
+\begin{small}
+	\begin{verbatim}
 Vyz/3курс/СЦИФУПР/1/weather-etl-lab/
-├── .env                ← не в репозитории
-├── .env.example        ← шаблон
-├── README.md
-├── requirements.txt
-├── main.py
-├── api_caller.py
-├── config.py
-├── save.py
-├── to_md.py
-├── wpp_parser.py
-└──
+- .env               <- не в репозитории
+- .env.example       <- шаблон
+- README.md
+- requirements.txt
+- main.py
+- api_caller.py
+- config.py
+- save.py
+- to_md.py
+- wpp_parser.py
+\end{verbatim}
+\end{small}
+
 \section*{Ключевые фрагменты кода}
 \addcontentsline{toc}{section}{Ключевые фрагменты кода}
 
+\subsection*{Конфигурация}
+\addcontentsline{toc}{subsection}{Конфигурация}
+Все параметры подключения вынесены в переменные окружения. Значения по умолчанию заданы для url, чтобы код работал даже при неполном .env.
+
+\begin{small}
+	\begin{verbatim}
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+WEATHER_API_KEY: str = os.getenv("WEATHER_API_KEY")
+WEATHER_API_BASE_URL: str = os.getenv(
+    "WEATHER_API_BASE_URL", "https://api.openweathermap.org/data/2.5"
+)
+GEO_API_URL: str = os.getenv("GEO_API_URL")
+GEO_API_FALLBACK_CITY: str = os.getenv("GEO_API_FALLBACK_CITY")
+DB_URL: str = os.getenv("DB_URL")
+\end{verbatim}
+\end{small}
+
+\subsection*{HTTP-клиент}
+\addcontentsline{toc}{subsection}{HTTP-клиент}
+Функция get\_data - единая точка обращения к внешним API. Она выполняет запрос, проверяет статус и логирует специфические ошибки.
+
+\begin{small}
+	\begin{verbatim}
+def get_data(API_URL: str, parametrs: dict[str, Any] | None = None) -> dict[str, Any]:
+    try:
+        response = requests.get(url=API_URL, params=parametrs)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.Timeout:
+        logger.error("Таймаут при запросе к %s", API_URL)
+        raise
+    except requests.exceptions.ConnectionError:
+        logger.error("Ошибка соединения с %s", API_URL)
+        raise
+    except requests.exceptions.HTTPError as exc:
+        status = exc.response.status_code
+        if status == 401:
+            logger.error("Неверный API-ключ.")
+        elif status == 404:
+            logger.error("Ресурс не найден.")
+        elif status == 429:
+            logger.error("Превышен лимит запросов.")
+        else:
+            logger.error("Ошибка %s: %s", status, exc)
+        raise
+    except requests.exceptions.RequestException as exc:
+        logger.error("Неизвестная ошибка запроса: %s", exc)
+        raise
+\end{verbatim}
+\end{small}
+
+\subsection*{Парсинг прогноза}
+\addcontentsline{toc}{subsection}{Парсинг прогноза}
+OpenWeatherMap возвращает точки с шагом 3 часа. Из них отбираются записи за сегодня и следующие 3 дня, которые преобразуются в объекты WeatherPoint.
+
+\begin{small}
+	\begin{verbatim}
+def parse_weather(raw_data: dict[str, Any]) -> list[WeatherPoint]:
+    DAYS: list[WeatherPoint] = []
+    list_of_points: list[dict[str, Any]] = raw_data["list"]
+
+    today = datetime.now().date()
+    end_date = today + timedelta(days=3)
+
+    for day in list_of_points:
+        point_date = datetime.fromisoformat(day["dt_txt"]).date()
+        if point_date < today or point_date > end_date:
+            continue
+        DAYS.append(WeatherPoint(...))
+    return DAYS
+\end{verbatim}
+\end{small}
+
+\subsection*{Сохранение в SQLite}
+\addcontentsline{toc}{subsection}{Сохранение в SQLite}
+Модель WeatherPoint описана через SQLAlchemy 2.0. Перед записью проверяются уже существующие даты, чтобы не дублировать записи.
+
+\begin{small}
+	\begin{verbatim}
+class WeatherPoint(Base):
+    __tablename__ = "weather"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    city: Mapped[str] = mapped_column(String(100), default="")
+    date: Mapped[date] = mapped_column(Date, index=True)
+    temperature: Mapped[float] = mapped_column(Float, default=0.0)
+    # ... остальные поля ...
+
+def save_points(points: list[WeatherPointModel], city: str = "") -> None:
+    with Session(engine) as session:
+        existing_dates: set[date] = set(
+            session.scalars(select(WeatherPoint.date)).all()
+        )
+        new_points = [p for p in points if p.date not in existing_dates]
+        session.add_all(WeatherPoint(...) for p in new_points)
+        session.commit()
+\end{verbatim}
+\end{small}
+
+\subsection*{Выгрузка в Markdown}
+\addcontentsline{toc}{subsection}{Выгрузка в Markdown}
+Формируется таблица с датой, минимальной и максимальной температурой, описанием, влажностью и скоростью ветра.
+
+\begin{small}
+	\begin{verbatim}
+lines: list[str] = [
+    "# Прогноз погоды",
+    "",
+    f"Автоматически определённая локация: {city or 'не определена'}  ",
+    f"Период: {period}  ",
+    "",
+    "| Дата | Мин. темп. | Макс. темп. | Описание | Влажность | Ветер |",
+    "|------|-----------------|------------------|----------|---------------|-------------|",
+]
+for d in points:
+    lines.append(
+        f"| {date_str} | {d.temp_min:.1f} | {d.temp_max:.1f} "
+        f"| {d.description} | {d.humidity:.0f} | {d.windspeed:.1f} |"
+    )
+\end{verbatim}
+\end{small}
+
 \section*{Обработка ошибок}
 \addcontentsline{toc}{section}{Обработка ошибок}
+Обработка ошибок построена по принципу «не падать молча»: каждая проблема логируется и, если она критична для дальнейших шагов, пробрасывается наверх.
+
+\begin{itemize}
+	\item Сетевые ошибки. В get\_data отдельно перехватываются Timeout, ConnectionError и общий RequestException. Для HTTP-ошибок различаются коды 401 (неверный API-ключ), 404 (ресурс не найден) и 429 (превышен лимит запросов).
+	\item Ошибки формата ответа. В get\_geo проверяется наличие поля loc; если его нет - возбуждается KeyError с сообщением «Неправильный ответ от API».
+	\item Ошибки конфигурации. В main проверяется, что WEATHER\_API\_KEY задан; иначе работа прекращается с сообщением в лог.
+	\item Ошибки БД. Операции init\_db, save\_points, load\_points обёрнуты в try/except на уровне main, чтобы при сбое не терять уже собранные данные и не завершать программу аварийно.
+	\item Логирование. Используется стандартный модуль logging с уровнем INFO и форматом, включающим время, уровень, имя логгера и сообщение. Для отладочных сведений (например, список точек) применяется logger.debug.
+\end{itemize}
 
 \section*{Результаты работы}
 \addcontentsline{toc}{section}{Результаты работы}
+В результате выполнения main.py:
+\begin{enumerate}
+	\item создаётся (или пересоздаётся) файл базы данных weather.db и таблица weather;
+	\item через https://ipinfo.io/json определяется текущий IP, затем через IP-геолокацию - координаты и город;
+	\item выполняется запрос к OpenWeatherMap /forecast и из ответа отбираются точки за сегодня и ближайшие 3 дня;
+	\item отобранные точки сохраняются в SQLite (без дублей по дате);
+	\item формируется файл weather\_report.md с заголовком, периодом, названием локации и таблицей прогноза;
+	\item все ключевые шаги сопровождаются записями в логе.
+\end{enumerate}
+
+Пример содержимого weather\_report.md:
+
+\begin{small}
+	\begin{verbatim}
+# Прогноз погоды
+
+Автоматически определённая локация: Moscow
+Период: 2025-01-01 - 2025-01-04
+
+| Дата | Мин. темп. | Макс. темп. | Описание | Влажность | Ветер |
+|------|-----------------|------------------|----------|---------------|-------------|
+| 2025-01-01 | -3.5 | -1.0 | небольшой снег | 85 | 4.2 |
+| 2025-01-02 | -4.1 | -2.3 | облачно | 80 | 3.1 |
+\end{verbatim}
+\end{small}
 
 \section*{Содержимое .env.example}
 \addcontentsline{toc}{section}{Содержимое .env.example}
+Шаблонный файл окружения содержит следующие переменные:
+
+\begin{small}
+	\begin{verbatim}
+WEATHER_API_KEY=apykey
+WEATHER_API_BASE_URL=https://api.openweathermap.org/data/2.5
+
+GEO_API_URL=https://ipinfo.io/json
+GEO_API_FALLBACK_CITY=Moscow
+
+DB_URL=sqlite:///weather.db
+
+ENVIRONMENT=development
+OUTPUT_FILE=weather_report.md
+\end{verbatim}
+\end{small}
 
 \section*{Вывод}
 \addcontentsline{toc}{section}{Вывод}
+В ходе лабораторной работы был реализован полный ETL-контур: получение данных из внешних API, их нормализация, сохранение в реляционную БД и выгрузка в человекочитаемый формат Markdown. Освоены:
+\begin{itemize}
+	\item работа с REST-API через requests и обработка сетевых/HTTP-ошибок;
+	\item параметризация конфигурации через python-dotenv и переменные окружения;
+	\item описание модели данных и запросы к SQLite через SQLAlchemy 2.0;
+	\item логирование с разделением уровней INFO/DEBUG;
+	\item генерация отчёта в формате Markdown.
+\end{itemize}
+Полученный код легко расширяется: достаточно добавить новые поля в модель и парсер, чтобы включить в отчёт дополнительные метрики (например, давление или облачность).
 
 \section*{Список литературы}
 \addcontentsline{toc}{section}{Список литературы}
-
+\begin{enumerate}
+	\item OpenWeatherMap API - документация сервиса прогноза погоды. URL: \href{https://openweathermap.org/api}{https://openweathermap.org/api}
+	\item IP Geolocation API (ipinfo.io) - определение местоположения по IP-адресу. URL: \href{https://ipinfo.io/developers}{https://ipinfo.io/developers}
+	\item SQLite Documentation - встраиваемая СУБД. URL: \href{https://docs.python.org/3/library/sqlite3.html}{https://docs.python.org/3/library/sqlite3.html}
+	\item SQLAlchemy Documentation - ORM и работа с БД на Python. URL: \href{https://docs.sqlalchemy.org/en/14/}{https://docs.sqlalchemy.org/en/14/}
+	\item python-dotenv Documentation - загрузка переменных окружения из .env. URL: \href{https://pypi.org/project/python-dotenv/}{https://pypi.org/project/python-dotenv/}
+	\item Python JSON Module Documentation - сериализация и десериализация JSON. URL: \href{https://docs.python.org/3/library/json.html}{https://docs.python.org/3/library/json.html}
+	\item Python OS Module Documentation - работа с переменными окружения и файловой системой. URL: \href{https://docs.python.org/3/library/os.html}{https://docs.python.org/3/library/os.html}
+	\item Python Logging Module Documentation - логирование в Python. URL: \href{https://docs.python.org/3/library/logging.html}{https://docs.python.org/3/library/logging.html}
+	\item Python Unittest Module Documentation - модульное тестирование. URL: \href{https://docs.python.org/3/library/unittest.html}{https://docs.python.org/3/library/unittest.html}
+	\item GitHub REST API Documentation - работа с репозиториями через API. URL: \href{https://docs.github.com/en/rest}{https://docs.github.com/en/rest}
+\end{enumerate}
 \end{document}

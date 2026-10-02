@@ -19,6 +19,4 @@ GEO_API_FALLBACK_CITY: str = os.getenv("GEO_API_FALLBACK_CITY")
 
 # DB ---
 DB_URL: str = os.getenv("DB_URL")
-DB_USER: str = os.getenv("DB_USER")
-DB_PASSWORD: str = os.getenv("DB_PASSWORD")
 # DB ---
