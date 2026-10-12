@@ -125,7 +125,7 @@ lib/generated_plugin_registrant.dart
 **/ios/**/*.pbxuser
 **/ios/**/*.perspectivev3
 **/ios/**/*sync/
-**/ios/**/.sconsign.dblite
+**/ios/**/.sconsignlite
 **/ios/**/.tags*
 **/ios/**/.vagrant/
 **/ios/**/DerivedData/
@@ -480,7 +480,7 @@ TSWLatexianTemp*
 *.lrs
 *.res
 *.compiled
-*.dbg
+*g
 *.ppu
 *.or
 
@@ -690,9 +690,10 @@ pyrightconfig.json
 
 ### Windows ###
 # Windows thumbnail cache files
-Thumbs.db
-Thumbs.db:encryptable
+Thumbs
+Thumbs:encryptable
 ehthumbs.db
+*.db
 ehthumbs_vista.db
 
 # Dump file
@@ -945,7 +946,7 @@ ipch/
 *.opensdf
 *.sdf
 *.cachefile
-*.VC.db
+*.VC
 *.VC.VC.opendb
 
 # Visual Studio profiler
@@ -1068,8 +1069,8 @@ _pkginfo.txt
 # Others
 ClientBin/
 ~$*
-*.dbmdl
-*.dbproj.schemaview
+*mdl
+*proj.schemaview
 *.jfm
 *.pfx
 *.publishsettings
