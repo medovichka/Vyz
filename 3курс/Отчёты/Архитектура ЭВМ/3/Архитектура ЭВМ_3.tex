@@ -17,6 +17,7 @@
 \usepackage[breaklinks]{hyperref}
 \usepackage{titlesec}
 \usepackage{fancyvrb}
+\usepackage{multirow}
 \usepackage{xcolor}
 \titleformat{\section}{\normalsize\bfseries}{\thesection}{1em}{}
 \titleformat{\section}{\normalsize\bfseries}{\thesection}{1em}{}
@@ -39,21 +40,78 @@
 
 \section*{Разработка алгоритма}
 \addcontentsline{toc}{section}{Разработка алгоритма}
-
+Для выполнения сдвига 8-разрядного двоичного кода $X$ на $N$ разрядов в сторону старших разрядов, сдвиг логический, необходимо выполнить алгоритм, представленный на рисунке \ref{fig:alg}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Алгоритм.png}
+	\caption{Алгоритм микропрограммы}
+	\label{fig:alg}
+\end{figure}
+B и N – вспомогательные переменные
+Перед началом цикла сдвига присваивается нулевое значение признаку равенства нуля
+(E);
+В цикле сдвига проверяется значение N. Если N=0, то признаку равенства нуля устанавливается значение 1, и цикл завершается;
+Если N>0, то выполняется сдвиг X в сторону старших разрядов;
+После сдвига значение N уменьшается на 1.
 
 \section*{Разработка граф-схемы микропрограммы}
 \addcontentsline{toc}{section}{Разработка граф-схемы микропрограммы}
+Граф-схема микропрограммы представлена на рисунке \ref{fig:graph}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Граф-схема.png}
+	\caption{Граф-схема микропрограммы}
+	\label{fig:graph}
+\end{figure}
 
+\newpage
 
 \section*{Микрокоманды}
 \addcontentsline{toc}{section}{Микрокоманды}
+Результатом выполнения лабораторной работы является последовательность микрокоманд для выполнения в имитаторе операционного устройства. Микрокоманды представлены в таблице 1.
+\begin{flushright}
+	Таблица 1: Таблица микрокоманд
+\end{flushright}
 
+\begin{table}[h!]
+	\centering
+	\renewcommand{\arraystretch}{1.2}
+	\resizebox{\textwidth}{!}{
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+
+			\hline
+
+			\multirow{2}{*}{№} & \multicolumn{3}{c|}{Код микрокоманды} & \multirow{2}{*} {Шина данных} & \multirow{2}{*}{Адрес} & \multirow{2}{*}{Адрес} & \multicolumn{4}{c|}{Управляющие сигналы}                                               \\ \cline{2-4} \cline{8-11}
+			                   & 18-16                                 & 15-13                         & 12-10                  &                        & A                                        & B    & C0 & \textasciicircum OE & SC1 & SC0 \\ \hline
+			00:                & 011                                   & 011                           & 111                    & 10000001               & 0000                                     & 0000 & 0  & 1                   & 0   & 0   \\ \hline
+			01:                & 011                                   & 011                           & 111                    & 00000001               & 0000                                     & 1001 & 0  & 1                   & 0   & 0   \\ \hline
+			02:                & 111                                   & 011                           & 000                    & 00000000               & 0000                                     & 0000 & 0  & 1                   & 0   & 0   \\ \hline
+			03:                & 011                                   & 001                           & 011                    & 00000000               & 0000                                     & 1001 & 0  & 1                   & 0   & 0   \\ \hline
+		\end{tabular}
+	}
+\end{table}
+\newpage
 
 \section*{Экранные формы}
 \addcontentsline{toc}{section}{Экранные формы}
+На рисунках \ref{fig:screen1} и \ref{fig:screen2} представлены экранные формы имитатора операционного устройства,в который была введена разработанная микропрограмма. На рисунке \ref{fig:screen1} представлено окно выполнения микрокоманд, а на рисунке \ref{fig:screen2} представлено окно ввода микрокоманд.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Окно выполнения микрокоманд.png}
+	\caption{Окно выполнения микрокоманд}
+	\label{fig:screen1}
+\end{figure}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Окно ввода микрокоманд.png}
+	\caption{Окно ввода микрокоманд}
+	\label{fig:screen2}
+\end{figure}
 
 \section*{Вывод}
 \addcontentsline{toc}{section}{Вывод}
+В данной лабораторной работе была разработана микропрограмма для выполнения
+сдвига 8-разрядного двоичного кода X на N разрядов в сторону старших разрядов (сдвиг логический). Были разработаны алгоритм, граф-схема и экранные формы микропрограммы.
 
 \end{document}
