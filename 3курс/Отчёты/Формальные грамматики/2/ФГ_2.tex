@@ -1,0 +1,209 @@
+\documentclass[oneside,a4paper,14pt]{extarticle}
+\usepackage[a4paper,top=20mm,bottom=20mm,left=30mm,right=10mm]{geometry}
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{textcomp}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{tocloft}
+\usepackage{multicol}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\usepackage[breaklinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+
+\titleformat{\section}{\normalsize\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+\renewcommand\baselinestretch{1.33}\normalsize
+\setlength{\parindent}{1.25cm}
+
+\begin{document}
+
+\newpage
+\clearpage
+
+\section*{Цель}
+\addcontentsline{toc}{section}{Цель}
+Изучить принципы построения и функционирования автоматов с магазинной памятью. Разработать шаблон адреса на основе заданного алфавита и протестировать корректность распознавания входных цепочек автоматом в различных ситуациях.
+
+\section*{Задание}
+\addcontentsline{toc}{section}{Задание}
+Спроектировать шаблон адреса с применением терминального и нетерминального алфавитов, загрузить полученную структуру в память автомата и провести исследование его работы на тестовых наборах данных, смоделировав четыре ситуации:
+\begin{itemize}
+	\item полное соответствие входного слова шаблону;
+	\item ошибка недостаточной длины входного слова.
+	\item ошибка превышения длины входного слова;
+	\item ошибка недопустимого символа;
+\end{itemize}
+
+\section*{Теоретическое описание}
+\addcontentsline{toc}{section}{Теоретическое описание}
+Автомат с магазинной памятью (МП-автомат) представляет собой расширение конечного автомата, снабжённое дополнительной памятью в виде стека (магазина), работающего по принципу LIFO (последним пришёл - первым ушёл). В данной работе магазин применяется для хранения структуры шаблона, с которым посимвольно сверяется анализируемая строка.
+
+Функционирование модели разделяется на две фазы:
+\begin{enumerate}
+	\item \textbf{Инициализация и загрузка шаблона:} формируется последовательность из конкретных символов (терминалов) и обобщённых категорий (нетерминалов), определяющая структуру адреса. Эта последовательность помещается в магазин автомата таким образом, чтобы первый ожидаемый элемент находился на вершине стека.
+	\item \textbf{Пошаговая верификация цепочки:} на вход подаётся проверяемая текстовая строка. На каждом такте работы автомат считывает текущий символ строки и сопоставляет его с верхним элементом магазина. При совпадении терминалов или принадлежности символа к множеству значений нетерминала верхний элемент удаляется из стека (выполняется операция извлечения), а головка чтения сдвигается к следующему символу. Если условие сопоставления нарушается или нарушается баланс длины цепочки и содержимого стека, фиксируется состояние отказа.
+\end{enumerate}
+
+\section*{Нетерминальные символы}
+\addcontentsline{toc}{section}{Нетерминальные символы}
+Множество нетерминальных символов: L, B, C, D, K, M, N.
+\begin{itemize}
+	\item \textbf{L} - любой символ;
+	\item \textbf{B} - заглавные буквы русского алфавита (А-Я);
+	\item \textbf{C} - строчные и заглавные буквы русского алфавита (а-яА-Я);
+	\item \textbf{D} - строчные буквы русского алфавита (а-я);
+	\item \textbf{K} - строчные буквы русского алфавита или символ нижнего подчёркивания (отсутствие символа)(а-я\_);
+	\item \textbf{M} - цифры (0-9);
+	\item \textbf{N} - цифры или символ нижнего подчёркивания (отсутствие символа) (0-9\_);
+\end{itemize}
+
+\section*{Терминальные символы}
+\addcontentsline{toc}{section}{Терминальные символы}
+Алфавит терминальных символов включает:
+\begin{itemize}
+	\item строчные и прописные буквы русского алфавита (а-яА-Я);
+	\item цифры от 0 до 9;
+	\item нижнее подчёркивание (отсутствие символа), точка, символ пробела\\ (\_ .\textvisiblespace).
+\end{itemize}
+
+\section*{Разработка шаблона адреса}
+\addcontentsline{toc}{section}{Разработка шаблона адреса}
+На основе заданных множеств символов составлен следующий шаблон адреса:
+
+\begin{center}
+	\textbf{ул.\textvisiblespace BCCCDKKKKK.\textvisiblespace д. \textvisiblespace MNN. \textvisiblespace кв. \textvisiblespace MMN}
+\end{center}
+\begin{itemize}
+	\item \textbf{ул.\textvisiblespace} - фиксированный префикс адреса - перед названием улицы;
+	\item \textbf{B} - первая заглавная буква в названии улицы;
+	\item \textbf{CCC} - три буквы названия улицы в любом регистре;
+	\item \textbf{D} - обязательная строчная буква названия улицы;
+	\item \textbf{KKKKK} - пять строчных букв или символы нижнего подчёркивания (отсутствие символа) для дополнения коротких названий до фиксированной длины шаблона;
+	\item \textbf{д. \textvisiblespace} - фиксированное подслово адреса перед номером дома;
+	\item \textbf{MNN} - номер дома, начинающийся с обязательной цифры (M), за которой следуют две цифры или символы подчёркивания (отсутствие символа) для дополнения коротких названий до фиксированной длины шаблона; (NN);
+	\item \textbf{кв. \textvisiblespace} - фиксированное подслово адреса - перед номером квартиры;
+	\item \textbf{MMN} - номер квартиры, состоящий из двух обязательных цифр (MM) и одной цифры либо символа нижнего подчёркивания (N).
+\end{itemize}
+
+\newpage
+\clearpage
+
+\section*{Выполнение лабораторной в программе}
+\addcontentsline{toc}{section}{Выполнение лабораторной в программе}
+
+\section*{Цепочка заполнения магазина автомата}
+\addcontentsline{toc}{section}{Цепочка заполнения магазина автомата}ы
+
+\begin{multicols}{2}
+	\noindent
+	1. $(q_0, \_, Z_0) \to (q_1, \_, \text{N})$\\
+	2. $(q_1, \_, \text{N}) \to (q_1, \_, \text{M})$\\
+	3. $(q_1, \_, \text{M}) \to (q_1, \_, \text{M})$\\
+	4. $(q_1, \_, \text{M}) \to (q_1, \_, \text{\textvisiblespace})$\\
+	5. $(q_1, \_, \text{\textvisiblespace}) \to (q_1, \_, \text{.})$\\
+	6. $(q_1, \_, \text{.}) \to (q_1, \_, \text{в})$\\
+	7. $(q_1, \_, \text{в}) \to (q_1, \_, \text{к})$\\
+	8. $(q_1, \_, \text{к}) \to (q_1, \_, \text{\textvisiblespace})$\\
+	9. $(q_1, \_, \text{\textvisiblespace}) \to (q_1, \_, \text{.})$\\
+	10. $(q_1, \_, \text{.}) \to (q_1, \_, \text{N})$\\
+	11. $(q_1, \_, \text{N}) \to (q_1, \_, \text{N})$\\
+	12. $(q_1, \_, \text{N}) \to (q_1, \_, \text{M})$\\
+	13. $(q_1, \_, \text{M}) \to (q_1, \_, \text{\textvisiblespace})$\\
+	14. $(q_1, \_, \text{\textvisiblespace}) \to (q_1, \_, \text{.})$\\
+	15. $(q_1, \_, \text{.}) \to (q_1, \_, \text{д})$\\
+	16. $(q_1, \_, \text{д}) \to (q_1, \_, \text{\textvisiblespace})$\\
+	17. $(q_1, \_, \text{\textvisiblespace}) \to (q_1, \_, \text{.})$\\
+	18. $(q_1, \_, \text{.}) \to (q_1, \_, \text{K})$\\
+	19. $(q_1, \_, \text{K}) \to (q_1, \_, \text{K})$\\
+	20. $(q_1, \_, \text{K}) \to (q_1, \_, \text{K})$\\
+	21. $(q_1, \_, \text{K}) \to (q_1, \_, \text{K})$\\
+	22. $(q_1, \_, \text{K}) \to (q_1, \_, \text{K})$\\
+	23. $(q_1, \_, \text{K}) \to (q_1, \_, \text{D})$\\
+	24. $(q_1, \_, \text{D}) \to (q_1, \_, \text{C})$\\
+	25. $(q_1, \_, \text{C}) \to (q_1, \_, \text{C})$\\
+	26. $(q_1, \_, \text{C}) \to (q_1, \_, \text{C})$\\
+	27. $(q_1, \_, \text{C}) \to (q_1, \_, \text{B})$\\
+	28. $(q_1, \_, \text{B}) \to (q_1, \_, \text{\textvisiblespace})$\\
+	29. $(q_1, \_, \text{\textvisiblespace}) \to (q_1, \_, \text{.})$\\
+	30. $(q_1, \_, \text{.}) \to (q_1, \_, \text{л})$\\
+	31. $(q_1, \_, \text{л}) \to (q_1, \_, \text{у})$
+\end{multicols}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{пр.1.верх.jpg}
+	\caption{Пример 1 - верхняя часть окна программы}
+	\label{fig:pr1_top}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{пр1.низ.jpg}
+	\caption{Пример 1 - нижняя часть окна программы}
+	\label{fig:pr1_bot}
+\end{figure}
+
+\newpage
+\clearpage
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{пр2.верх.jpg}
+	\caption{Пример 2 - верхняя часть окна программы}
+	\label{fig:pr2_top}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{пр2.низ.jpg}
+	\caption{Пример 2 - нижняя часть окна программы}
+	\label{fig:pr2_bot}
+\end{figure}
+
+\newpage
+\clearpage
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{пр3.верх.jpg}
+	\caption{Пример 3 - верхняя часть окна программы}
+	\label{fig:pr3_top}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{пр3.низ.jpg}
+	\caption{Пример 3 - нижняя часть окна программы}
+	\label{fig:pr3_bot}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{пр4.низ.jpg}
+	\caption{Пример 4 - нижняя часть окна программы}
+	\label{fig:pr3_bot}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{пр4.низ.jpg}
+	\caption{Пример 4 - нижняя часть окна программы}
+	\label{fig:pr3_bot}
+\end{figure}
+\newpage
+\clearpage
+
+\section*{Вывод}
+\addcontentsline{toc}{section}{Вывод}
+В ходе выполнения лабораторной работы были изучены базовые принципы построения и функционирования автоматов с магазинной памятью. С использованием заданного алфавита терминальных и нетерминальных символов был разработан шаблон адреса, загружен в стек автомата и протестирован на различных входных цепочках.
+
+Экспериментально проверены основные сценария работы автомата: правильная цепочка с полным соответствием шаблону, цепочка с недопустимым символом, цепочка недостаточной длины и длины, превышающей магазин автомата.
+\end{document}
