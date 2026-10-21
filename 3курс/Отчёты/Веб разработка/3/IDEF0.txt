@@ -1,0 +1,226 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="IDEF0_43Kolesa_A0" name="A0 - Работа ИС 43Колеса">
+    <mxGraphModel dx="1422" dy="798" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- РАМКА И ШТАМП IDEF0 -->
+        <mxCell id="frame_outer" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="1560" height="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="header_box" value="&lt;b&gt;USED AT:&lt;/b&gt; ВятГУ, Кафедра ЭВМ &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;|&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;b&gt;AUTHOR:&lt;/b&gt; Ковальский И.И. (гр. ИВТб-3301) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;|&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;b&gt;PROJECT:&lt;/b&gt; ИС «43Колеса» &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;|&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;b&gt;DATE:&lt;/b&gt; 2026 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;|&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;b&gt;STATUS:&lt;/b&gt; WORKING" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;align=left;spacingLeft=15;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="1560" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="footer_node" value="&lt;b&gt;NODE:&lt;/b&gt; A0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1030" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="footer_title" value="&lt;b&gt;TITLE:&lt;/b&gt; Координировать проведение веломероприятий и вести учет статистики в ИС «43Колеса»" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="1030" width="1160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="footer_num" value="&lt;b&gt;NUMBER:&lt;/b&gt; A0 (Стр. 2)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="1030" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ФУНКЦИОНАЛЬНЫЕ БЛОКИ A1 - A4 -->
+        <mxCell id="A1" value="&lt;b&gt;Управлять профилями и&lt;br&gt;авторизацией пользователей&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;div align=&quot;right&quot;&gt;A1&amp;nbsp;&amp;nbsp;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="260" y="220" width="220" height="110" as="geometry" />
+        </mxCell>
+
+        <mxCell id="A2" value="&lt;b&gt;Формировать карточку&lt;br&gt;веломероприятия и&lt;br&gt;рассчитывать маршрут&lt;/b&gt;&lt;br&gt;&lt;div align=&quot;right&quot;&gt;A2&amp;nbsp;&amp;nbsp;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="560" y="390" width="220" height="110" as="geometry" />
+        </mxCell>
+
+        <mxCell id="A3" value="&lt;b&gt;Регистрировать участников и&lt;br&gt;информировать об изменениях&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;div align=&quot;right&quot;&gt;A3&amp;nbsp;&amp;nbsp;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="860" y="560" width="220" height="110" as="geometry" />
+        </mxCell>
+
+        <mxCell id="A4" value="&lt;b&gt;Подводить итоги заезда и&lt;br&gt;обновлять спортивную&lt;br&gt;статистику&lt;/b&gt;&lt;br&gt;&lt;div align=&quot;right&quot;&gt;A4&amp;nbsp;&amp;nbsp;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="730" width="220" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- ВХОДНЫЕ ДУГИ (INPUTS - СЛЕВА) -->
+        <mxCell id="I2_1" value="I2: Учетные данные (email, пароль, профиль)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A1">
+          <mxGeometry x="-0.2" y="15" relative="1" as="geometry">
+            <mxPoint x="40" y="275" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="I1" value="I1: Параметры заезда и GPX-трек" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.3;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A2">
+          <mxGeometry x="-0.3" y="15" relative="1" as="geometry">
+            <mxPoint x="40" y="423" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="I3" value="I3: Метеоданные по координатам (Open-Meteo)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.7;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A2">
+          <mxGeometry x="-0.3" y="15" relative="1" as="geometry">
+            <mxPoint x="40" y="467" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="I2_2" value="I2: Заявки спортсменов на старт" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.65;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A3">
+          <mxGeometry x="-0.4" y="15" relative="1" as="geometry">
+            <mxPoint x="40" y="631" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="I4" value="I4: Итоговые результаты заезда" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.65;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A4">
+          <mxGeometry x="-0.5" y="15" relative="1" as="geometry">
+            <mxPoint x="40" y="801" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- УПРАВЛЯЮЩИЕ ДУГИ (CONTROLS - СВЕРХУ) -->
+        <mxCell id="C2_A1" value="C2: Бизнес-правила и безопасность (JWT, bcrypt, OWASP)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A1">
+          <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+            <mxPoint x="370" y="80" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="C1_A2" value="C1: Регламент и правила ACP" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A2">
+          <mxGeometry x="-0.4" y="10" relative="1" as="geometry">
+            <mxPoint x="615" y="80" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="C3_A2" value="C3: Формула гаверсинусов, WGS-84, фильтр высот" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A2">
+          <mxGeometry x="-0.1" y="10" relative="1" as="geometry">
+            <mxPoint x="725" y="80" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="C1_A3" value="C1: Лимиты слотов и дедлайны" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A3">
+          <mxGeometry x="-0.5" y="10" relative="1" as="geometry">
+            <mxPoint x="970" y="80" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="C2_A3" value="C2: Правило автооповещения при смене трека" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.8;entryY=0;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A3">
+          <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+            <mxPoint x="1036" y="80" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="C3_A4" value="C3: Формулы расчета накопительной статистики" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A4">
+          <mxGeometry x="-0.3" y="10" relative="1" as="geometry">
+            <mxPoint x="1325" y="80" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ВНУТРЕННИЕ СВЯЗИ МЕЖДУ БЛОКАМИ -->
+        <mxCell id="A1_to_A2" value="JWT-токен (Роль: Организатор)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="A1" target="A2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="670" y="253" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="A1_to_A4" value="Права Организатора" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="A1" target="A4">
+          <mxGeometry x="0.3" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1226" y="253" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="A1_to_A3" value="JWT-токен (Роль: Спортсмен)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0.2;entryY=0;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="A1" target="A3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="904" y="297" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="A2_to_A3" value="Карточка события и трек" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="A2" target="A3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="820" y="467" />
+              <mxPoint x="820" y="593" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="A3_to_A4" value="Список участников старта" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.8;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="A3" target="A4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1120" y="648" />
+              <mxPoint x="1120" y="763" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ВЫХОДНЫЕ ДУГИ (OUTPUTS - СПРАВА) -->
+        <mxCell id="O1" value="O1: Timeline-доска, карта маршрута и метеопрогноз" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3;exitDx=0;exitDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="A2">
+          <mxGeometry x="0.3" y="-15" relative="1" as="geometry">
+            <mxPoint x="1600" y="423" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="O2" value="O2: Сформированный стартовый протокол" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="A3">
+          <mxGeometry x="0.2" y="-15" relative="1" as="geometry">
+            <mxPoint x="1600" y="588" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="O3" value="O3: Сервисные уведомления и анонсы (VK-бот)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.55;exitDx=0;exitDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="A3">
+          <mxGeometry x="0.2" y="-15" relative="1" as="geometry">
+            <mxPoint x="1600" y="621" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="O4" value="O4: Итоговый протокол в архиве и обновленная статистика профиля" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="A4">
+          <mxGeometry x="0.1" y="-15" relative="1" as="geometry">
+            <mxPoint x="1600" y="785" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- МЕХАНИЗМЫ (MECHANISMS - СНИЗУ) -->
+        <mxCell id="M_A1" value="M1: Организатор, M2: Спортсмен, M3: ПАК ИС «43Колеса»" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A1">
+          <mxGeometry x="-0.5" relative="1" as="geometry">
+            <mxPoint x="370" y="1030" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="M_A2" value="M1: Организатор, M3: ИС «43Колеса», M4: Leaflet/OSM, Open-Meteo" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A2">
+          <mxGeometry x="-0.4" relative="1" as="geometry">
+            <mxPoint x="670" y="1030" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="M_A3" value="M1: Организатор, M2: Спортсмен, M3: ИС «43Колеса», M4: VK API" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A3">
+          <mxGeometry x="-0.3" relative="1" as="geometry">
+            <mxPoint x="970" y="1030" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="M_A4" value="M1: Организатор, M3: ПАК ИС «43Колеса» (PostgreSQL, FastAPI)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" target="A4">
+          <mxGeometry x="-0.2" relative="1" as="geometry">
+            <mxPoint x="1270" y="1030" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
