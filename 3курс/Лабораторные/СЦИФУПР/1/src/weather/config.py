@@ -11,7 +11,8 @@ WEATHER_API_BASE_URL: str = os.getenv(
     "WEATHER_API_BASE_URL", "https://api.openweathermap.org/data/2.5"
 )
 # OpenWeatherMap ---
-
+GEO_API_FALLBACK_LAT: float = os.getenv("GEO_API_FALLBACK_LAT")
+GEO_API_FALLBACK_LON: float = os.getenv("GEO_API_FALLBACK_LON")
 # IP ---
 GEO_API_URL: str = os.getenv("GEO_API_URL")
 GEO_API_FALLBACK_CITY: str = os.getenv("GEO_API_FALLBACK_CITY")

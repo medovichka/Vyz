@@ -1,6 +1,6 @@
 import logging
 from typing import Any
-
+from config import GEO_API_FALLBACK_LAT, GEO_API_FALLBACK_LON
 import requests
 
 from config import (
@@ -39,18 +39,26 @@ def get_data(API_URL: str, parametrs: dict[str, Any] | None = None) -> dict[str,
         raise
 
 
-def get_geo(IP: str) -> tuple[float, float]:
-    logger.info("Определение координат через %s", GEO_API_URL)
-
-    info: dict[str, Any] = get_data(GEO_API_URL)
-    loc: str | None = info.get("loc")
-    if not loc:
-        raise KeyError("Неправильный ответ от API")
-    lat_str, lon_str = loc.split(",")
-    lat, lon = float(lat_str), float(lon_str)
-    city: str = info.get("city", "неизвестно")
-    logger.info("Определён город: %s (lat=%.4f, lon=%.4f)", city, lat, lon)
-    return lat, lon
+def get_geo() -> tuple[float, float]:
+    logger.info("Определение IP через %s", GEO_API_URL)
+    try:
+        logger.info("Определение координат через %s", GEO_API_URL)
+        info: dict[str, Any] = get_data(GEO_API_URL)
+        if not isinstance(info, dict):
+            raise ValueError(f"ожидался dict, получено {type(info).__name__}")
+        loc: str | None = info.get("loc")
+        lat_str, lon_str = loc.split(",")
+        lat, lon = float(lat_str), float(lon_str)
+        city: str = info.get("city", "неизвестно")
+        logger.info("Определён город: %s (lat=%.4f, lon=%.4f)", city, lat, lon)
+        return lat, lon
+    except (requests.RequestException, TimeoutError, ValueError) as e:
+        logger.warning(
+            "Не удалось определить координаты (%s: %s), используется fallback",
+            type(e).__name__,
+            e,
+        )
+        return float(GEO_API_FALLBACK_LAT), float(GEO_API_FALLBACK_LON)
 
 
 def get_weather_points(lat: float, lon: float) -> dict[str, Any]:

@@ -1,10 +1,11 @@
 import logging
 
-from api_caller import get_data, get_geo, get_weather_points
 from config import GEO_API_FALLBACK_CITY, WEATHER_API_KEY
 from save import init_db, load_points, save_points
 from to_md import points_to_markdown
 from wpp_parser import parse_weather
+
+from weather.api_caller import get_data, get_geo, get_weather_points
 
 logging.basicConfig(
     level=logging.INFO,
@@ -19,15 +20,12 @@ def main() -> None:
         logger.error("WEATHER_API_KEY не задан")
         return
     # координаты
+    init_db()
     try:
-        init_db()
-        ip_json = get_data("https://ipinfo.io/json")
-        ip = ip_json.get("ip")
-        lat, lon = get_geo(ip)
+        lat, lon = get_geo()
     except Exception:
         logger.exception("Не удалось определить координаты")
         return
-
     # прогноз
     try:
         raw_weather = get_weather_points(lat=lat, lon=lon)
